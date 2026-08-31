@@ -1,0 +1,12 @@
+; Dependencias minimas para la version local (Ollama) de NourishBot.
+; A diferencia de requirements.txt (lab original, ~240 paquetes con SDKs de
+; IBM WatsonX, Google Cloud, Cohere, etc.), esta lista solo trae lo que
+; realmente se usa: CrewAI (que ya trae LiteLLM para hablar con Ollama),
+; Gradio para la UI, y requests para las llamadas de vision.
+crewai==0.75.0
+crewai-tools==0.17.0
+gradio==5.12.0
+pydantic==2.10.5
+PyYAML==6.0.2
+requests==2.32.0
+pillow==11.1.0
