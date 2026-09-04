@@ -1,12 +1,26 @@
-; Dependencias minimas para la version local (Ollama) de NourishBot.
-; A diferencia de requirements.txt (lab original, ~240 paquetes con SDKs de
-; IBM WatsonX, Google Cloud, Cohere, etc.), esta lista solo trae lo que
-; realmente se usa: CrewAI (que ya trae LiteLLM para hablar con Ollama),
-; Gradio para la UI, y requests para las llamadas de vision.
-crewai==0.75.0
-crewai-tools==0.17.0
-gradio==5.12.0
-pydantic==2.10.5
-PyYAML==6.0.2
-requests==2.32.0
-pillow==11.1.0
+# IMPORTANTE (confirmado contra el indice de PyPI, no una suposicion): a la
+# fecha de este cambio NINGUNA version de `crewai` soporta Python 3.14 -
+# ni siquiera la ultima (1.15.18) declara "Requires-Python >=3.10,<3.14".
+# Las unicas versiones que "instalan" en 3.14 son binarios muy viejos
+# (0.1.x - 0.11.x, anteriores a la API con @CrewBase/Agent(config=...) que
+# usa este proyecto) y quedan rotas/incompletas. Por eso este proyecto corre
+# en un venv de Python 3.13 dedicado dentro de esta misma carpeta (`.venv313`,
+# ver MANUAL.md seccion "Como correrlo") en vez del env-llm-314 compartido.
+#
+# crewai==0.75.0 (pin original del lab) tambien tiene techo Requires-Python
+# <=3.13 pero ya quedo varias versiones atras del salto de CrewAI de la
+# serie 0.x a 1.x (cambios de API) - se fija aqui la ultima version estable
+# 1.x que sigue soportando Python 3.13.
+crewai==1.15.18
+crewai-tools
+# gradio==5.12.0 (pin original) depende de aiofiles<24, pero crewai 1.x
+# depende de aiofiles~=24.1.0 -> conflicto irresoluble. Se sube al ultimo
+# 5.x (misma API estable de gr.Blocks/gr.themes que usa app.py, sin saltar
+# a la mayor 6.x) para satisfacer ambos.
+gradio==5.50.0
+pydantic>=2.10
+PyYAML>=6.0.3
+# requests==2.32.0 (pin original) fue "yanked" (retirado) por PyPI y ademas
+# es demasiado viejo para lo que exige el resto del arbol de crewai 1.x.
+requests>=2.32.3
+pillow>=11.3.0

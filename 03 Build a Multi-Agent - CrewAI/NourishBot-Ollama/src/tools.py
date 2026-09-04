@@ -27,7 +27,6 @@ from crewai.tools import BaseTool
 from pydantic import BaseModel, Field
 
 import logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 # --- Configuracion centralizada: ver config.ini en la raiz del proyecto ---
@@ -37,7 +36,17 @@ _CONFIG.read(os.path.join(os.path.dirname(__file__), "..", "config.ini"))
 OLLAMA_BASE_URL = _CONFIG.get("ollama", "base_url", fallback="http://localhost:11434")
 VISION_MODEL = _CONFIG.get("ollama", "vision_model", fallback="llava:7b")
 TEXT_MODEL = _CONFIG.get("ollama", "text_model", fallback="qwen2.5:7b-instruct-q4_K_M")
-TEMPERATURE = _CONFIG.getfloat("ollama", "temperature", fallback=0.2)
+TEMPERATURE_VISION = _CONFIG.getfloat("ollama", "temperature_vision", fallback=0.1)
+TEMPERATURE_TEXT = _CONFIG.getfloat("ollama", "temperature_text", fallback=0.3)
+TIMEOUT = int(_CONFIG.get("ollama", "timeout", fallback="180"))
+KEEP_ALIVE = _CONFIG.get("ollama", "keep_alive", fallback="10m")
+TOP_P = _CONFIG.getfloat("ollama", "top_p", fallback=0.9)
+NUM_PREDICT = int(_CONFIG.get("ollama", "num_predict", fallback="500"))
+
+logger.info(f"[TOOLS.PY] Ollama config: {OLLAMA_BASE_URL}")
+logger.info(f"[TOOLS.PY]   vision_model={VISION_MODEL} (temp={TEMPERATURE_VISION})")
+logger.info(f"[TOOLS.PY]   text_model={TEXT_MODEL} (temp={TEMPERATURE_TEXT})")
+logger.info(f"[TOOLS.PY]   timeout={TIMEOUT}s, keep_alive={KEEP_ALIVE}")
 
 
 def _encode_image_base64(image_path: str) -> str:
@@ -55,29 +64,89 @@ def _call_ollama_vision(image_path: str, prompt: str, model: str = VISION_MODEL)
     mas directa ahi. `stream=False` porque solo necesitamos la respuesta completa,
     no un stream token a token (esto es una llamada de herramienta, no un chat).
     """
-    payload = {
-        "model": model,
-        "prompt": prompt,
-        "images": [_encode_image_base64(image_path)],
-        "stream": False,
-        "options": {"temperature": TEMPERATURE},
-    }
-    resp = requests.post(f"{OLLAMA_BASE_URL}/api/generate", json=payload, timeout=180)
-    resp.raise_for_status()
-    return resp.json().get("response", "").strip()
+    import time
+    t_start = time.time()
+
+    logger.info(f"[CALL_OLLAMA_VISION] Iniciando llamada a {OLLAMA_BASE_URL}/api/generate con modelo {model}")
+    logger.debug(f"[CALL_OLLAMA_VISION] image_path={image_path}, prompt_len={len(prompt)}")
+
+    try:
+        logger.debug("[CALL_OLLAMA_VISION] Codificando imagen a base64...")
+        encoded_image = _encode_image_base64(image_path)
+        logger.debug(f"[CALL_OLLAMA_VISION] ✓ Imagen codificada ({len(encoded_image)} chars)")
+
+        payload = {
+            "model": model,
+            "prompt": prompt,
+            "images": [encoded_image],
+            "stream": False,
+            "options": {
+                "temperature": TEMPERATURE_VISION,
+                "top_p": TOP_P,
+                "num_predict": NUM_PREDICT,
+            },
+            "keep_alive": KEEP_ALIVE,
+        }
+
+        logger.debug(f"[CALL_OLLAMA_VISION] Enviando POST a {OLLAMA_BASE_URL}/api/generate...")
+        resp = requests.post(f"{OLLAMA_BASE_URL}/api/generate", json=payload, timeout=TIMEOUT)
+        resp.raise_for_status()
+
+        result = resp.json().get("response", "").strip()
+        elapsed = time.time() - t_start
+        logger.info(f"[CALL_OLLAMA_VISION] ✓ Respuesta recibida ({len(result)} chars, {elapsed:.2f}s)")
+        logger.debug(f"[CALL_OLLAMA_VISION] Response: {result[:200]}...")
+        return result
+
+    except requests.RequestException as e:
+        elapsed = time.time() - t_start
+        logger.error(f"[CALL_OLLAMA_VISION] ❌ ERROR de conexión tras {elapsed:.2f}s: {type(e).__name__}: {str(e)}", exc_info=True)
+        raise
+    except Exception as e:
+        elapsed = time.time() - t_start
+        logger.error(f"[CALL_OLLAMA_VISION] ❌ ERROR tras {elapsed:.2f}s: {type(e).__name__}: {str(e)}", exc_info=True)
+        raise
 
 
 def _call_ollama_text(prompt: str, model: str = TEXT_MODEL) -> str:
     """Llamada de texto puro (sin imagen) al servidor Ollama local, para tareas de solo-razonamiento."""
-    payload = {
-        "model": model,
-        "prompt": prompt,
-        "stream": False,
-        "options": {"temperature": TEMPERATURE},
-    }
-    resp = requests.post(f"{OLLAMA_BASE_URL}/api/generate", json=payload, timeout=180)
-    resp.raise_for_status()
-    return resp.json().get("response", "").strip()
+    import time
+    t_start = time.time()
+
+    logger.info(f"[CALL_OLLAMA_TEXT] Iniciando llamada a {OLLAMA_BASE_URL}/api/generate con modelo {model}")
+    logger.debug(f"[CALL_OLLAMA_TEXT] prompt_len={len(prompt)}")
+
+    try:
+        payload = {
+            "model": model,
+            "prompt": prompt,
+            "stream": False,
+            "options": {
+                "temperature": TEMPERATURE_TEXT,
+                "top_p": TOP_P,
+                "num_predict": NUM_PREDICT,
+            },
+            "keep_alive": KEEP_ALIVE,
+        }
+
+        logger.debug(f"[CALL_OLLAMA_TEXT] Enviando POST a {OLLAMA_BASE_URL}/api/generate...")
+        resp = requests.post(f"{OLLAMA_BASE_URL}/api/generate", json=payload, timeout=TIMEOUT)
+        resp.raise_for_status()
+
+        result = resp.json().get("response", "").strip()
+        elapsed = time.time() - t_start
+        logger.info(f"[CALL_OLLAMA_TEXT] ✓ Respuesta recibida ({len(result)} chars, {elapsed:.2f}s)")
+        logger.debug(f"[CALL_OLLAMA_TEXT] Response: {result[:200]}...")
+        return result
+
+    except requests.RequestException as e:
+        elapsed = time.time() - t_start
+        logger.error(f"[CALL_OLLAMA_TEXT] ❌ ERROR de conexión tras {elapsed:.2f}s: {type(e).__name__}: {str(e)}", exc_info=True)
+        raise
+    except Exception as e:
+        elapsed = time.time() - t_start
+        logger.error(f"[CALL_OLLAMA_TEXT] ❌ ERROR tras {elapsed:.2f}s: {type(e).__name__}: {str(e)}", exc_info=True)
+        raise
 
 
 def _extract_json_block(text: str) -> dict:
@@ -113,13 +182,15 @@ class ExtractIngredientsTool(BaseTool):
     args_schema: Type[BaseModel] = ExtractIngredientsInput
 
     def _run(self, image_path: str) -> str:
+        logger.info(f"[ExtractIngredientsTool._run] Iniciando con imagen: {image_path}")
         prompt = (
             "You are a food vision expert. List every distinct ingredient or food item "
             "visible in this image. Reply with ONLY a plain list, one ingredient per line, "
             "no numbering, no extra commentary."
         )
+        logger.debug("[ExtractIngredientsTool._run] Llamando a Ollama vision...")
         raw = _call_ollama_vision(image_path, prompt)
-        logger.info("Ingredientes crudos detectados: %s", raw)
+        logger.info(f"[ExtractIngredientsTool._run] ✓ Ingredientes detectados:\n{raw}")
         return raw
 
 
@@ -140,6 +211,9 @@ class FilterIngredientsTool(BaseTool):
     args_schema: Type[BaseModel] = FilterIngredientsInput
 
     def _run(self, raw_ingredients: str) -> str:
+        logger.info("[FilterIngredientsTool._run] Iniciando filtrado de ingredientes")
+        logger.debug(f"[FilterIngredientsTool._run] Raw input:\n{raw_ingredients}")
+
         seen = set()
         cleaned: List[str] = []
         for line in raw_ingredients.splitlines():
@@ -148,6 +222,9 @@ class FilterIngredientsTool(BaseTool):
             if item and item not in seen:
                 seen.add(item)
                 cleaned.append(item)
+
+        logger.info(f"[FilterIngredientsTool._run] ✓ {len(cleaned)} ingredientes después del filtrado")
+        logger.debug(f"[FilterIngredientsTool._run] Ingredientes filtrados: {cleaned}")
         return json.dumps(cleaned)
 
 
@@ -196,15 +273,22 @@ class DietaryFilterTool(BaseTool):
     args_schema: Type[BaseModel] = DietaryFilterInput
 
     def _run(self, ingredients_json: str, dietary_restrictions: str = "") -> str:
+        logger.info(f"[DietaryFilterTool._run] Iniciando filtrado por dieta: '{dietary_restrictions}'")
+        logger.debug(f"[DietaryFilterTool._run] Raw ingredients JSON: {ingredients_json}")
+
         try:
             ingredients = json.loads(ingredients_json)
         except json.JSONDecodeError:
+            logger.warning("[DietaryFilterTool._run] No se pudo parsear JSON, dividiendo por comas")
             ingredients = [i.strip() for i in ingredients_json.split(",") if i.strip()]
 
         diet_key = dietary_restrictions.strip().lower()
         excluded = DIETARY_EXCLUSIONS.get(diet_key, set())
+        logger.debug(f"[DietaryFilterTool._run] Restricción '{diet_key}' excluye: {excluded}")
 
         filtered = [ing for ing in ingredients if ing.lower() not in excluded]
+        logger.info(f"[DietaryFilterTool._run] ✓ {len(ingredients)} → {len(filtered)} ingredientes después del filtrado")
+        logger.debug(f"[DietaryFilterTool._run] Ingredientes filtrados: {filtered}")
         return json.dumps(filtered)
 
 
@@ -226,6 +310,7 @@ class NutrientAnalysisTool(BaseTool):
     args_schema: Type[BaseModel] = NutrientAnalysisInput
 
     def _run(self, image_path: str) -> str:
+        logger.info(f"[NutrientAnalysisTool._run] Iniciando análisis nutricional: {image_path}")
         prompt = (
             "You are a nutrition expert analyzing a photo of a dish. "
             "Estimate its nutritional content and reply with ONLY a JSON object "
@@ -244,9 +329,17 @@ class NutrientAnalysisTool(BaseTool):
             "}\n"
             "If you are unsure of an exact value, give your best reasonable estimate - never leave a field null."
         )
+
+        logger.debug("[NutrientAnalysisTool._run] Llamando a Ollama vision...")
         raw = _call_ollama_vision(image_path, prompt)
+        logger.debug("[NutrientAnalysisTool._run] Extrayendo JSON de respuesta...")
         data = _extract_json_block(raw)
+
         if not data:
             # Fallback minimo para que el pipeline no se caiga si el modelo no devolvio JSON valido.
+            logger.warning("[NutrientAnalysisTool._run] ⚠ No se extrajo JSON válido, usando fallback")
             data = {"dish": "unknown", "nutrients": {}}
+        else:
+            logger.info(f"[NutrientAnalysisTool._run] ✓ JSON extraído - dish='{data.get('dish')}'")
+
         return json.dumps(data)

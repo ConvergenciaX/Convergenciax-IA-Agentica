@@ -25,6 +25,7 @@ el resultado de las tareas anteriores via `context`):
 
 import os
 import yaml
+import logging
 import configparser
 
 from crewai import Agent, Crew, Process, Task, LLM
@@ -38,12 +39,18 @@ from src.tools import (
 )
 from src.models import RecipeSuggestionOutput, NutrientAnalysisOutput
 
+logger = logging.getLogger(__name__)
+logger.info("[CREW.PY] Cargando módulo crew...")
+
 _CONFIG = configparser.ConfigParser()
-_CONFIG.read(os.path.join(os.path.dirname(__file__), "..", "config.ini"))
+config_path = os.path.join(os.path.dirname(__file__), "..", "config.ini")
+logger.debug(f"[CREW.PY] Leyendo config desde: {config_path}")
+_CONFIG.read(config_path)
 
 OLLAMA_BASE_URL = _CONFIG.get("ollama", "base_url", fallback="http://localhost:11434")
 TEXT_MODEL = _CONFIG.get("ollama", "text_model", fallback="qwen2.5:7b-instruct-q4_K_M")
 TEMPERATURE = _CONFIG.getfloat("ollama", "temperature", fallback=0.2)
+logger.info(f"[CREW.PY] Config cargada - Ollama: {OLLAMA_BASE_URL}, Modelo: {TEXT_MODEL}, Temp: {TEMPERATURE}")
 
 # Los agentes.yaml/tasks.yaml del lab original ya son genericos (no mencionan
 # OpenAI ni WatsonX en ningun lado), asi que se reutilizan tal cual - solo
@@ -57,11 +64,14 @@ def _build_ollama_llm() -> LLM:
     (el router de proveedores que usa CrewAI por debajo) que hable el
     protocolo nativo de Ollama contra `base_url`, en vez de ir a OpenAI/Anthropic/etc.
     """
-    return LLM(
+    logger.debug("[BUILD_LLM] Creando LLM Ollama")
+    llm = LLM(
         model=f"ollama/{TEXT_MODEL}",
         base_url=OLLAMA_BASE_URL,
         temperature=TEMPERATURE,
     )
+    logger.info(f"[BUILD_LLM] ✓ LLM creado: ollama/{TEXT_MODEL}")
+    return llm
 
 
 @CrewBase
@@ -77,13 +87,19 @@ class BaseNourishBotCrew:
     tasks_config_path = os.path.join(CONFIG_DIR, "tasks.yaml")
 
     def __init__(self, image_data: str, dietary_restrictions: str = None):
+        logger.debug(f"[BaseNourishBotCrew.__init__] image_data={image_data}, dietary_restrictions={dietary_restrictions}")
         self.image_data = image_data
         self.dietary_restrictions = dietary_restrictions or ""
 
+        logger.debug(f"[BaseNourishBotCrew.__init__] Leyendo agents.yaml desde {self.agents_config_path}")
         with open(self.agents_config_path, "r") as f:
             self.agents_config = yaml.safe_load(f)
+        logger.debug(f"[BaseNourishBotCrew.__init__] ✓ Agentes cargados: {list(self.agents_config.keys())}")
+
+        logger.debug(f"[BaseNourishBotCrew.__init__] Leyendo tasks.yaml desde {self.tasks_config_path}")
         with open(self.tasks_config_path, "r") as f:
             self.tasks_config = yaml.safe_load(f)
+        logger.debug(f"[BaseNourishBotCrew.__init__] ✓ Tareas cargadas: {list(self.tasks_config.keys())}")
 
         self.llm = _build_ollama_llm()
 
@@ -176,7 +192,8 @@ class NourishBotRecipeCrew(BaseNourishBotCrew):
 
     @crew
     def crew(self) -> Crew:
-        return Crew(
+        logger.info("[NourishBotRecipeCrew.crew] Construyendo crew RECIPE")
+        crew_obj = Crew(
             agents=[
                 self.ingredient_detection_agent(),
                 self.dietary_filtering_agent(),
@@ -190,6 +207,8 @@ class NourishBotRecipeCrew(BaseNourishBotCrew):
             process=Process.sequential,
             verbose=True,
         )
+        logger.info("[NourishBotRecipeCrew.crew] ✓ Crew RECIPE construido exitosamente")
+        return crew_obj
 
 
 @CrewBase
@@ -198,7 +217,8 @@ class NourishBotAnalysisCrew(BaseNourishBotCrew):
 
     @crew
     def crew(self) -> Crew:
-        return Crew(
+        logger.info("[NourishBotAnalysisCrew.crew] Construyendo crew ANALYSIS")
+        crew_obj = Crew(
             agents=[
                 self.ingredient_detection_agent(),
                 self.nutrient_analysis_agent(),
@@ -210,3 +230,5 @@ class NourishBotAnalysisCrew(BaseNourishBotCrew):
             process=Process.sequential,
             verbose=True,
         )
+        logger.info("[NourishBotAnalysisCrew.crew] ✓ Crew ANALYSIS construido exitosamente")
+        return crew_obj
