@@ -1010,3 +1010,108 @@ ocr_options
 2026-09-10 19:40:39 | INFO     | __main__:check_config:54 |    • Text model: qwen2.5:7b-instruct-q4_K_M
 2026-09-10 19:40:39 | INFO     | __main__:main:69 | ================================================================================
 2026-09-10 19:40:39 | ERROR    | __main__:main:76 | ❌ Faltan componentes. Ver arriba.
+2026-09-10 19:48:39 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-10 19:48:39 | INFO     | __main__:main:57 | ================================================================================
+2026-09-10 19:48:39 | INFO     | __main__:main:58 | 🔧 DIAGNÓSTICO: Verificando que todo está listo para indexar
+2026-09-10 19:48:39 | INFO     | __main__:main:59 | ================================================================================
+2026-09-10 19:48:41 | INFO     | __main__:check_ollama:17 | ✅ Ollama: OK
+2026-09-10 19:48:41 | INFO     | __main__:check_chroma:29 | ✅ ChromaDB: OK
+2026-09-10 19:48:41 | INFO     | __main__:check_docling_models:40 | ✅ Docling models: OK (models\docling)
+2026-09-10 19:48:41 | INFO     | __main__:check_config:49 | ✅ Config:
+2026-09-10 19:48:41 | INFO     | __main__:check_config:50 |    • do_ocr: True
+2026-09-10 19:48:41 | INFO     | __main__:check_config:51 |    • Ollama: http://localhost:11434
+2026-09-10 19:48:41 | INFO     | __main__:check_config:52 |    • Chroma: http://localhost:8000
+2026-09-10 19:48:41 | INFO     | __main__:check_config:53 |    • Embedding model: mxbai-embed-large
+2026-09-10 19:48:41 | INFO     | __main__:check_config:54 |    • Text model: qwen2.5:7b-instruct-q4_K_M
+2026-09-10 19:48:41 | INFO     | __main__:main:69 | ================================================================================
+2026-09-10 19:48:41 | INFO     | __main__:main:72 | ✅ TODO LISTO. Ahora ejecuta:
+2026-09-10 19:48:41 | INFO     | __main__:main:73 |    python scripts/upload_and_index.py 'examples/Financial Theory with Python.pdf'
+2026-09-10 19:49:24 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-10 19:49:46 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-10 19:50:13 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-10 19:50:13 | INFO     | __main__:list_indexed_documents:18 | 📚 Indexed documents:
+2026-09-10 19:50:56 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-10 19:52:49 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-10 19:52:49 | INFO     | __main__:show_document_content:90 | 📖 Content from 'financial_theory_with_python':
+2026-09-10 19:57:57 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-10 19:57:58 | INFO     | __main__:<module>:167 | 
+
+                        🧪 PRUEBA COMPLETA DE RAG-AgentAI                        
+2026-09-10 19:57:58 | INFO     | __main__:<module>:168 | ================================================================================
+2026-09-10 19:57:58 | INFO     | __main__:test_document_processing:17 | ================================================================================
+2026-09-10 19:57:58 | INFO     | __main__:test_document_processing:18 | TEST 1: Procesar documentos
+2026-09-10 19:57:58 | INFO     | __main__:test_document_processing:19 | ================================================================================
+2026-09-10 19:57:58 | INFO     | document_processor.file_handler:__init__:46 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-10 19:57:58 | INFO     | document_processor.file_handler:__init__:47 |   OCR: habilitado
+2026-09-10 19:57:58 | INFO     | document_processor.file_handler:__init__:71 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-10 19:57:58 | INFO     | document_processor.file_handler:__init__:72 | ✓ Docling pipeline configurado para operación offline
+2026-09-10 19:57:58 | INFO     | __main__:test_document_processing:32 | 📄 Procesando: examples/Financial Theory with Python.pdf
+2026-09-10 19:57:58 | INFO     | document_processor.file_handler:process:89 | Processing 1 file(s) → una colección por documento
+2026-09-10 19:57:58 | DEBUG    | document_processor.file_handler:validate_files:81 | ✓ File validation passed (total: 8.4MB)
+2026-09-10 19:57:58 | INFO     | document_processor.file_handler:process:107 | Processing file: examples/Financial Theory with Python.pdf
+2026-09-10 20:03:38 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-10 20:03:57 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-10 20:04:52 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-10 20:05:45 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-10 20:06:16 | INFO     | document_processor.file_handler:process:130 |   → examples/Financial Theory with Python.pdf: 199 chunks → collection 'examplesfinancial_theory_with_pythonpdf_1bdac887'
+2026-09-10 20:06:16 | INFO     | document_processor.file_handler:process:137 | ✓ Indexing 1 document(s) → 199 total chunks
+2026-09-10 20:06:16 | INFO     | __main__:test_document_processing:39 | ✅ Procesados 1 documento(s)
+2026-09-10 20:06:16 | INFO     | __main__:test_document_processing:41 |    Total chunks: 199
+2026-09-10 20:06:16 | INFO     | __main__:test_document_processing:44 |    • examplesfinancial_theory_with_pythonpdf_1bdac887: 199 chunks
+2026-09-10 20:06:16 | INFO     | __main__:test_indexing:55 | 
+================================================================================
+2026-09-10 20:06:16 | INFO     | __main__:test_indexing:56 | TEST 2: Indexar en ChromaDB
+2026-09-10 20:06:16 | INFO     | __main__:test_indexing:57 | ================================================================================
+2026-09-10 20:06:17 | INFO     | __main__:test_indexing:62 | 📚 Indexando documentos...
+2026-09-10 20:06:30 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-10 20:06:30 | INFO     | __main__:list_indexed_documents:18 | 📚 Indexed documents:
+2026-09-10 20:06:38 | INFO     | __main__:test_indexing:68 | ✅ Documentos indexados
+2026-09-10 20:06:38 | INFO     | __main__:test_indexing:72 |    Colecciones en ChromaDB: ['financial_theory_with_python', 'examplesfinancial_theory_with_pythonpdf_1bdac887', 'design_thinking_lean_startup_agile']
+2026-09-10 20:06:38 | INFO     | __main__:test_retrieval:83 | 
+================================================================================
+2026-09-10 20:06:38 | INFO     | __main__:test_retrieval:84 | TEST 3: Búsqueda (Query: '¿Cuáles son los principios fundamentales de la teoría financiera?')
+2026-09-10 20:06:38 | INFO     | __main__:test_retrieval:85 | ================================================================================
+2026-09-10 20:06:38 | INFO     | __main__:test_retrieval:94 | 📖 Colecciones disponibles: ['financial_theory_with_python', 'examplesfinancial_theory_with_pythonpdf_1bdac887', 'design_thinking_lean_startup_agile']
+2026-09-10 20:06:38 | INFO     | __main__:test_retrieval:102 | 🔍 Buscando: '¿Cuáles son los principios fundamentales de la teoría financiera?'
+2026-09-10 20:06:38 | INFO     | __main__:test_retrieval:105 | ✅ Encontrados 14 documentos
+2026-09-10 20:06:38 | INFO     | __main__:test_retrieval:107 |    [1] As an empirical domain, finance is aimed at specific answers, such as an appropriate value for a giv...
+2026-09-10 20:06:38 | INFO     | __main__:test_retrieval:107 |    [2] This chapter introduces finance, starting with the very basics and illustrating the central  mathema...
+2026-09-10 20:06:38 | INFO     | __main__:test_retrieval:107 |    [3] | financial assets, 28-29, 60                                                                       ...
+2026-09-10 20:06:38 | INFO     | __main__:test_rag_pipeline:118 | 
+================================================================================
+2026-09-10 20:06:38 | INFO     | __main__:test_rag_pipeline:119 | TEST 4: Pipeline RAG (Query: '¿Qué es la teoría moderna de carteras de inversión?')
+2026-09-10 20:06:38 | INFO     | __main__:test_rag_pipeline:120 | ================================================================================
+2026-09-10 20:06:38 | INFO     | document_processor.file_handler:__init__:46 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-10 20:06:38 | INFO     | document_processor.file_handler:__init__:47 |   OCR: habilitado
+2026-09-10 20:06:38 | INFO     | document_processor.file_handler:__init__:71 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-10 20:06:38 | INFO     | document_processor.file_handler:__init__:72 | ✓ Docling pipeline configurado para operación offline
+2026-09-10 20:06:39 | INFO     | __main__:test_rag_pipeline:128 | 📄 Procesando documentos...
+2026-09-10 20:06:39 | INFO     | document_processor.file_handler:process:89 | Processing 1 file(s) → una colección por documento
+2026-09-10 20:06:39 | DEBUG    | document_processor.file_handler:validate_files:81 | ✓ File validation passed (total: 8.4MB)
+2026-09-10 20:06:39 | INFO     | document_processor.file_handler:process:104 | Loading from cache: examples/Financial Theory with Python.pdf
+2026-09-10 20:06:39 | INFO     | document_processor.file_handler:process:130 |   → examples/Financial Theory with Python.pdf: 199 chunks → collection 'examplesfinancial_theory_with_pythonpdf_1bdac887'
+2026-09-10 20:06:39 | INFO     | document_processor.file_handler:process:137 | ✓ Indexing 1 document(s) → 199 total chunks
+2026-09-10 20:06:39 | INFO     | __main__:test_rag_pipeline:140 | 📚 Indexando...
+2026-09-10 20:06:40 | INFO     | __main__:test_rag_pipeline:147 | 🚀 Ejecutando RAG pipeline (3 agentes)...
+2026-09-10 20:07:00 | INFO     | __main__:test_rag_pipeline:155 | ✅ RAG completado
+2026-09-10 20:07:00 | INFO     | __main__:test_rag_pipeline:156 | 
+📝 RESPUESTA:
+Esta pregunta no está relacionada con los documentos. Por favor, haz otra pregunta.
+2026-09-10 20:07:00 | INFO     | __main__:test_rag_pipeline:157 | 
+🔍 VERIFICACIÓN:
+Relevancia: NO
+2026-09-10 20:07:00 | INFO     | __main__:<module>:201 | 
+
+================================================================================
+2026-09-10 20:07:00 | INFO     | __main__:<module>:202 | ✅ TODOS LOS TESTS COMPLETADOS
+2026-09-10 20:07:00 | INFO     | __main__:<module>:203 | ================================================================================
+2026-09-10 20:07:00 | INFO     | __main__:<module>:204 | 
+Pasos finales:
+2026-09-10 20:07:00 | INFO     | __main__:<module>:205 |   1. Abre http://127.0.0.1:5020 en tu navegador
+2026-09-10 20:07:00 | INFO     | __main__:<module>:206 |   2. Prueba la pestaña '💬 Preguntar' (sube un PDF + pregunta)
+2026-09-10 20:07:00 | INFO     | __main__:<module>:207 |   3. Prueba la pestaña '📚 Explorar Documentos' (lista + chunks)
+2026-09-10 20:07:00 | INFO     | __main__:<module>:208 | 
+✨ RAG-AgentAI está listo para usar!
+2026-09-10 20:07:01 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-10 20:07:01 | INFO     | __main__:search_in_document:43 | 🔍 Searching in 'financial_theory_with_python' for: '¿Qué es la teoría moderna de carteras de inversión?'
+2026-09-10 20:07:03 | INFO     | __main__:search_in_document:56 |    Generating embedding...
