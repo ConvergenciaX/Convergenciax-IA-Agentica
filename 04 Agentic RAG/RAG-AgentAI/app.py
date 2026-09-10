@@ -25,12 +25,12 @@ logging.basicConfig(level=settings.LOG_LEVEL)
 
 # Example documents and questions
 EXAMPLES = {
-    "Google 2024 Environmental Report": {
-        "question": "Retrieve the data center PUE efficiency values in Singapore 2nd facility in 2019 and 2022. Also retrieve regional average CFE in Asia pacific in 2023",
+    "Reporte Ambiental Google 2024": {
+        "question": "¿Cuáles son los valores de eficiencia PUE del centro de datos en la segunda instalación de Singapur en 2019 y 2022? ¿Cuál es el promedio regional de CFE en Asia Pacífico en 2023?",
         "file_paths": ["examples/google-2024-environmental-report.pdf"]
     },
-    "DeepSeek-R1 Technical Report": {
-        "question": "Summarize DeepSeek-R1 model's performance evaluation on all coding tasks against OpenAI o1-mini model",
+    "Reporte Técnico DeepSeek-R1": {
+        "question": "Resumir la evaluación de desempeño del modelo DeepSeek-R1 en todas las tareas de codificación en comparación con el modelo OpenAI o1-mini",
         "file_paths": ["examples/DeepSeek Technical Report.pdf"]
     }
 }
@@ -223,8 +223,8 @@ def main():
 
                 chroma_health_output = gr.Markdown(label="Estado de ChromaDB")
 
-            # Tab 3: Explore indexed documents + Upload & Optimize
-            with gr.Tab("📚 Explorar Documentos", id="explore"):
+            # Tab 3: Index RAG documents + Upload & Optimize
+            with gr.Tab("📚 Indexar RAG Documentos", id="explore"):
                 gr.Markdown("### Documentos indexados en ChromaDB")
 
                 with gr.Row():
@@ -325,7 +325,7 @@ python scripts/download_easyocr_models.py
 
 1. **Selecciona** la colección a actualizar en "Eliminar colección"
 2. Click **"🗑️ Eliminar Colección"** → confirma eliminación
-3. Ve a **"📚 Explorar Documentos"** tab
+3. Ve a **"📚 Indexar RAG Documentos"** tab
 4. Sube el documento **ACTUALIZADO**
 5. Click **"📥 Indexar documento(s)"**
 6. ¡Hecho! Tu colección está actualizada con contenido nuevo
@@ -413,10 +413,10 @@ python scripts/download_easyocr_models.py
                             collections_to_index.update(doc_collections)
                         except Exception as e:
                             # Errores específicos: Ollama, Docling, EasyOCR
-                            if "Failed to connect to Ollama" in str(e):
+                            if "Failed to connect to Ollama" in str(e) or "No se puede conectar" in str(e):
                                 return ("❌ Error: No se puede conectar a Ollama.\n"
-                                       "Ejecuta: ollama serve"), "", state
-                            elif "Missing models" in str(e) or "EasyOCR" in str(e):
+                                       "Ejecuta en terminal: ollama serve"), "", state
+                            elif "Missing models" in str(e) or "EasyOCR" in str(e) or "modelo" in str(e).lower():
                                 return ("❌ Error: Modelos EasyOCR faltantes.\n"
                                        "Ejecuta: python scripts/download_easyocr_models.py\n"
                                        "O desactiva OCR en config.ini (do_ocr = false)"), "", state
@@ -529,13 +529,13 @@ python scripts/download_easyocr_models.py
                 if use_all:
                     colls_to_use = retriever_builder.list_collections()
                     if not colls_to_use:
-                        return "❌ Error: No hay colecciones disponibles", "", state
+                        return "❌ Error: No hay colecciones indexadas. Primero indexa documentos en '📚 Indexar RAG Documentos'", "", state
                     logger.info(f"Usando TODAS las colecciones: {colls_to_use}")
                 else:
                     if not selected_colls:
-                        return "❌ Error: Selecciona al menos una colección o marca 'Usar TODAS'", "", state
+                        return "❌ Error: Selecciona al menos una colección o marca '✅ Usar TODAS las colecciones'", "", state
                     colls_to_use = selected_colls
-                    logger.info(f"Consultando colecciones: {colls_to_use}")
+                    logger.info(f"Consultando colecciones seleccionadas: {colls_to_use}")
 
                 logger.info(f"Pregunta: {question_text[:50]}...")
 
@@ -634,8 +634,8 @@ python scripts/download_easyocr_models.py
                 if not files_to_upload:
                     return "❌ Error: No hay documentos para indexar", state
 
-                logger.info(f"Indexando {len(files_to_upload)} doc(s) desde Explorar tab")
-                logger.info(f"  OCR override: {do_ocr}, Custom title: '{custom_title}'")
+                logger.info(f"Indexando {len(files_to_upload)} documento(s)")
+                logger.info(f"  OCR habilitado: {do_ocr}, Título personalizado: '{custom_title}'")
 
                 # Procesar documentos con override de OCR
                 processor_with_override = DocumentProcessor(do_ocr_override=do_ocr)
@@ -689,13 +689,13 @@ python scripts/download_easyocr_models.py
                     gr.Dropdown(choices=new_collections_list)
 
             except Exception as e:
-                if "Missing models" in str(e) or "EasyOCR" in str(e):
-                    msg = ("❌ Error: Modelos EasyOCR faltantes.\n"
-                           "Ejecuta: python scripts/download_easyocr_models.py\n"
-                           "O desactiva OCR")
-                elif "Failed to connect to Ollama" in str(e):
+                if "Missing models" in str(e) or "EasyOCR" in str(e) or "modelo" in str(e).lower():
+                    msg = ("❌ Error: Modelos EasyOCR no disponibles.\n"
+                           "Ejecuta en terminal: python scripts/download_easyocr_models.py\n"
+                           "O desactiva OCR en config.ini")
+                elif "Failed to connect to Ollama" in str(e) or "Ollama" in str(e):
                     msg = ("❌ Error: No se puede conectar a Ollama.\n"
-                           "Ejecuta: ollama serve")
+                           "Ejecuta en terminal: ollama serve")
                 else:
                     msg = f"❌ Error al indexar: {str(e)[:100]}"
 
@@ -768,7 +768,7 @@ python scripts/download_easyocr_models.py
                     existing_collections_update = gr.Dropdown(choices=updated_collections)
                     collection_selector_update = gr.Dropdown(choices=updated_collections)
 
-                    status_msg = f"✅ Éxito: Colección '{collection_to_delete}' eliminada\n\nPuede volver a indexarla en '📚 Explorar Documentos'"
+                    status_msg = f"✅ Éxito: Colección '{collection_to_delete}' eliminada\n\nPuede volver a indexarla en '📚 Indexar RAG Documentos'"
 
                     return status_msg, manage_dropdown_update, refresh_collections_list()
                 else:

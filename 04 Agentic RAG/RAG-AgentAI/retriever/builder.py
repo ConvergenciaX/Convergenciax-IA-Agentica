@@ -303,11 +303,23 @@ class RetrieverBuilder:
             embeddings_list = self.embeddings.embed_documents([d.page_content for d in docs_to_embed])
 
             # Add to collection with deterministic IDs
+            # Ensure metadata is never empty (ChromaDB v0.6+ requires at least one attribute)
+            metadatas = []
+            for i, d in enumerate(docs_to_embed):
+                meta = getattr(d, "metadata", {})
+                # Ensure metadata dict is not empty
+                if not meta or not isinstance(meta, dict):
+                    meta = {"chunk_index": i}
+                elif "chunk_index" not in meta:
+                    # Add chunk_index to ensure non-empty metadata
+                    meta["chunk_index"] = i
+                metadatas.append(meta)
+
             collection.add(
                 ids=ids_to_embed,
                 documents=[d.page_content for d in docs_to_embed],
                 embeddings=embeddings_list,
-                metadatas=[getattr(d, "metadata", {}) for d in docs_to_embed]
+                metadatas=metadatas
             )
 
             logger.info(f"✓ Collection '{collection_name}': {len(docs_to_embed)} new chunks indexed, "

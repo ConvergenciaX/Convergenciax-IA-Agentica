@@ -44,24 +44,24 @@ processor = None
 
 # Models
 class QueryRequest(BaseModel):
-    """Query request model."""
+    """Solicitud de consulta."""
     question: str
     collections: Optional[List[str]] = None  # Si None, usa todas las colecciones
 
 class QueryResponse(BaseModel):
-    """Query response model."""
+    """Respuesta de consulta."""
     answer: str
     verification: str
     collections_used: List[str]
     chunks_retrieved: int
 
 class CollectionInfo(BaseModel):
-    """Collection information model."""
+    """Información de colección."""
     name: str
     chunks: int
 
 class HealthStatus(BaseModel):
-    """ChromaDB health status."""
+    """Estado de salud de ChromaDB."""
     heartbeat_ok: bool
     heartbeat_ms: Optional[float]
     host: str
@@ -71,7 +71,7 @@ class HealthStatus(BaseModel):
     error: Optional[str] = None
 
 class DeleteResponse(BaseModel):
-    """Delete collection response."""
+    """Respuesta de eliminación de colección."""
     success: bool
     message: str
     remaining_collections: List[str]
@@ -79,23 +79,23 @@ class DeleteResponse(BaseModel):
 # Startup
 @app.on_event("startup")
 async def startup():
-    """Initialize components on startup."""
+    """Inicializar componentes al arrancar."""
     global retriever_builder, workflow, processor
-    logger.info("🚀 RAG-AgentAI API Starting...")
+    logger.info("🚀 RAG-AgentAI API iniciando...")
 
     try:
         retriever_builder = RetrieverBuilder()
         workflow = AgentWorkflow()
         processor = DocumentProcessor()
-        logger.info("✅ All components initialized")
+        logger.info("✅ Todos los componentes inicializados")
     except Exception as e:
-        logger.error(f"❌ Startup failed: {e}", exc_info=True)
+        logger.error(f"❌ Error al arrancar: {e}", exc_info=True)
         raise
 
 # Health check
 @app.get("/health")
 async def health_check() -> Dict:
-    """Check API and ChromaDB health."""
+    """Verificar estado de API y ChromaDB."""
     try:
         health = retriever_builder.get_health_status()
         return {
@@ -114,7 +114,7 @@ async def health_check() -> Dict:
 # Collections endpoints
 @app.get("/collections", response_model=List[CollectionInfo])
 async def list_collections():
-    """List all indexed collections."""
+    """Listar todas las colecciones indexadas."""
     try:
         collections = retriever_builder.list_collections()
         result = []
@@ -132,11 +132,11 @@ async def list_collections():
 
 @app.get("/collections/{collection_name}")
 async def get_collection_info(collection_name: str) -> CollectionInfo:
-    """Get info about specific collection."""
+    """Obtener información de una colección específica."""
     try:
         details = retriever_builder.get_collection_details(collection_name)
         if not details:
-            raise HTTPException(status_code=404, detail=f"Collection '{collection_name}' not found")
+            raise HTTPException(status_code=404, detail=f"Colección '{collection_name}' no encontrada")
         return CollectionInfo(
             name=collection_name,
             chunks=details["chunks"]
@@ -149,16 +149,16 @@ async def get_collection_info(collection_name: str) -> CollectionInfo:
 
 @app.delete("/collections/{collection_name}", response_model=DeleteResponse)
 async def delete_collection(collection_name: str) -> DeleteResponse:
-    """Delete a collection (for updating)."""
+    """Eliminar una colección (para actualizar)."""
     try:
         success = retriever_builder.delete_collection(collection_name)
         if not success:
-            raise HTTPException(status_code=400, detail=f"Failed to delete '{collection_name}'")
+            raise HTTPException(status_code=400, detail=f"No se pudo eliminar la colección '{collection_name}'")
 
         remaining = retriever_builder.list_collections()
         return DeleteResponse(
             success=True,
-            message=f"Collection '{collection_name}' deleted successfully",
+            message=f"Colección '{collection_name}' eliminada exitosamente",
             remaining_collections=remaining
         )
     except HTTPException:
@@ -170,10 +170,10 @@ async def delete_collection(collection_name: str) -> DeleteResponse:
 # Query endpoints
 @app.post("/query", response_model=QueryResponse)
 async def query(request: QueryRequest) -> QueryResponse:
-    """Query the RAG system."""
+    """Consultar el sistema RAG."""
     try:
         if not request.question.strip():
-            raise HTTPException(status_code=400, detail="Question cannot be empty")
+            raise HTTPException(status_code=400, detail="La pregunta no puede estar vacía")
 
         # Determine collections to use
         if request.collections:
@@ -182,7 +182,7 @@ async def query(request: QueryRequest) -> QueryResponse:
             collections_to_use = retriever_builder.list_collections()
 
         if not collections_to_use:
-            raise HTTPException(status_code=400, detail="No collections available to query")
+            raise HTTPException(status_code=400, detail="No hay colecciones indexadas para consultar")
 
         logger.info(f"API Query: {request.question[:50]}... (collections: {collections_to_use})")
 
@@ -214,7 +214,7 @@ async def query(request: QueryRequest) -> QueryResponse:
 # Health status endpoint
 @app.get("/health/chroma", response_model=HealthStatus)
 async def chroma_health() -> HealthStatus:
-    """Check ChromaDB health."""
+    """Verificar estado de ChromaDB."""
     try:
         health = retriever_builder.get_health_status()
         return HealthStatus(**health)
@@ -225,11 +225,11 @@ async def chroma_health() -> HealthStatus:
 # Info endpoint
 @app.get("/info")
 async def app_info() -> Dict:
-    """Get application information."""
+    """Obtener información de la aplicación."""
     return {
         "name": "RAG-AgentAI",
         "version": "1.0.0",
-        "description": "Local RAG system with Ollama + ChromaDB",
+        "description": "Sistema RAG local con Ollama + ChromaDB",
         "endpoints": {
             "health": "GET /health",
             "collections": {
@@ -253,11 +253,11 @@ if __name__ == "__main__":
     import uvicorn
 
     logger.info("=" * 80)
-    logger.info("RAG-AgentAI REST API")
+    logger.info("RAG-AgentAI API REST")
     logger.info("=" * 80)
-    logger.info(f"Starting API server on http://127.0.0.1:8000")
-    logger.info(f"Swagger UI: http://127.0.0.1:8000/docs")
-    logger.info(f"ReDoc: http://127.0.0.1:8000/redoc")
+    logger.info(f"Iniciando servidor API en http://127.0.0.1:8000")
+    logger.info(f"Interfaz Swagger: http://127.0.0.1:8000/docs")
+    logger.info(f"Documentación ReDoc: http://127.0.0.1:8000/redoc")
     logger.info("=" * 80)
 
     uvicorn.run(
