@@ -977,3 +977,36 @@ ocr_options
 2026-09-10 00:07:18 | INFO     | __main__:process_collection_query:558 | ✓ Pipeline completado
 2026-09-10 00:07:41 | INFO     | __main__:refresh_collections_list:736 | ✓ Lista de colecciones refrescada: 2 colecciones
 2026-09-10 00:07:51 | INFO     | __main__:refresh_explore:510 | Documentos actualizados: ['financial_theory_with_python', 'design_thinking_lean_startup_agile']
+2026-09-10 00:13:27 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-10 00:13:27 | INFO     | __main__:main:195 | 
+
+                     🧪 BENCHMARK DE INDEXACIÓN RAG-AgentAI                      
+2026-09-10 00:13:27 | INFO     | __main__:main:196 | ================================================================================
+2026-09-10 00:13:27 | INFO     | __main__:benchmark_document_processing:22 | 
+================================================================================
+2026-09-10 00:13:27 | INFO     | __main__:benchmark_document_processing:23 | ETAPA 1: PROCESAMIENTO DE DOCUMENTO (Docling + Chunking)
+2026-09-10 00:13:27 | INFO     | __main__:benchmark_document_processing:24 | ================================================================================
+2026-09-10 00:13:27 | INFO     | __main__:benchmark_document_processing:32 | Archivo: Financial Theory with Python.pdf (8.4 MB)
+2026-09-10 00:13:27 | INFO     | document_processor.file_handler:__init__:46 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-10 00:13:27 | INFO     | document_processor.file_handler:__init__:47 |   OCR: habilitado
+2026-09-10 00:13:27 | INFO     | document_processor.file_handler:__init__:71 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-10 00:13:27 | INFO     | document_processor.file_handler:__init__:72 | ✓ Docling pipeline configurado para operación offline
+2026-09-10 00:13:27 | INFO     | document_processor.file_handler:process:89 | Processing 1 file(s) → una colección por documento
+2026-09-10 00:13:27 | DEBUG    | document_processor.file_handler:validate_files:81 | ✓ File validation passed (total: 8.4MB)
+2026-09-10 00:13:28 | INFO     | document_processor.file_handler:process:107 | Processing file: examples\Financial Theory with Python.pdf
+2026-09-10 19:40:33 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-10 19:40:33 | INFO     | __main__:main:57 | ================================================================================
+2026-09-10 19:40:33 | INFO     | __main__:main:58 | 🔧 DIAGNÓSTICO: Verificando que todo está listo para indexar
+2026-09-10 19:40:33 | INFO     | __main__:main:59 | ================================================================================
+2026-09-10 19:40:35 | INFO     | __main__:check_ollama:17 | ✅ Ollama: OK
+2026-09-10 19:40:39 | ERROR    | __main__:check_chroma:32 | ❌ ChromaDB: NO RESPONDE (HTTPConnectionPool(host='localhost', port=8000): Max retries exceeded with url: /api/v2/heartbeat (Caused by ConnectTimeoutError(<HTTPConnection(host='localhost', port=8000) at 0x1b518cdead0>, 'Connection to localhost timed out. (connect timeout=2)')))
+2026-09-10 19:40:39 | ERROR    | __main__:check_chroma:33 |    Ejecuta: chroma run --host localhost --port 8000 --path ./chroma_data
+2026-09-10 19:40:39 | INFO     | __main__:check_docling_models:40 | ✅ Docling models: OK (models\docling)
+2026-09-10 19:40:39 | INFO     | __main__:check_config:49 | ✅ Config:
+2026-09-10 19:40:39 | INFO     | __main__:check_config:50 |    • do_ocr: True
+2026-09-10 19:40:39 | INFO     | __main__:check_config:51 |    • Ollama: http://localhost:11434
+2026-09-10 19:40:39 | INFO     | __main__:check_config:52 |    • Chroma: http://localhost:8000
+2026-09-10 19:40:39 | INFO     | __main__:check_config:53 |    • Embedding model: mxbai-embed-large
+2026-09-10 19:40:39 | INFO     | __main__:check_config:54 |    • Text model: qwen2.5:7b-instruct-q4_K_M
+2026-09-10 19:40:39 | INFO     | __main__:main:69 | ================================================================================
+2026-09-10 19:40:39 | ERROR    | __main__:main:76 | ❌ Faltan componentes. Ver arriba.
