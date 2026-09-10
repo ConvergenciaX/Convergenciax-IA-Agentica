@@ -1,0 +1,771 @@
+2026-09-05 23:55:01 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-05 23:55:01 | INFO     | __main__:<module>:106 | Smoke test: Initializing components...
+2026-09-05 23:55:18 | INFO     | __main__:<module>:127 | ✓ All components importable
+2026-09-05 23:55:20 | INFO     | __main__:<module>:198 | ✓ Smoke test logging OK
+2026-09-06 01:08:15 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-06 01:08:15 | INFO     | __main__:<module>:106 | Smoke test: Initializing components...
+2026-09-06 01:08:18 | INFO     | __main__:<module>:127 | ✓ All components importable
+2026-09-06 01:08:20 | INFO     | __main__:<module>:198 | ✓ Smoke test logging OK
+2026-09-06 21:42:20 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-06 21:42:21 | INFO     | __main__:main:34 | === DocChat RAG Initialization ===
+2026-09-06 21:42:21 | INFO     | document_processor.file_handler:__init__:23 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-06 21:42:21 | ERROR    | __main__:main:43 | ❌ Failed to initialize components: 1 validation error for OllamaEmbeddings
+show_progress
+  Extra inputs are not permitted [type=extra_forbidden, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.13/v/extra_forbidden
+2026-09-06 21:52:14 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-06 21:52:15 | INFO     | __main__:main:34 | === DocChat RAG Initialization ===
+2026-09-06 21:52:15 | INFO     | document_processor.file_handler:__init__:23 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-06 21:52:15 | ERROR    | __main__:main:43 | ❌ Failed to initialize components: 1 validation error for OllamaEmbeddings
+show_progress
+  Extra inputs are not permitted [type=extra_forbidden, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.13/v/extra_forbidden
+2026-09-06 22:13:54 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-06 22:13:55 | INFO     | __main__:main:34 | === DocChat RAG Initialization ===
+2026-09-06 22:13:55 | INFO     | document_processor.file_handler:__init__:23 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-06 22:13:55 | ERROR    | __main__:main:43 | ❌ Failed to initialize components: 1 validation error for OllamaEmbeddings
+show_progress
+  Extra inputs are not permitted [type=extra_forbidden, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.13/v/extra_forbidden
+2026-09-06 22:19:32 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-06 22:19:32 | INFO     | __main__:main:34 | === DocChat RAG Initialization ===
+2026-09-06 22:19:32 | INFO     | document_processor.file_handler:__init__:23 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-06 22:19:32 | ERROR    | __main__:main:43 | ❌ Failed to initialize components: 1 validation error for OllamaEmbeddings
+show_progress
+  Extra inputs are not permitted [type=extra_forbidden, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.13/v/extra_forbidden
+2026-09-06 22:22:51 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-06 22:22:51 | INFO     | __main__:<module>:106 | Smoke test: Initializing components...
+2026-09-06 22:22:53 | INFO     | __main__:<module>:127 | ✓ All components importable
+2026-09-06 22:22:55 | INFO     | __main__:<module>:199 | ✓ Smoke test logging OK
+2026-09-06 22:30:17 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-06 22:30:17 | INFO     | __main__:main:34 | === DocChat RAG Initialization ===
+2026-09-06 22:30:17 | INFO     | document_processor.file_handler:__init__:23 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-06 22:30:17 | ERROR    | __main__:main:43 | ❌ Failed to initialize components: 1 validation error for OllamaEmbeddings
+show_progress
+  Extra inputs are not permitted [type=extra_forbidden, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.13/v/extra_forbidden
+2026-09-06 22:30:36 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-06 22:30:36 | INFO     | __main__:<module>:106 | Smoke test: Initializing components...
+2026-09-06 22:30:39 | INFO     | __main__:<module>:127 | ✓ All components importable
+2026-09-06 22:30:41 | INFO     | __main__:<module>:199 | ✓ Smoke test logging OK
+2026-09-06 22:31:11 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-06 22:31:11 | INFO     | __main__:main:34 | === DocChat RAG Initialization ===
+2026-09-06 22:31:11 | INFO     | document_processor.file_handler:__init__:23 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-06 22:31:11 | ERROR    | __main__:main:43 | ❌ Failed to initialize components: 1 validation error for OllamaEmbeddings
+show_progress
+  Extra inputs are not permitted [type=extra_forbidden, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.13/v/extra_forbidden
+2026-09-06 22:32:30 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-06 22:32:32 | INFO     | __main__:main:34 | === DocChat RAG Initialization ===
+2026-09-06 22:32:32 | INFO     | document_processor.file_handler:__init__:23 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-06 22:32:32 | ERROR    | __main__:main:43 | ❌ Failed to initialize components: 1 validation error for OllamaEmbeddings
+show_progress
+  Extra inputs are not permitted [type=extra_forbidden, input_value=True, input_type=bool]
+    For further information visit https://errors.pydantic.dev/2.13/v/extra_forbidden
+2026-09-06 22:37:45 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-06 22:37:46 | INFO     | __main__:main:34 | === DocChat RAG Initialization ===
+2026-09-06 22:37:46 | INFO     | document_processor.file_handler:__init__:23 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-06 22:37:47 | INFO     | __main__:main:41 | ✓ All components initialized successfully
+2026-09-06 22:37:47 | INFO     | __main__:main:189 | Launching Gradio server on 127.0.0.1:5020
+2026-09-06 22:40:40 | INFO     | __main__:process_question:145 | Procesando pregunta: cual es el proposito del high traiding
+...
+2026-09-06 22:40:40 | INFO     | __main__:process_question:150 | Construyendo nuevo recuperador para documentos...
+2026-09-06 22:40:40 | INFO     | document_processor.file_handler:process:36 | Processing 1 file(s)
+2026-09-06 22:40:40 | INFO     | document_processor.file_handler:process:54 | Processing file: C:\Users\Joel\AppData\Local\Temp\gradio\5ea7fb326b4f281a874ad33ac69852cb08173e66dba32e4f1ef47af5c96db042\Hilpisch Y. Artificial Intelligence in Finance. A Python-Based Guide 2020.pdf
+2026-09-06 22:53:45 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-06 22:53:46 | INFO     | __main__:main:34 | === DocChat RAG Initialization ===
+2026-09-06 22:53:46 | INFO     | document_processor.file_handler:__init__:23 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-06 22:53:47 | INFO     | __main__:main:41 | ✓ All components initialized successfully
+2026-09-06 22:53:47 | INFO     | __main__:main:189 | Launching Gradio server on 127.0.0.1:5020
+2026-09-06 23:08:44 | INFO     | __main__:process_question:145 | Procesando pregunta: Summarize DeepSeek-R1 model's performance evaluati...
+2026-09-06 23:08:44 | INFO     | __main__:process_question:150 | Construyendo nuevo recuperador para documentos...
+2026-09-06 23:08:44 | INFO     | document_processor.file_handler:process:36 | Processing 1 file(s)
+2026-09-06 23:08:44 | INFO     | document_processor.file_handler:process:54 | Processing file: C:\Users\Joel\AppData\Local\Temp\gradio\dd5825c5ce73c53f5762c5fc79c43fc881623199a810d0d7fb1f11d6af48d730\DeepSeek Technical Report.pdf
+2026-09-06 23:10:27 | INFO     | document_processor.file_handler:process:71 | ✓ Total unique chunks: 29
+2026-09-06 23:10:27 | INFO     | __main__:process_question:154 | Procesados 29 fragmentos de documento
+2026-09-06 23:10:27 | ERROR    | __main__:process_question:177 | Error en procesamiento: Chroma.__init__() got an unexpected keyword argument 'client_type'
+2026-09-06 23:11:45 | INFO     | __main__:process_question:145 | Procesando pregunta: Resumen Python y Finanzas
+...
+2026-09-06 23:11:45 | INFO     | __main__:process_question:150 | Construyendo nuevo recuperador para documentos...
+2026-09-06 23:11:45 | INFO     | document_processor.file_handler:process:36 | Processing 2 file(s)
+2026-09-06 23:11:45 | INFO     | document_processor.file_handler:process:51 | Loading from cache: C:\Users\Joel\AppData\Local\Temp\gradio\dd5825c5ce73c53f5762c5fc79c43fc881623199a810d0d7fb1f11d6af48d730\DeepSeek Technical Report.pdf
+2026-09-06 23:11:45 | INFO     | document_processor.file_handler:process:54 | Processing file: C:\Users\Joel\AppData\Local\Temp\gradio\5ea7fb326b4f281a874ad33ac69852cb08173e66dba32e4f1ef47af5c96db042\Hilpisch Y. Artificial Intelligence in Finance. A Python-Based Guide 2020.pdf
+2026-09-06 23:32:35 | INFO     | document_processor.file_handler:process:71 | ✓ Total unique chunks: 467
+2026-09-06 23:32:35 | INFO     | __main__:process_question:154 | Procesados 467 fragmentos de documento
+2026-09-06 23:32:35 | ERROR    | __main__:process_question:177 | Error en procesamiento: Chroma.__init__() got an unexpected keyword argument 'client_type'
+2026-09-06 23:35:05 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-06 23:35:06 | INFO     | __main__:main:34 | === DocChat RAG Initialization ===
+2026-09-06 23:35:06 | INFO     | document_processor.file_handler:__init__:23 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-06 23:35:07 | INFO     | __main__:main:41 | ✓ All components initialized successfully
+2026-09-06 23:35:07 | INFO     | __main__:main:189 | Launching Gradio server on 127.0.0.1:5020
+2026-09-06 23:36:43 | INFO     | __main__:process_question:145 | Procesando pregunta: Historia de las Finanzas...
+2026-09-06 23:36:43 | INFO     | __main__:process_question:150 | Construyendo nuevo recuperador para documentos...
+2026-09-06 23:36:43 | INFO     | document_processor.file_handler:process:36 | Processing 1 file(s)
+2026-09-06 23:36:43 | INFO     | document_processor.file_handler:process:51 | Loading from cache: C:\Users\Joel\AppData\Local\Temp\gradio\5ea7fb326b4f281a874ad33ac69852cb08173e66dba32e4f1ef47af5c96db042\Hilpisch Y. Artificial Intelligence in Finance. A Python-Based Guide 2020.pdf
+2026-09-06 23:36:43 | INFO     | document_processor.file_handler:process:71 | ✓ Total unique chunks: 439
+2026-09-06 23:36:43 | INFO     | __main__:process_question:154 | Procesados 439 fragmentos de documento
+2026-09-06 23:36:43 | ERROR    | __main__:process_question:177 | Error en procesamiento: Chroma.__init__() got an unexpected keyword argument 'client_type'
+2026-09-06 23:36:51 | INFO     | __main__:process_question:145 | Procesando pregunta: Historia de las Finanzas...
+2026-09-06 23:36:51 | INFO     | __main__:process_question:150 | Construyendo nuevo recuperador para documentos...
+2026-09-06 23:36:51 | INFO     | document_processor.file_handler:process:36 | Processing 1 file(s)
+2026-09-06 23:36:51 | INFO     | document_processor.file_handler:process:51 | Loading from cache: C:\Users\Joel\AppData\Local\Temp\gradio\5ea7fb326b4f281a874ad33ac69852cb08173e66dba32e4f1ef47af5c96db042\Hilpisch Y. Artificial Intelligence in Finance. A Python-Based Guide 2020.pdf
+2026-09-06 23:36:51 | INFO     | document_processor.file_handler:process:71 | ✓ Total unique chunks: 439
+2026-09-06 23:36:51 | INFO     | __main__:process_question:154 | Procesados 439 fragmentos de documento
+2026-09-06 23:36:51 | ERROR    | __main__:process_question:177 | Error en procesamiento: Chroma.__init__() got an unexpected keyword argument 'client_type'
+2026-09-06 23:36:56 | INFO     | __main__:process_question:145 | Procesando pregunta: Retrieve the data center PUE efficiency values in ...
+2026-09-06 23:36:56 | INFO     | __main__:process_question:150 | Construyendo nuevo recuperador para documentos...
+2026-09-06 23:36:56 | INFO     | document_processor.file_handler:process:36 | Processing 1 file(s)
+2026-09-06 23:36:57 | INFO     | document_processor.file_handler:process:54 | Processing file: C:\Users\Joel\AppData\Local\Temp\gradio\493a1d479a2102c817fb0d11c7140284005650a830e4f119e3e5ad129e6e117c\google-2024-environmental-report.pdf
+2026-09-06 23:49:40 | INFO     | document_processor.file_handler:process:71 | ✓ Total unique chunks: 327
+2026-09-06 23:49:40 | INFO     | __main__:process_question:154 | Procesados 327 fragmentos de documento
+2026-09-06 23:49:40 | ERROR    | __main__:process_question:177 | Error en procesamiento: Chroma.__init__() got an unexpected keyword argument 'client_type'
+2026-09-06 23:55:55 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-06 23:55:55 | INFO     | __main__:<module>:106 | Smoke test: Initializing components...
+2026-09-06 23:55:58 | INFO     | __main__:<module>:127 | ✓ All components importable
+2026-09-06 23:56:00 | INFO     | __main__:<module>:199 | ✓ Smoke test logging OK
+2026-09-07 22:33:36 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 22:33:36 | INFO     | __main__:<module>:106 | Smoke test: Initializing components...
+2026-09-07 22:33:40 | INFO     | __main__:<module>:127 | ✓ All components importable
+2026-09-07 22:33:43 | INFO     | __main__:<module>:199 | ✓ Smoke test logging OK
+2026-09-07 22:34:40 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 22:34:40 | INFO     | __main__:<module>:106 | Smoke test: Initializing components...
+2026-09-07 22:34:43 | INFO     | __main__:<module>:127 | ✓ All components importable
+2026-09-07 22:34:43 | INFO     | __main__:<module>:199 | ✓ Smoke test logging OK
+2026-09-07 22:35:41 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 22:35:41 | INFO     | __main__:<module>:106 | Smoke test: Initializing components...
+2026-09-07 22:35:44 | INFO     | __main__:<module>:127 | ✓ All components importable
+2026-09-07 22:35:46 | INFO     | __main__:<module>:199 | ✓ Smoke test logging OK
+2026-09-07 22:41:16 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 22:41:16 | INFO     | __main__:<module>:106 | Smoke test: Initializing components...
+2026-09-07 22:41:18 | INFO     | __main__:<module>:127 | ✓ All components importable
+2026-09-07 22:41:19 | INFO     | __main__:<module>:199 | ✓ Smoke test logging OK
+2026-09-07 22:41:33 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 22:41:34 | INFO     | __main__:main:40 | === DocChat RAG Initialization ===
+2026-09-07 22:41:34 | INFO     | __main__:main:41 | Modo offline: HF_HUB_OFFLINE=1, TRANSFORMERS_OFFLINE=1
+2026-09-07 22:41:34 | INFO     | document_processor.file_handler:__init__:37 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-07 22:41:34 | INFO     | document_processor.file_handler:__init__:38 |   OCR: habilitado
+2026-09-07 22:41:34 | INFO     | document_processor.file_handler:__init__:56 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-07 22:41:34 | INFO     | document_processor.file_handler:__init__:57 | ✓ Docling pipeline configurado para operación offline
+2026-09-07 22:41:35 | INFO     | __main__:main:49 | ✓ All components initialized successfully
+2026-09-07 22:41:35 | INFO     | __main__:main:197 | Launching Gradio server on 127.0.0.1:5020
+2026-09-07 22:42:26 | INFO     | __main__:process_question:153 | Procesando pregunta: Resume la historia de las finanzas
+...
+2026-09-07 22:42:26 | INFO     | __main__:process_question:158 | Construyendo nuevo recuperador para documentos...
+2026-09-07 22:42:26 | INFO     | document_processor.file_handler:process:70 | Processing 1 file(s)
+2026-09-07 22:42:26 | INFO     | document_processor.file_handler:process:85 | Loading from cache: C:\Users\Joel\AppData\Local\Temp\gradio\5ea7fb326b4f281a874ad33ac69852cb08173e66dba32e4f1ef47af5c96db042\Hilpisch Y. Artificial Intelligence in Finance. A Python-Based Guide 2020.pdf
+2026-09-07 22:42:26 | INFO     | document_processor.file_handler:process:105 | ✓ Total unique chunks: 439
+2026-09-07 22:42:26 | INFO     | __main__:process_question:162 | Procesados 439 fragmentos de documento
+2026-09-07 22:42:26 | ERROR    | __main__:process_question:185 | Error en procesamiento: Chroma.__init__() got an unexpected keyword argument 'client_type'
+2026-09-07 22:42:52 | INFO     | __main__:process_question:153 | Procesando pregunta: Summarize DeepSeek-R1 model's performance evaluati...
+2026-09-07 22:42:52 | INFO     | __main__:process_question:158 | Construyendo nuevo recuperador para documentos...
+2026-09-07 22:42:52 | INFO     | document_processor.file_handler:process:70 | Processing 1 file(s)
+2026-09-07 22:42:52 | INFO     | document_processor.file_handler:process:85 | Loading from cache: C:\Users\Joel\AppData\Local\Temp\gradio\dd5825c5ce73c53f5762c5fc79c43fc881623199a810d0d7fb1f11d6af48d730\DeepSeek Technical Report.pdf
+2026-09-07 22:42:52 | INFO     | document_processor.file_handler:process:105 | ✓ Total unique chunks: 29
+2026-09-07 22:42:52 | INFO     | __main__:process_question:162 | Procesados 29 fragmentos de documento
+2026-09-07 22:42:52 | ERROR    | __main__:process_question:185 | Error en procesamiento: Chroma.__init__() got an unexpected keyword argument 'client_type'
+2026-09-07 22:50:54 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 22:50:55 | INFO     | __main__:main:40 | === DocChat RAG Initialization ===
+2026-09-07 22:50:55 | INFO     | __main__:main:41 | Modo offline: HF_HUB_OFFLINE=1, TRANSFORMERS_OFFLINE=1
+2026-09-07 22:50:55 | INFO     | document_processor.file_handler:__init__:37 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-07 22:50:55 | INFO     | document_processor.file_handler:__init__:38 |   OCR: habilitado
+2026-09-07 22:50:55 | INFO     | document_processor.file_handler:__init__:56 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-07 22:50:55 | INFO     | document_processor.file_handler:__init__:57 | ✓ Docling pipeline configurado para operación offline
+2026-09-07 22:50:57 | INFO     | __main__:main:49 | ✓ All components initialized successfully
+2026-09-07 22:50:57 | INFO     | __main__:main:197 | Launching Gradio server on 127.0.0.1:5020
+2026-09-07 22:51:16 | ERROR    | __main__:process_question:185 | Error en procesamiento: La pregunta no puede estar vacía
+2026-09-07 22:52:29 | INFO     | __main__:process_question:153 | Procesando pregunta: resumen la historia de la finanzas
+...
+2026-09-07 22:52:29 | INFO     | __main__:process_question:158 | Construyendo nuevo recuperador para documentos...
+2026-09-07 22:52:29 | INFO     | document_processor.file_handler:process:70 | Processing 1 file(s)
+2026-09-07 22:52:29 | INFO     | document_processor.file_handler:process:85 | Loading from cache: C:\Users\Joel\AppData\Local\Temp\gradio\5ea7fb326b4f281a874ad33ac69852cb08173e66dba32e4f1ef47af5c96db042\Hilpisch Y. Artificial Intelligence in Finance. A Python-Based Guide 2020.pdf
+2026-09-07 22:52:29 | INFO     | document_processor.file_handler:process:105 | ✓ Total unique chunks: 439
+2026-09-07 22:52:29 | INFO     | __main__:process_question:162 | Procesados 439 fragmentos de documento
+2026-09-07 22:52:33 | ERROR    | __main__:process_question:185 | Error en procesamiento: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2026-09-07 22:55:02 | INFO     | __main__:process_question:153 | Procesando pregunta: lista tecnicas de fraude...
+2026-09-07 22:55:02 | INFO     | __main__:process_question:158 | Construyendo nuevo recuperador para documentos...
+2026-09-07 22:55:02 | INFO     | document_processor.file_handler:process:70 | Processing 1 file(s)
+2026-09-07 22:55:02 | INFO     | document_processor.file_handler:process:88 | Processing file: C:\Users\Joel\AppData\Local\Temp\gradio\7991774ae9e7912dabca4746e2757340b599456523586595db0d709bdaebb67a\Fraud Analytics Using Descriptive, Predictive, and Social Network Techniques - Bart Baesens.pdf
+2026-09-07 22:55:04 | ERROR    | document_processor.file_handler:process:102 | Failed to process C:\Users\Joel\AppData\Local\Temp\gradio\7991774ae9e7912dabca4746e2757340b599456523586595db0d709bdaebb67a\Fraud Analytics Using Descriptive, Predictive, and Social Network Techniques - Bart Baesens.pdf: Missing models\easyocr\craft_mlt_25k.pth and downloads disabled
+2026-09-07 22:55:04 | INFO     | document_processor.file_handler:process:105 | ✓ Total unique chunks: 0
+2026-09-07 22:55:04 | INFO     | __main__:process_question:162 | Procesados 0 fragmentos de documento
+2026-09-07 22:55:07 | ERROR    | __main__:process_question:185 | Error en procesamiento: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2026-09-07 22:55:47 | INFO     | __main__:process_question:153 | Procesando pregunta: lista tecnicas de fraude...
+2026-09-07 22:55:47 | INFO     | __main__:process_question:158 | Construyendo nuevo recuperador para documentos...
+2026-09-07 22:55:47 | INFO     | document_processor.file_handler:process:70 | Processing 1 file(s)
+2026-09-07 22:55:47 | INFO     | document_processor.file_handler:process:88 | Processing file: C:\Users\Joel\AppData\Local\Temp\gradio\7991774ae9e7912dabca4746e2757340b599456523586595db0d709bdaebb67a\Fraud Analytics Using Descriptive, Predictive, and Social Network Techniques - Bart Baesens.pdf
+2026-09-07 22:55:47 | ERROR    | document_processor.file_handler:process:102 | Failed to process C:\Users\Joel\AppData\Local\Temp\gradio\7991774ae9e7912dabca4746e2757340b599456523586595db0d709bdaebb67a\Fraud Analytics Using Descriptive, Predictive, and Social Network Techniques - Bart Baesens.pdf: Missing models\easyocr\craft_mlt_25k.pth and downloads disabled
+2026-09-07 22:55:47 | INFO     | document_processor.file_handler:process:105 | ✓ Total unique chunks: 0
+2026-09-07 22:55:47 | INFO     | __main__:process_question:162 | Procesados 0 fragmentos de documento
+2026-09-07 22:55:51 | ERROR    | __main__:process_question:185 | Error en procesamiento: Failed to connect to Ollama. Please check that Ollama is downloaded, running and accessible. https://ollama.com/download
+2026-09-07 22:59:51 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 22:59:51 | INFO     | __main__:main:40 | === DocChat RAG Initialization ===
+2026-09-07 22:59:51 | INFO     | __main__:main:41 | Modo offline: HF_HUB_OFFLINE=1, TRANSFORMERS_OFFLINE=1
+2026-09-07 22:59:51 | INFO     | document_processor.file_handler:__init__:37 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-07 22:59:51 | INFO     | document_processor.file_handler:__init__:38 |   OCR: habilitado
+2026-09-07 22:59:51 | INFO     | document_processor.file_handler:__init__:56 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-07 22:59:51 | INFO     | document_processor.file_handler:__init__:57 | ✓ Docling pipeline configurado para operación offline
+2026-09-07 22:59:53 | INFO     | __main__:main:49 | ✓ All components initialized successfully
+2026-09-07 22:59:53 | INFO     | __main__:main:197 | Launching Gradio server on 127.0.0.1:5020
+2026-09-07 23:00:51 | INFO     | __main__:process_question:153 | Procesando pregunta: Resume las tecnicas de analisis de fraude
+...
+2026-09-07 23:00:51 | INFO     | __main__:process_question:158 | Construyendo nuevo recuperador para documentos...
+2026-09-07 23:00:51 | INFO     | document_processor.file_handler:process:70 | Processing 1 file(s)
+2026-09-07 23:00:51 | INFO     | document_processor.file_handler:process:88 | Processing file: C:\Users\Joel\AppData\Local\Temp\gradio\7991774ae9e7912dabca4746e2757340b599456523586595db0d709bdaebb67a\Fraud Analytics Using Descriptive, Predictive, and Social Network Techniques - Bart Baesens.pdf
+2026-09-07 23:00:51 | ERROR    | document_processor.file_handler:process:102 | Failed to process C:\Users\Joel\AppData\Local\Temp\gradio\7991774ae9e7912dabca4746e2757340b599456523586595db0d709bdaebb67a\Fraud Analytics Using Descriptive, Predictive, and Social Network Techniques - Bart Baesens.pdf: Missing models\easyocr\craft_mlt_25k.pth and downloads disabled
+2026-09-07 23:00:51 | INFO     | document_processor.file_handler:process:105 | ✓ Total unique chunks: 0
+2026-09-07 23:00:51 | INFO     | __main__:process_question:162 | Procesados 0 fragmentos de documento
+2026-09-07 23:01:06 | ERROR    | __main__:process_question:185 | Error en procesamiento: Expected Embeddings to be non-empty list or numpy array, got [] in upsert.
+2026-09-07 23:09:26 | INFO     | __main__:process_question:153 | Procesando pregunta: Resume las tecnicas de analisis de fraude
+...
+2026-09-07 23:09:26 | INFO     | __main__:process_question:158 | Construyendo nuevo recuperador para documentos...
+2026-09-07 23:09:26 | INFO     | document_processor.file_handler:process:70 | Processing 1 file(s)
+2026-09-07 23:09:26 | INFO     | document_processor.file_handler:process:88 | Processing file: C:\Users\Joel\AppData\Local\Temp\gradio\7991774ae9e7912dabca4746e2757340b599456523586595db0d709bdaebb67a\Fraud Analytics Using Descriptive, Predictive, and Social Network Techniques - Bart Baesens.pdf
+2026-09-07 23:09:26 | ERROR    | document_processor.file_handler:process:102 | Failed to process C:\Users\Joel\AppData\Local\Temp\gradio\7991774ae9e7912dabca4746e2757340b599456523586595db0d709bdaebb67a\Fraud Analytics Using Descriptive, Predictive, and Social Network Techniques - Bart Baesens.pdf: Missing models\easyocr\craft_mlt_25k.pth and downloads disabled
+2026-09-07 23:09:26 | INFO     | document_processor.file_handler:process:105 | ✓ Total unique chunks: 0
+2026-09-07 23:09:26 | INFO     | __main__:process_question:162 | Procesados 0 fragmentos de documento
+2026-09-07 23:09:46 | ERROR    | __main__:process_question:185 | Error en procesamiento: Expected Embeddings to be non-empty list or numpy array, got [] in upsert.
+2026-09-07 23:22:51 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 23:22:52 | INFO     | __main__:main:68 | === DocChat RAG Initialization ===
+2026-09-07 23:22:52 | INFO     | __main__:main:69 | Modo offline: HF_HUB_OFFLINE=1, TRANSFORMERS_OFFLINE=1
+2026-09-07 23:22:52 | INFO     | document_processor.file_handler:__init__:38 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-07 23:22:52 | INFO     | document_processor.file_handler:__init__:39 |   OCR: habilitado
+2026-09-07 23:22:52 | INFO     | document_processor.file_handler:__init__:57 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-07 23:22:52 | INFO     | document_processor.file_handler:__init__:58 | ✓ Docling pipeline configurado para operación offline
+2026-09-07 23:22:53 | INFO     | __main__:main:77 | ✓ All components initialized successfully
+2026-09-07 23:22:56 | INFO     | __main__:main:81 | Preflight checks:
+✓ Ollama: OK
+✓ ChromaDB: OK
+2026-09-07 23:22:56 | INFO     | __main__:main:293 | Launching Gradio server on 127.0.0.1:5020
+2026-09-07 23:23:42 | INFO     | __main__:process_question:214 | Procesando pregunta: explique el fraude analitico
+... (archivos: 1, colecciones: 0)
+2026-09-07 23:23:42 | INFO     | __main__:process_question:230 | Construyendo nuevo recuperador...
+2026-09-07 23:23:42 | INFO     | document_processor.file_handler:process:75 | Processing 1 file(s) → una colección por documento
+2026-09-07 23:23:42 | INFO     | document_processor.file_handler:process:93 | Processing file: C:\Users\Joel\AppData\Local\Temp\gradio\7991774ae9e7912dabca4746e2757340b599456523586595db0d709bdaebb67a\Fraud Analytics Using Descriptive, Predictive, and Social Network Techniques - Bart Baesens.pdf
+2026-09-07 23:23:42 | ERROR    | document_processor.file_handler:process:119 | Failed to process C:\Users\Joel\AppData\Local\Temp\gradio\7991774ae9e7912dabca4746e2757340b599456523586595db0d709bdaebb67a\Fraud Analytics Using Descriptive, Predictive, and Social Network Techniques - Bart Baesens.pdf: Missing models\easyocr\craft_mlt_25k.pth and downloads disabled
+2026-09-07 23:23:42 | INFO     | document_processor.file_handler:process:123 | ✓ Indexing 0 document(s) → 0 total chunks
+2026-09-07 23:23:42 | INFO     | __main__:process_question:237 | Procesados 0 documento(s)
+2026-09-07 23:45:47 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 23:45:47 | INFO     | __main__:upload_and_index:92 | 📄 Processing: c:\workspace-vc\LLM\CognitiveClass\convergenciax-langchaint-LLM\04 Agentic RAG\RAG-AgentAI\examples\Financial Theory with Python.pdf
+2026-09-07 23:45:48 | WARNING  | __main__:_extract_title_from_pdf:61 | Could not extract title from PDF: Missing models\easyocr\craft_mlt_25k.pth and downloads disabled. Using filename.
+2026-09-07 23:45:48 | INFO     | __main__:upload_and_index:100 | 📝 Extracted title: Financial Theory with Python
+2026-09-07 23:45:48 | INFO     | __main__:upload_and_index:104 | 🏷️  Collection name: 'financial_theory_with_python'
+2026-09-07 23:45:48 | INFO     | __main__:upload_and_index:108 | 🔄 Processing document...
+2026-09-07 23:45:48 | INFO     | document_processor.file_handler:__init__:38 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-07 23:45:48 | INFO     | document_processor.file_handler:__init__:39 |   OCR: habilitado
+2026-09-07 23:45:48 | INFO     | document_processor.file_handler:__init__:57 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-07 23:45:48 | INFO     | document_processor.file_handler:__init__:58 | ✓ Docling pipeline configurado para operación offline
+2026-09-07 23:45:48 | ERROR    | __main__:upload_and_index:146 | ❌ Failed to index: Missing models\easyocr\craft_mlt_25k.pth and downloads disabled
+2026-09-07 23:46:21 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 23:46:21 | ERROR    | __main__:upload_and_index:89 | File not found: Fraud Analytics Using Descriptive, Predictive, and Social Network Techniques - Bart Baesens.pdf
+2026-09-07 23:46:45 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 23:49:09 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 23:49:09 | INFO     | __main__:list_indexed_documents:18 | 📚 Indexed documents:
+2026-09-07 23:49:50 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 23:49:51 | INFO     | __main__:upload_and_index:92 | 📄 Processing: examples/Financial Theory with Python.pdf
+2026-09-07 23:49:51 | WARNING  | __main__:_extract_title_from_pdf:61 | Could not extract title from PDF: Missing models\easyocr\craft_mlt_25k.pth and downloads disabled. Using filename.
+2026-09-07 23:49:51 | INFO     | __main__:upload_and_index:100 | 📝 Extracted title: Financial Theory with Python
+2026-09-07 23:49:51 | INFO     | __main__:upload_and_index:104 | 🏷️  Collection name: 'financial_theory_with_python'
+2026-09-07 23:49:51 | INFO     | __main__:upload_and_index:108 | 🔄 Processing document...
+2026-09-07 23:49:51 | INFO     | document_processor.file_handler:__init__:38 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-07 23:49:51 | INFO     | document_processor.file_handler:__init__:39 |   OCR: habilitado
+2026-09-07 23:49:51 | INFO     | document_processor.file_handler:__init__:57 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-07 23:49:51 | INFO     | document_processor.file_handler:__init__:58 | ✓ Docling pipeline configurado para operación offline
+2026-09-07 23:49:51 | ERROR    | __main__:upload_and_index:146 | ❌ Failed to index: Missing models\easyocr\craft_mlt_25k.pth and downloads disabled
+2026-09-07 23:51:32 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 23:51:32 | INFO     | __main__:upload_and_index:92 | 📄 Processing: examples/Financial Theory with Python.pdf
+2026-09-07 23:51:32 | WARNING  | __main__:_extract_title_from_pdf:61 | Could not extract title from PDF: 1 validation error for PdfPipelineOptions
+ocr_options
+  Input should be a valid dictionary or object to extract fields from [type=model_attributes_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/model_attributes_type. Using filename.
+2026-09-07 23:51:32 | INFO     | __main__:upload_and_index:100 | 📝 Extracted title: Financial Theory with Python
+2026-09-07 23:51:32 | INFO     | __main__:upload_and_index:104 | 🏷️  Collection name: 'financial_theory_with_python'
+2026-09-07 23:51:32 | INFO     | __main__:upload_and_index:108 | 🔄 Processing document...
+2026-09-07 23:51:32 | INFO     | document_processor.file_handler:__init__:38 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-07 23:51:32 | INFO     | document_processor.file_handler:__init__:39 |   OCR: deshabilitado
+2026-09-07 23:51:32 | ERROR    | __main__:upload_and_index:146 | ❌ Failed to index: 1 validation error for PdfPipelineOptions
+ocr_options
+  Input should be a valid dictionary or object to extract fields from [type=model_attributes_type, input_value=None, input_type=NoneType]
+    For further information visit https://errors.pydantic.dev/2.13/v/model_attributes_type
+2026-09-07 23:53:35 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 23:53:35 | INFO     | __main__:main:57 | ================================================================================
+2026-09-07 23:53:35 | INFO     | __main__:main:58 | 🔧 DIAGNÓSTICO: Verificando que todo está listo para indexar
+2026-09-07 23:53:35 | INFO     | __main__:main:59 | ================================================================================
+2026-09-07 23:53:38 | INFO     | __main__:check_ollama:17 | ✅ Ollama: OK
+2026-09-07 23:53:38 | INFO     | __main__:check_chroma:29 | ✅ ChromaDB: OK
+2026-09-07 23:53:38 | INFO     | __main__:check_docling_models:40 | ✅ Docling models: OK (models\docling)
+2026-09-07 23:53:38 | INFO     | __main__:check_config:49 | ✅ Config:
+2026-09-07 23:53:38 | INFO     | __main__:check_config:50 |    • do_ocr: False
+2026-09-07 23:53:38 | INFO     | __main__:check_config:51 |    • Ollama: http://localhost:11434
+2026-09-07 23:53:38 | INFO     | __main__:check_config:52 |    • Chroma: http://localhost:8000
+2026-09-07 23:53:38 | INFO     | __main__:check_config:53 |    • Embedding model: mxbai-embed-large
+2026-09-07 23:53:38 | INFO     | __main__:check_config:54 |    • Text model: qwen2.5:7b-instruct-q4_K_M
+2026-09-07 23:53:38 | INFO     | __main__:main:69 | ================================================================================
+2026-09-07 23:53:38 | INFO     | __main__:main:72 | ✅ TODO LISTO. Ahora ejecuta:
+2026-09-07 23:53:38 | INFO     | __main__:main:73 |    python scripts/upload_and_index.py 'examples/Financial Theory with Python.pdf'
+2026-09-07 23:54:07 | INFO     | utils.logging:<module>:27 | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+2026-09-07 23:54:10 | INFO     | __main__:upload_and_index:97 | 📄 Processing: examples/Financial Theory with Python.pdf
+2026-09-08 00:02:24 | INFO     | __main__:upload_and_index:105 | 📝 Extracted title: Financial Theory with Python
+2026-09-08 00:02:24 | INFO     | __main__:upload_and_index:109 | 🏷️  Collection name: 'financial_theory_with_python'
+2026-09-08 00:02:24 | INFO     | __main__:upload_and_index:113 | 🔄 Processing document...
+2026-09-08 00:02:24 | INFO     | document_processor.file_handler:__init__:38 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-08 00:02:24 | INFO     | document_processor.file_handler:__init__:39 |   OCR: deshabilitado
+2026-09-08 00:02:24 | INFO     | document_processor.file_handler:__init__:62 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-08 00:02:24 | INFO     | document_processor.file_handler:__init__:63 | ✓ Docling pipeline configurado para operación offline
+2026-09-08 00:06:18 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 00:06:19 | INFO     | __main__:upload_and_index:97 | 📄 Processing: examples/Financial Theory with Python.pdf
+2026-09-08 00:06:19 | WARNING  | __main__:_extract_title_from_pdf:66 | Could not extract title from PDF: Missing models\easyocr\craft_mlt_25k.pth and downloads disabled. Using filename.
+2026-09-08 00:06:19 | INFO     | __main__:upload_and_index:105 | 📝 Extracted title: Financial Theory with Python
+2026-09-08 00:06:19 | INFO     | __main__:upload_and_index:109 | 🏷️  Collection name: 'financial_theory_with_python'
+2026-09-08 00:06:19 | INFO     | __main__:upload_and_index:113 | 🔄 Processing document...
+2026-09-08 00:06:19 | INFO     | document_processor.file_handler:__init__:38 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-08 00:06:19 | INFO     | document_processor.file_handler:__init__:39 |   OCR: habilitado
+2026-09-08 00:06:19 | INFO     | document_processor.file_handler:__init__:62 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-08 00:06:19 | INFO     | document_processor.file_handler:__init__:63 | ✓ Docling pipeline configurado para operación offline
+2026-09-08 00:06:19 | ERROR    | __main__:upload_and_index:151 | ❌ Failed to index: Missing models\easyocr\craft_mlt_25k.pth and downloads disabled
+2026-09-08 00:07:01 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 00:07:01 | INFO     | __main__:upload_and_index:97 | 📄 Processing: examples/Financial Theory with Python.pdf
+2026-09-08 00:11:55 | INFO     | __main__:upload_and_index:105 | 📝 Extracted title: Financial Theory with Python
+2026-09-08 00:11:55 | INFO     | __main__:upload_and_index:109 | 🏷️  Collection name: 'financial_theory_with_python'
+2026-09-08 00:11:55 | INFO     | __main__:upload_and_index:113 | 🔄 Processing document...
+2026-09-08 00:11:55 | INFO     | document_processor.file_handler:__init__:38 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-08 00:11:55 | INFO     | document_processor.file_handler:__init__:39 |   OCR: deshabilitado
+2026-09-08 00:11:55 | INFO     | document_processor.file_handler:__init__:62 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-08 00:11:55 | INFO     | document_processor.file_handler:__init__:63 | ✓ Docling pipeline configurado para operación offline
+2026-09-08 00:16:13 | INFO     | __main__:upload_and_index:128 | ✓ Extracted 199 chunks
+2026-09-08 00:16:13 | INFO     | __main__:upload_and_index:131 | 📚 Indexing in ChromaDB...
+2026-09-08 00:17:29 | INFO     | __main__:upload_and_index:140 | ✅ SUCCESS! Document indexed as: 'financial_theory_with_python'
+2026-09-08 00:17:29 | INFO     | __main__:upload_and_index:141 |    • Chunks: 199
+2026-09-08 00:17:29 | INFO     | __main__:upload_and_index:142 |    • Title: Financial Theory with Python
+2026-09-08 00:17:29 | INFO     | __main__:upload_and_index:143 | 
+🔍 To query this index:
+2026-09-08 00:17:29 | INFO     | __main__:upload_and_index:144 |    python scripts/search_by_title.py query 'financial_theory_with_python' 'your question'
+2026-09-08 00:17:29 | INFO     | __main__:upload_and_index:145 | 
+📋 To list all indexed documents:
+2026-09-08 00:17:29 | INFO     | __main__:upload_and_index:146 |    python scripts/search_by_title.py list
+2026-09-08 00:36:17 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 00:36:17 | INFO     | __main__:list_indexed_documents:18 | 📚 Indexed documents:
+2026-09-08 00:37:01 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 00:37:10 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 00:37:47 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 00:38:03 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 00:38:24 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 00:38:43 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 00:39:00 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 00:39:00 | INFO     | __main__:list_indexed_documents:18 | 📚 Indexed documents:
+2026-09-08 00:39:44 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 00:39:44 | INFO     | __main__:show_document_content:90 | 📖 Content from 'financial_theory_with_python':
+2026-09-08 00:40:29 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 00:40:29 | INFO     | __main__:show_document_content:90 | 📖 Content from 'financial_theory_with_python':
+2026-09-08 00:40:30 | ERROR    | __main__:show_document_content:115 | ❌ Failed to retrieve content: 'charmap' codec can't encode character '\u211d' in position 2245: character maps to <undefined>
+2026-09-08 01:10:24 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 01:10:26 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 01:10:26 | INFO     | __main__:main:57 | ================================================================================
+2026-09-08 01:10:26 | INFO     | __main__:main:58 | 🔧 DIAGNÓSTICO: Verificando que todo está listo para indexar
+2026-09-08 01:10:26 | INFO     | __main__:main:59 | ================================================================================
+2026-09-08 01:10:29 | INFO     | __main__:check_ollama:17 | ✅ Ollama: OK
+2026-09-08 01:10:29 | INFO     | __main__:check_chroma:29 | ✅ ChromaDB: OK
+2026-09-08 01:10:29 | INFO     | __main__:check_docling_models:40 | ✅ Docling models: OK (models\docling)
+2026-09-08 01:10:29 | INFO     | __main__:check_config:49 | ✅ Config:
+2026-09-08 01:10:29 | INFO     | __main__:check_config:50 |    • do_ocr: True
+2026-09-08 01:10:29 | INFO     | __main__:check_config:51 |    • Ollama: http://localhost:11434
+2026-09-08 01:10:29 | INFO     | __main__:check_config:52 |    • Chroma: http://localhost:8000
+2026-09-08 01:10:29 | INFO     | __main__:check_config:53 |    • Embedding model: mxbai-embed-large
+2026-09-08 01:10:29 | INFO     | __main__:check_config:54 |    • Text model: qwen2.5:7b-instruct-q4_K_M
+2026-09-08 01:10:29 | INFO     | __main__:main:69 | ================================================================================
+2026-09-08 01:10:29 | INFO     | __main__:main:72 | ✅ TODO LISTO. Ahora ejecuta:
+2026-09-08 01:10:29 | INFO     | __main__:main:73 |    python scripts/upload_and_index.py 'examples/Financial Theory with Python.pdf'
+2026-09-08 01:10:55 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 01:10:56 | INFO     | __main__:upload_and_index:97 | 📄 Processing: examples/Financial Theory with Python.pdf
+2026-09-08 01:10:56 | WARNING  | __main__:_extract_title_from_pdf:66 | Could not extract title from PDF: Missing models\easyocr\craft_mlt_25k.pth and downloads disabled. Using filename.
+2026-09-08 01:10:56 | INFO     | __main__:upload_and_index:105 | 📝 Extracted title: Financial Theory with Python
+2026-09-08 01:10:56 | INFO     | __main__:upload_and_index:109 | 🏷️  Collection name: 'financial_theory_with_python'
+2026-09-08 01:10:56 | INFO     | __main__:upload_and_index:113 | 🔄 Processing document...
+2026-09-08 01:10:56 | INFO     | document_processor.file_handler:__init__:38 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-08 01:10:56 | INFO     | document_processor.file_handler:__init__:39 |   OCR: habilitado
+2026-09-08 01:10:56 | INFO     | document_processor.file_handler:__init__:62 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-08 01:10:56 | INFO     | document_processor.file_handler:__init__:63 | ✓ Docling pipeline configurado para operación offline
+2026-09-08 01:10:56 | ERROR    | __main__:upload_and_index:151 | ❌ Failed to index: Missing models\easyocr\craft_mlt_25k.pth and downloads disabled
+2026-09-08 01:11:00 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 01:11:00 | INFO     | __main__:main:57 | ================================================================================
+2026-09-08 01:11:00 | INFO     | __main__:main:58 | 🔧 DIAGNÓSTICO: Verificando que todo está listo para indexar
+2026-09-08 01:11:00 | INFO     | __main__:main:59 | ================================================================================
+2026-09-08 01:11:02 | INFO     | __main__:check_ollama:17 | ✅ Ollama: OK
+2026-09-08 01:11:02 | INFO     | __main__:check_chroma:29 | ✅ ChromaDB: OK
+2026-09-08 01:11:02 | INFO     | __main__:check_docling_models:40 | ✅ Docling models: OK (models\docling)
+2026-09-08 01:11:02 | INFO     | __main__:check_config:49 | ✅ Config:
+2026-09-08 01:11:02 | INFO     | __main__:check_config:50 |    • do_ocr: True
+2026-09-08 01:11:02 | INFO     | __main__:check_config:51 |    • Ollama: http://localhost:11434
+2026-09-08 01:11:02 | INFO     | __main__:check_config:52 |    • Chroma: http://localhost:8000
+2026-09-08 01:11:02 | INFO     | __main__:check_config:53 |    • Embedding model: mxbai-embed-large
+2026-09-08 01:11:02 | INFO     | __main__:check_config:54 |    • Text model: qwen2.5:7b-instruct-q4_K_M
+2026-09-08 01:11:02 | INFO     | __main__:main:69 | ================================================================================
+2026-09-08 01:11:02 | INFO     | __main__:main:72 | ✅ TODO LISTO. Ahora ejecuta:
+2026-09-08 01:11:02 | INFO     | __main__:main:73 |    python scripts/upload_and_index.py 'examples/Financial Theory with Python.pdf'
+2026-09-08 01:11:09 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 01:11:09 | INFO     | __main__:<module>:52 | ================================================================================
+2026-09-08 01:11:09 | INFO     | __main__:<module>:53 | 🔧 Descargando modelos de EasyOCR para OCR offline
+2026-09-08 01:11:09 | INFO     | __main__:<module>:54 | ================================================================================
+2026-09-08 01:11:13 | INFO     | __main__:download_easyocr_models:19 | 📥 Descargando modelos de EasyOCR...
+2026-09-08 01:11:13 | INFO     | __main__:download_easyocr_models:20 |    Destino: models\easyocr
+2026-09-08 01:11:13 | INFO     | __main__:download_easyocr_models:21 |    Esto puede tomar 5-10 minutos la primera vez...
+2026-09-08 01:11:21 | INFO     | __main__:download_easyocr_models:30 | ✅ Modelos de EasyOCR descargados exitosamente en: models\easyocr
+2026-09-08 01:11:21 | INFO     | __main__:download_easyocr_models:34 |    Total de archivos descargados: 2
+2026-09-08 01:11:21 | INFO     | __main__:download_easyocr_models:36 |      • craft_mlt_25k.pth
+2026-09-08 01:11:21 | INFO     | __main__:download_easyocr_models:36 |      • latin_g2.pth
+2026-09-08 01:11:21 | INFO     | __main__:download_easyocr_models:40 | 
+✅ SUCCESS! Ahora puedes usar OCR en modo offline.
+2026-09-08 01:11:21 | INFO     | __main__:download_easyocr_models:41 |    Cambia en config.ini: do_ocr = true
+2026-09-08 01:11:21 | INFO     | __main__:download_easyocr_models:42 |    Y reinicia la app para usar OCR con imágenes.
+
+2026-09-08 01:11:21 | INFO     | __main__:<module>:58 | ================================================================================
+2026-09-08 01:11:35 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 01:11:35 | INFO     | __main__:main:57 | ================================================================================
+2026-09-08 01:11:35 | INFO     | __main__:main:58 | 🔧 DIAGNÓSTICO: Verificando que todo está listo para indexar
+2026-09-08 01:11:35 | INFO     | __main__:main:59 | ================================================================================
+2026-09-08 01:11:37 | INFO     | __main__:check_ollama:17 | ✅ Ollama: OK
+2026-09-08 01:11:37 | INFO     | __main__:check_chroma:29 | ✅ ChromaDB: OK
+2026-09-08 01:11:37 | INFO     | __main__:check_docling_models:40 | ✅ Docling models: OK (models\docling)
+2026-09-08 01:11:37 | INFO     | __main__:check_config:49 | ✅ Config:
+2026-09-08 01:11:37 | INFO     | __main__:check_config:50 |    • do_ocr: True
+2026-09-08 01:11:37 | INFO     | __main__:check_config:51 |    • Ollama: http://localhost:11434
+2026-09-08 01:11:37 | INFO     | __main__:check_config:52 |    • Chroma: http://localhost:8000
+2026-09-08 01:11:37 | INFO     | __main__:check_config:53 |    • Embedding model: mxbai-embed-large
+2026-09-08 01:11:37 | INFO     | __main__:check_config:54 |    • Text model: qwen2.5:7b-instruct-q4_K_M
+2026-09-08 01:11:37 | INFO     | __main__:main:69 | ================================================================================
+2026-09-08 01:11:37 | INFO     | __main__:main:72 | ✅ TODO LISTO. Ahora ejecuta:
+2026-09-08 01:11:37 | INFO     | __main__:main:73 |    python scripts/upload_and_index.py 'examples/Financial Theory with Python.pdf'
+2026-09-08 01:12:06 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 01:12:07 | INFO     | __main__:upload_and_index:97 | 📄 Processing: examples/Financial Theory with Python.pdf
+2026-09-08 01:12:44 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 01:12:44 | INFO     | __main__:list_indexed_documents:18 | 📚 Indexed documents:
+2026-09-08 01:14:15 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 01:14:25 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 01:14:26 | INFO     | __main__:list_indexed_documents:18 | 📚 Indexed documents:
+2026-09-08 01:20:24 | INFO     | __main__:upload_and_index:105 | 📝 Extracted title: Financial Theory with Python
+2026-09-08 01:20:24 | INFO     | __main__:upload_and_index:109 | 🏷️  Collection name: 'financial_theory_with_python'
+2026-09-08 01:20:24 | INFO     | __main__:upload_and_index:113 | 🔄 Processing document...
+2026-09-08 01:20:24 | INFO     | document_processor.file_handler:__init__:38 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-08 01:20:24 | INFO     | document_processor.file_handler:__init__:39 |   OCR: habilitado
+2026-09-08 01:20:24 | INFO     | document_processor.file_handler:__init__:62 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-08 01:20:24 | INFO     | document_processor.file_handler:__init__:63 | ✓ Docling pipeline configurado para operación offline
+2026-09-08 22:16:24 | INFO     | __main__:upload_and_index:128 | ✓ Extracted 199 chunks
+2026-09-08 22:16:24 | INFO     | __main__:upload_and_index:131 | 📚 Indexing in ChromaDB...
+2026-09-08 22:16:32 | INFO     | __main__:upload_and_index:140 | ✅ SUCCESS! Document indexed as: 'financial_theory_with_python'
+2026-09-08 22:16:32 | INFO     | __main__:upload_and_index:141 |    • Chunks: 199
+2026-09-08 22:16:32 | INFO     | __main__:upload_and_index:142 |    • Title: Financial Theory with Python
+2026-09-08 22:16:32 | INFO     | __main__:upload_and_index:143 | 
+🔍 To query this index:
+2026-09-08 22:16:32 | INFO     | __main__:upload_and_index:144 |    python scripts/search_by_title.py query 'financial_theory_with_python' 'your question'
+2026-09-08 22:16:32 | INFO     | __main__:upload_and_index:145 | 
+📋 To list all indexed documents:
+2026-09-08 22:16:32 | INFO     | __main__:upload_and_index:146 |    python scripts/search_by_title.py list
+2026-09-08 23:54:21 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-08 23:54:22 | INFO     | __main__:main:68 | === DocChat RAG Initialization ===
+2026-09-08 23:54:22 | INFO     | __main__:main:69 | Modo offline: HF_HUB_OFFLINE=1, TRANSFORMERS_OFFLINE=1
+2026-09-08 23:54:22 | INFO     | document_processor.file_handler:__init__:38 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-08 23:54:22 | INFO     | document_processor.file_handler:__init__:39 |   OCR: habilitado
+2026-09-08 23:54:22 | INFO     | document_processor.file_handler:__init__:61 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-08 23:54:22 | INFO     | document_processor.file_handler:__init__:62 | ✓ Docling pipeline configurado para operación offline
+2026-09-08 23:54:25 | INFO     | __main__:main:77 | ✓ All components initialized successfully
+2026-09-08 23:54:27 | INFO     | __main__:main:81 | Preflight checks:
+✓ Ollama: OK
+✓ ChromaDB: OK
+2026-09-09 22:03:12 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-09 22:03:13 | INFO     | __main__:main:68 | === DocChat RAG Initialization ===
+2026-09-09 22:03:13 | INFO     | __main__:main:69 | Modo offline: HF_HUB_OFFLINE=1, TRANSFORMERS_OFFLINE=1
+2026-09-09 22:03:13 | INFO     | document_processor.file_handler:__init__:38 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-09 22:03:13 | INFO     | document_processor.file_handler:__init__:39 |   OCR: habilitado
+2026-09-09 22:03:13 | INFO     | document_processor.file_handler:__init__:61 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-09 22:03:13 | INFO     | document_processor.file_handler:__init__:62 | ✓ Docling pipeline configurado para operación offline
+2026-09-09 22:03:15 | INFO     | __main__:main:77 | ✓ All components initialized successfully
+2026-09-09 22:03:17 | INFO     | __main__:main:81 | Preflight checks:
+✓ Ollama: OK
+✓ ChromaDB: OK
+2026-09-09 22:03:17 | INFO     | __main__:main:369 | Launching Gradio server on 127.0.0.1:5020
+2026-09-09 22:09:53 | INFO     | __main__:process_question:239 | Procesando pregunta: principales tecnicas de analisis de fraude?
+... (archivos: 1, colecciones: 0)
+2026-09-09 22:09:53 | INFO     | __main__:process_question:255 | Construyendo nuevo recuperador...
+2026-09-09 22:09:53 | INFO     | document_processor.file_handler:process:79 | Processing 1 file(s) → una colección por documento
+2026-09-09 22:09:53 | DEBUG    | document_processor.file_handler:validate_files:71 | ✓ File validation passed (total: 10.4MB)
+2026-09-09 22:09:53 | INFO     | document_processor.file_handler:process:97 | Processing file: C:\Users\Joel\AppData\Local\Temp\gradio\7991774ae9e7912dabca4746e2757340b599456523586595db0d709bdaebb67a\Fraud Analytics Using Descriptive, Predictive, and Social Network Techniques - Bart Baesens.pdf
+2026-09-09 22:10:29 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'financial_theory_with_python']
+2026-09-09 22:10:30 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'financial_theory_with_python']
+2026-09-09 22:16:38 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'financial_theory_with_python']
+2026-09-09 22:16:42 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'financial_theory_with_python']
+2026-09-09 22:16:42 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'financial_theory_with_python']
+2026-09-09 22:16:42 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'financial_theory_with_python']
+2026-09-09 22:16:43 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'financial_theory_with_python']
+2026-09-09 22:16:43 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'financial_theory_with_python']
+2026-09-09 22:16:43 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'financial_theory_with_python']
+2026-09-09 22:16:43 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'financial_theory_with_python']
+2026-09-09 22:16:43 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'financial_theory_with_python']
+2026-09-09 22:16:43 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'financial_theory_with_python']
+2026-09-09 22:16:44 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'financial_theory_with_python']
+2026-09-09 22:16:56 | INFO     | __main__:refresh_collections_ui:216 | Colecciones actualizadas: ['rag_agentai_documents', 'financial_theory_with_python']
+2026-09-09 22:27:31 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'financial_theory_with_python']
+2026-09-09 22:43:06 | INFO     | document_processor.file_handler:process:120 |   → C:\Users\Joel\AppData\Local\Temp\gradio\7991774ae9e7912dabca4746e2757340b599456523586595db0d709bdaebb67a\Fraud Analytics Using Descriptive, Predictive, and Social Network Techniques - Bart Baesens.pdf: 228 chunks → collection 'cusersjoelappdatalocaltempgradio7991774a_4e81a279'
+2026-09-09 22:43:06 | INFO     | document_processor.file_handler:process:127 | ✓ Indexing 1 document(s) → 228 total chunks
+2026-09-09 22:43:06 | INFO     | __main__:process_question:262 | Procesados 1 documento(s)
+2026-09-09 22:43:31 | INFO     | __main__:process_question:282 | ✓ Recuperador híbrido construido
+2026-09-09 22:43:31 | INFO     | __main__:process_question:297 | Iniciando pipeline RAG agéntico...
+2026-09-09 22:44:10 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 22:44:16 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 22:44:17 | INFO     | __main__:refresh_explore:360 | Documentos actualizados: ['rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 22:44:47 | INFO     | __main__:process_question:302 | ✓ Pipeline completado
+2026-09-09 23:09:14 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-09 23:09:18 | INFO     | __main__:main:69 | === DocChat RAG Initialization ===
+2026-09-09 23:09:18 | INFO     | __main__:main:70 | Modo offline: HF_HUB_OFFLINE=1, TRANSFORMERS_OFFLINE=1
+2026-09-09 23:09:18 | INFO     | document_processor.file_handler:__init__:46 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-09 23:09:18 | INFO     | document_processor.file_handler:__init__:47 |   OCR: habilitado
+2026-09-09 23:09:18 | INFO     | document_processor.file_handler:__init__:71 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-09 23:09:18 | INFO     | document_processor.file_handler:__init__:72 | ✓ Docling pipeline configurado para operación offline
+2026-09-09 23:09:23 | INFO     | __main__:main:78 | ✓ All components initialized successfully
+2026-09-09 23:09:25 | INFO     | __main__:main:82 | Preflight checks:
+✓ Ollama: OK
+✓ ChromaDB: OK
+2026-09-09 23:09:26 | INFO     | __main__:main:663 | Launching Gradio server on 127.0.0.1:5020
+2026-09-09 23:09:49 | INFO     | __main__:refresh_explore:456 | Documentos actualizados: ['rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:10:13 | INFO     | __main__:process_collection_query:479 | Usando TODAS las colecciones: ['rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:10:13 | INFO     | __main__:process_collection_query:486 | Pregunta: resume el uso de python en analisis financiero
+...
+2026-09-09 23:10:14 | INFO     | __main__:process_collection_query:494 | ✓ Recuperador construido desde colecciones existentes
+2026-09-09 23:10:14 | INFO     | __main__:process_collection_query:499 | Iniciando pipeline RAG...
+2026-09-09 23:10:23 | INFO     | __main__:process_collection_query:504 | ✓ Pipeline completado
+2026-09-09 23:10:34 | INFO     | __main__:process_collection_query:479 | Usando TODAS las colecciones: ['rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:10:34 | INFO     | __main__:process_collection_query:486 | Pregunta: resume el uso de python en analisis financiero
+...
+2026-09-09 23:10:34 | INFO     | __main__:process_collection_query:494 | ✓ Recuperador construido desde colecciones existentes
+2026-09-09 23:10:34 | INFO     | __main__:process_collection_query:499 | Iniciando pipeline RAG...
+2026-09-09 23:10:41 | INFO     | __main__:process_collection_query:504 | ✓ Pipeline completado
+2026-09-09 23:10:52 | INFO     | __main__:process_collection_query:479 | Usando TODAS las colecciones: ['rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:10:52 | INFO     | __main__:process_collection_query:486 | Pregunta: resume el uso de python en analisis financiero
+...
+2026-09-09 23:10:52 | INFO     | __main__:process_collection_query:494 | ✓ Recuperador construido desde colecciones existentes
+2026-09-09 23:10:52 | INFO     | __main__:process_collection_query:499 | Iniciando pipeline RAG...
+2026-09-09 23:10:58 | INFO     | __main__:process_collection_query:504 | ✓ Pipeline completado
+2026-09-09 23:11:09 | INFO     | __main__:refresh_explore:456 | Documentos actualizados: ['rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:11:39 | INFO     | __main__:process_collection_query:479 | Usando TODAS las colecciones: ['rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:11:39 | INFO     | __main__:process_collection_query:486 | Pregunta: tell me a summary about FRAUD ANALYTICS
+...
+2026-09-09 23:11:39 | INFO     | __main__:process_collection_query:494 | ✓ Recuperador construido desde colecciones existentes
+2026-09-09 23:11:39 | INFO     | __main__:process_collection_query:499 | Iniciando pipeline RAG...
+2026-09-09 23:11:53 | INFO     | __main__:process_collection_query:504 | ✓ Pipeline completado
+2026-09-09 23:12:30 | INFO     | __main__:process_collection_query:479 | Usando TODAS las colecciones: ['rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:12:30 | INFO     | __main__:process_collection_query:486 | Pregunta: tell me a summary about FRAUD ANALYTICS
+...
+2026-09-09 23:12:30 | INFO     | __main__:process_collection_query:494 | ✓ Recuperador construido desde colecciones existentes
+2026-09-09 23:12:30 | INFO     | __main__:process_collection_query:499 | Iniciando pipeline RAG...
+2026-09-09 23:12:36 | INFO     | __main__:process_collection_query:504 | ✓ Pipeline completado
+2026-09-09 23:12:53 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-09 23:12:53 | INFO     | __main__:list_indexed_documents:18 | 📚 Indexed documents:
+2026-09-09 23:14:11 | INFO     | __main__:refresh_explore:456 | Documentos actualizados: ['rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:14:26 | INFO     | __main__:process_question:335 | Procesando pregunta: Summarize DeepSeek-R1 model's performance evaluati... (archivos: 1, colecciones: 0)
+2026-09-09 23:14:26 | INFO     | __main__:process_question:351 | Construyendo nuevo recuperador...
+2026-09-09 23:14:26 | INFO     | document_processor.file_handler:process:89 | Processing 1 file(s) → una colección por documento
+2026-09-09 23:14:26 | DEBUG    | document_processor.file_handler:validate_files:81 | ✓ File validation passed (total: 1.3MB)
+2026-09-09 23:14:26 | INFO     | document_processor.file_handler:process:104 | Loading from cache: C:\Users\Joel\AppData\Local\Temp\gradio\dd5825c5ce73c53f5762c5fc79c43fc881623199a810d0d7fb1f11d6af48d730\DeepSeek Technical Report.pdf
+2026-09-09 23:14:26 | INFO     | document_processor.file_handler:process:130 |   → C:\Users\Joel\AppData\Local\Temp\gradio\dd5825c5ce73c53f5762c5fc79c43fc881623199a810d0d7fb1f11d6af48d730\DeepSeek Technical Report.pdf: 29 chunks → collection 'cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a'
+2026-09-09 23:14:26 | INFO     | document_processor.file_handler:process:137 | ✓ Indexing 1 document(s) → 29 total chunks
+2026-09-09 23:14:26 | INFO     | __main__:process_question:358 | Procesados 1 documento(s)
+2026-09-09 23:15:18 | INFO     | __main__:process_question:335 | Procesando pregunta: Summarize DeepSeek-R1 model's performance evaluati... (archivos: 1, colecciones: 0)
+2026-09-09 23:15:18 | INFO     | __main__:process_question:351 | Construyendo nuevo recuperador...
+2026-09-09 23:15:18 | INFO     | document_processor.file_handler:process:89 | Processing 1 file(s) → una colección por documento
+2026-09-09 23:15:18 | DEBUG    | document_processor.file_handler:validate_files:81 | ✓ File validation passed (total: 1.3MB)
+2026-09-09 23:15:18 | INFO     | document_processor.file_handler:process:104 | Loading from cache: C:\Users\Joel\AppData\Local\Temp\gradio\dd5825c5ce73c53f5762c5fc79c43fc881623199a810d0d7fb1f11d6af48d730\DeepSeek Technical Report.pdf
+2026-09-09 23:15:18 | INFO     | document_processor.file_handler:process:130 |   → C:\Users\Joel\AppData\Local\Temp\gradio\dd5825c5ce73c53f5762c5fc79c43fc881623199a810d0d7fb1f11d6af48d730\DeepSeek Technical Report.pdf: 29 chunks → collection 'cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a'
+2026-09-09 23:15:18 | INFO     | document_processor.file_handler:process:137 | ✓ Indexing 1 document(s) → 29 total chunks
+2026-09-09 23:15:18 | INFO     | __main__:process_question:358 | Procesados 1 documento(s)
+2026-09-09 23:15:35 | INFO     | __main__:process_question:335 | Procesando pregunta: Summarize DeepSeek-R1 model's performance evaluati... (archivos: 1, colecciones: 1)
+2026-09-09 23:15:35 | INFO     | __main__:process_question:351 | Construyendo nuevo recuperador...
+2026-09-09 23:15:35 | INFO     | document_processor.file_handler:process:89 | Processing 1 file(s) → una colección por documento
+2026-09-09 23:15:35 | DEBUG    | document_processor.file_handler:validate_files:81 | ✓ File validation passed (total: 1.3MB)
+2026-09-09 23:15:35 | INFO     | document_processor.file_handler:process:104 | Loading from cache: C:\Users\Joel\AppData\Local\Temp\gradio\dd5825c5ce73c53f5762c5fc79c43fc881623199a810d0d7fb1f11d6af48d730\DeepSeek Technical Report.pdf
+2026-09-09 23:15:35 | INFO     | document_processor.file_handler:process:130 |   → C:\Users\Joel\AppData\Local\Temp\gradio\dd5825c5ce73c53f5762c5fc79c43fc881623199a810d0d7fb1f11d6af48d730\DeepSeek Technical Report.pdf: 29 chunks → collection 'cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a'
+2026-09-09 23:15:35 | INFO     | document_processor.file_handler:process:137 | ✓ Indexing 1 document(s) → 29 total chunks
+2026-09-09 23:15:35 | INFO     | __main__:process_question:358 | Procesados 1 documento(s)
+2026-09-09 23:18:22 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-09 23:18:23 | INFO     | __main__:main:76 | === DocChat RAG Initialization ===
+2026-09-09 23:18:23 | INFO     | __main__:main:77 | Modo offline: HF_HUB_OFFLINE=1, TRANSFORMERS_OFFLINE=1
+2026-09-09 23:18:23 | INFO     | document_processor.file_handler:__init__:46 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-09 23:18:23 | INFO     | document_processor.file_handler:__init__:47 |   OCR: habilitado
+2026-09-09 23:18:23 | INFO     | document_processor.file_handler:__init__:71 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-09 23:18:23 | INFO     | document_processor.file_handler:__init__:72 | ✓ Docling pipeline configurado para operación offline
+2026-09-09 23:18:26 | INFO     | __main__:main:85 | ✓ All components initialized successfully
+2026-09-09 23:18:28 | INFO     | __main__:main:89 | Preflight checks:
+✓ Ollama: OK
+✓ ChromaDB: OK (v2)
+2026-09-09 23:18:29 | INFO     | __main__:main:670 | Launching Gradio server on 127.0.0.1:5020
+2026-09-09 23:22:11 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 4 collections, 428 chunks
+2026-09-09 23:22:52 | INFO     | __main__:index_from_explore:590 | Indexando 1 doc(s) desde Explorar tab
+2026-09-09 23:22:52 | INFO     | __main__:index_from_explore:591 |   OCR override: True, Custom title: ''
+2026-09-09 23:22:52 | INFO     | document_processor.file_handler:__init__:46 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-09 23:22:52 | INFO     | document_processor.file_handler:__init__:47 |   OCR: habilitado
+2026-09-09 23:22:52 | INFO     | document_processor.file_handler:__init__:49 |   (OCR override: True, config.ini: True)
+2026-09-09 23:22:52 | INFO     | document_processor.file_handler:__init__:71 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-09 23:22:52 | INFO     | document_processor.file_handler:__init__:72 | ✓ Docling pipeline configurado para operación offline
+2026-09-09 23:22:52 | INFO     | document_processor.file_handler:process:89 | Processing 1 file(s) → una colección por documento
+2026-09-09 23:22:52 | DEBUG    | document_processor.file_handler:validate_files:81 | ✓ File validation passed (total: 1.6MB)
+2026-09-09 23:22:52 | INFO     | document_processor.file_handler:process:107 | Processing file: C:\Users\Joel\AppData\Local\Temp\gradio\a2180a3bbd34d7f2a345b50599cbe95fc7fce81b4cce1ccffbaa0b09c4a68296\BBVA-OpenMind-Gobernanza-y-gestion-del-cambio-en-la-empresa-del-siglo-xxi-William-M-Klepper.pdf.pdf
+2026-09-09 23:23:01 | INFO     | __main__:refresh_explore:463 | Documentos actualizados: ['cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a', 'rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:23:19 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 4 collections, 428 chunks
+2026-09-09 23:23:20 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 4 collections, 428 chunks
+2026-09-09 23:23:21 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 4 collections, 428 chunks
+2026-09-09 23:23:22 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 4 collections, 428 chunks
+2026-09-09 23:23:23 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 4 collections, 428 chunks
+2026-09-09 23:23:23 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 4 collections, 428 chunks
+2026-09-09 23:23:23 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 4 collections, 428 chunks
+2026-09-09 23:23:23 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 4 collections, 428 chunks
+2026-09-09 23:23:24 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 4 collections, 428 chunks
+2026-09-09 23:23:24 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 4 collections, 428 chunks
+2026-09-09 23:23:24 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 4 collections, 428 chunks
+2026-09-09 23:23:24 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 4 collections, 428 chunks
+2026-09-09 23:23:25 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 4 collections, 428 chunks
+2026-09-09 23:23:25 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 4 collections, 428 chunks
+2026-09-09 23:23:50 | INFO     | document_processor.file_handler:process:130 |   → C:\Users\Joel\AppData\Local\Temp\gradio\a2180a3bbd34d7f2a345b50599cbe95fc7fce81b4cce1ccffbaa0b09c4a68296\BBVA-OpenMind-Gobernanza-y-gestion-del-cambio-en-la-empresa-del-siglo-xxi-William-M-Klepper.pdf.pdf: 92 chunks → collection 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21'
+2026-09-09 23:23:50 | INFO     | document_processor.file_handler:process:137 | ✓ Indexing 1 document(s) → 92 total chunks
+2026-09-09 23:24:01 | INFO     | __main__:index_from_explore:629 | ✓ Indexados 1 colección(es)
+2026-09-09 23:24:05 | INFO     | __main__:index_from_explore:590 | Indexando 1 doc(s) desde Explorar tab
+2026-09-09 23:24:05 | INFO     | __main__:index_from_explore:591 |   OCR override: True, Custom title: 'BBVA-OpenMind-Gobernanza-y-gestion-del-cambio-en-la-empresa-del-siglo-xxi'
+2026-09-09 23:24:05 | INFO     | document_processor.file_handler:__init__:46 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-09 23:24:05 | INFO     | document_processor.file_handler:__init__:47 |   OCR: habilitado
+2026-09-09 23:24:05 | INFO     | document_processor.file_handler:__init__:49 |   (OCR override: True, config.ini: True)
+2026-09-09 23:24:05 | INFO     | document_processor.file_handler:__init__:71 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-09 23:24:05 | INFO     | document_processor.file_handler:__init__:72 | ✓ Docling pipeline configurado para operación offline
+2026-09-09 23:24:05 | INFO     | document_processor.file_handler:process:89 | Processing 1 file(s) → una colección por documento
+2026-09-09 23:24:05 | DEBUG    | document_processor.file_handler:validate_files:81 | ✓ File validation passed (total: 1.6MB)
+2026-09-09 23:24:05 | INFO     | document_processor.file_handler:process:104 | Loading from cache: C:\Users\Joel\AppData\Local\Temp\gradio\a2180a3bbd34d7f2a345b50599cbe95fc7fce81b4cce1ccffbaa0b09c4a68296\BBVA-OpenMind-Gobernanza-y-gestion-del-cambio-en-la-empresa-del-siglo-xxi-William-M-Klepper.pdf.pdf
+2026-09-09 23:24:05 | INFO     | document_processor.file_handler:process:130 |   → C:\Users\Joel\AppData\Local\Temp\gradio\a2180a3bbd34d7f2a345b50599cbe95fc7fce81b4cce1ccffbaa0b09c4a68296\BBVA-OpenMind-Gobernanza-y-gestion-del-cambio-en-la-empresa-del-siglo-xxi-William-M-Klepper.pdf.pdf: 92 chunks → collection 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21'
+2026-09-09 23:24:05 | INFO     | document_processor.file_handler:process:137 | ✓ Indexing 1 document(s) → 92 total chunks
+2026-09-09 23:24:05 | INFO     | __main__:index_from_explore:617 |   Renombrando colección: 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21' → 'bbva_openmind_gobernanza_y_gestion_del_cambio_en_la_empresa_'
+2026-09-09 23:24:05 | ERROR    | __main__:index_from_explore:655 | Error en index_from_explore: Validation error: name: Expected a name containing 3-512 characters from [a-zA-Z0-9._-], starting and ending with a character in [a-zA-Z0-9]. Got: bbva_openmind_gobernanza_y_gestion_del_cambio_en_la_empresa_
+2026-09-09 23:24:11 | INFO     | __main__:refresh_explore:463 | Documentos actualizados: ['cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a', 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21', 'rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:24:17 | INFO     | __main__:refresh_query_collections:522 | Colecciones disponibles: ['cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a', 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21', 'rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:24:27 | INFO     | __main__:index_from_explore:590 | Indexando 1 doc(s) desde Explorar tab
+2026-09-09 23:24:27 | INFO     | __main__:index_from_explore:591 |   OCR override: True, Custom title: 'BBVA-OpenMind-Gobernanza-y-gestion-del-cambio-en-la-empresa-del-siglo-xxi'
+2026-09-09 23:24:27 | INFO     | document_processor.file_handler:__init__:46 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-09 23:24:27 | INFO     | document_processor.file_handler:__init__:47 |   OCR: habilitado
+2026-09-09 23:24:27 | INFO     | document_processor.file_handler:__init__:49 |   (OCR override: True, config.ini: True)
+2026-09-09 23:24:27 | INFO     | document_processor.file_handler:__init__:71 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-09 23:24:27 | INFO     | document_processor.file_handler:__init__:72 | ✓ Docling pipeline configurado para operación offline
+2026-09-09 23:24:27 | INFO     | document_processor.file_handler:process:89 | Processing 1 file(s) → una colección por documento
+2026-09-09 23:24:27 | DEBUG    | document_processor.file_handler:validate_files:81 | ✓ File validation passed (total: 1.6MB)
+2026-09-09 23:24:27 | INFO     | document_processor.file_handler:process:104 | Loading from cache: C:\Users\Joel\AppData\Local\Temp\gradio\a2180a3bbd34d7f2a345b50599cbe95fc7fce81b4cce1ccffbaa0b09c4a68296\BBVA-OpenMind-Gobernanza-y-gestion-del-cambio-en-la-empresa-del-siglo-xxi-William-M-Klepper.pdf.pdf
+2026-09-09 23:24:27 | INFO     | document_processor.file_handler:process:130 |   → C:\Users\Joel\AppData\Local\Temp\gradio\a2180a3bbd34d7f2a345b50599cbe95fc7fce81b4cce1ccffbaa0b09c4a68296\BBVA-OpenMind-Gobernanza-y-gestion-del-cambio-en-la-empresa-del-siglo-xxi-William-M-Klepper.pdf.pdf: 92 chunks → collection 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21'
+2026-09-09 23:24:27 | INFO     | document_processor.file_handler:process:137 | ✓ Indexing 1 document(s) → 92 total chunks
+2026-09-09 23:24:28 | INFO     | __main__:index_from_explore:617 |   Renombrando colección: 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21' → 'bbva_openmind_gobernanza_y_gestion_del_cambio_en_la_empresa_'
+2026-09-09 23:24:28 | ERROR    | __main__:index_from_explore:655 | Error en index_from_explore: Validation error: name: Expected a name containing 3-512 characters from [a-zA-Z0-9._-], starting and ending with a character in [a-zA-Z0-9]. Got: bbva_openmind_gobernanza_y_gestion_del_cambio_en_la_empresa_
+2026-09-09 23:24:50 | INFO     | __main__:index_from_explore:590 | Indexando 2 doc(s) desde Explorar tab
+2026-09-09 23:24:50 | INFO     | __main__:index_from_explore:591 |   OCR override: True, Custom title: 'Banking on the clouds'
+2026-09-09 23:24:50 | INFO     | document_processor.file_handler:__init__:46 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-09 23:24:50 | INFO     | document_processor.file_handler:__init__:47 |   OCR: habilitado
+2026-09-09 23:24:50 | INFO     | document_processor.file_handler:__init__:49 |   (OCR override: True, config.ini: True)
+2026-09-09 23:24:50 | INFO     | document_processor.file_handler:__init__:71 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-09 23:24:50 | INFO     | document_processor.file_handler:__init__:72 | ✓ Docling pipeline configurado para operación offline
+2026-09-09 23:24:50 | INFO     | document_processor.file_handler:process:89 | Processing 2 file(s) → una colección por documento
+2026-09-09 23:24:50 | DEBUG    | document_processor.file_handler:validate_files:81 | ✓ File validation passed (total: 7.3MB)
+2026-09-09 23:24:50 | INFO     | document_processor.file_handler:process:104 | Loading from cache: C:\Users\Joel\AppData\Local\Temp\gradio\a2180a3bbd34d7f2a345b50599cbe95fc7fce81b4cce1ccffbaa0b09c4a68296\BBVA-OpenMind-Gobernanza-y-gestion-del-cambio-en-la-empresa-del-siglo-xxi-William-M-Klepper.pdf.pdf
+2026-09-09 23:24:50 | INFO     | document_processor.file_handler:process:130 |   → C:\Users\Joel\AppData\Local\Temp\gradio\a2180a3bbd34d7f2a345b50599cbe95fc7fce81b4cce1ccffbaa0b09c4a68296\BBVA-OpenMind-Gobernanza-y-gestion-del-cambio-en-la-empresa-del-siglo-xxi-William-M-Klepper.pdf.pdf: 92 chunks → collection 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21'
+2026-09-09 23:24:50 | INFO     | document_processor.file_handler:process:107 | Processing file: C:\Users\Joel\AppData\Local\Temp\gradio\ce2250aa70e0dc40c57f468cf74a292a5ee02b6988f5d00e90fb0c763537aef8\Banking on the clouds.pdf
+2026-09-09 23:25:02 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:25:05 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:25:06 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:25:56 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:25:57 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:25:58 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:26:04 | INFO     | __main__:refresh_query_collections:522 | Colecciones disponibles: ['cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a', 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21', 'rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:26:18 | INFO     | __main__:refresh_explore:463 | Documentos actualizados: ['cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a', 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21', 'rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:26:41 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:26:42 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:26:44 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:26:45 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:26:45 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:26:46 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:26:46 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:26:46 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:26:47 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:26:51 | INFO     | __main__:process_collection_query:486 | Usando TODAS las colecciones: ['cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a', 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21', 'rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:26:51 | INFO     | __main__:process_collection_query:493 | Pregunta: Banking trends...
+2026-09-09 23:26:52 | INFO     | __main__:process_collection_query:501 | ✓ Recuperador construido desde colecciones existentes
+2026-09-09 23:26:52 | INFO     | __main__:process_collection_query:506 | Iniciando pipeline RAG...
+2026-09-09 23:27:01 | INFO     | __main__:process_collection_query:511 | ✓ Pipeline completado
+2026-09-09 23:28:00 | INFO     | __main__:refresh_explore:463 | Documentos actualizados: ['cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a', 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21', 'rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:28:03 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:28:04 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:28:04 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:29:47 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:29:48 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:29:49 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:29:52 | INFO     | __main__:refresh_explore:463 | Documentos actualizados: ['cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a', 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21', 'rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:30:12 | INFO     | __main__:process_collection_query:486 | Usando TODAS las colecciones: ['cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a', 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21', 'rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:30:12 | INFO     | __main__:process_collection_query:493 | Pregunta: tellme about Banking trends...
+2026-09-09 23:30:12 | INFO     | __main__:process_collection_query:501 | ✓ Recuperador construido desde colecciones existentes
+2026-09-09 23:30:12 | INFO     | __main__:process_collection_query:506 | Iniciando pipeline RAG...
+2026-09-09 23:30:15 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:30:22 | INFO     | __main__:process_collection_query:511 | ✓ Pipeline completado
+2026-09-09 23:30:29 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:30:30 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:30:31 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:30:32 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:30:33 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:30:34 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:30:34 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:30:35 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:30:35 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:30:37 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:30:48 | INFO     | __main__:process_collection_query:486 | Usando TODAS las colecciones: ['cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a', 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21', 'rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:30:48 | INFO     | __main__:process_collection_query:493 | Pregunta: tell me about Banking trends...
+2026-09-09 23:30:49 | INFO     | __main__:process_collection_query:501 | ✓ Recuperador construido desde colecciones existentes
+2026-09-09 23:30:49 | INFO     | __main__:process_collection_query:506 | Iniciando pipeline RAG...
+2026-09-09 23:30:56 | INFO     | __main__:process_collection_query:511 | ✓ Pipeline completado
+2026-09-09 23:31:28 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:31:30 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:31:34 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:31:36 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:31:37 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:34:16 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:34:18 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:34:21 | INFO     | __main__:check_chroma_health:561 | ✓ ChromaDB health: 5 collections, 520 chunks
+2026-09-09 23:34:24 | INFO     | __main__:process_collection_query:486 | Usando TODAS las colecciones: ['cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a', 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21', 'rag_agentai_documents', 'cusersjoelappdatalocaltempgradio7991774a_4e81a279', 'financial_theory_with_python']
+2026-09-09 23:34:24 | INFO     | __main__:process_collection_query:493 | Pregunta: tell me about Banking trends...
+2026-09-09 23:34:25 | INFO     | __main__:process_collection_query:501 | ✓ Recuperador construido desde colecciones existentes
+2026-09-09 23:34:25 | INFO     | __main__:process_collection_query:506 | Iniciando pipeline RAG...
+2026-09-09 23:34:32 | INFO     | __main__:process_collection_query:511 | ✓ Pipeline completado
+2026-09-09 23:39:39 | INFO     | utils.logging:<module>:27 | Logging initialized (level=DEBUG, file=logs\rag_agentai.log)
+2026-09-09 23:39:40 | INFO     | __main__:main:76 | === DocChat RAG Initialization ===
+2026-09-09 23:39:40 | INFO     | __main__:main:77 | Modo offline: HF_HUB_OFFLINE=1, TRANSFORMERS_OFFLINE=1
+2026-09-09 23:39:40 | INFO     | document_processor.file_handler:__init__:46 | Inicializando Docling con artifacts_path=models\docling (offline)
+2026-09-09 23:39:40 | INFO     | document_processor.file_handler:__init__:47 |   OCR: habilitado
+2026-09-09 23:39:40 | INFO     | document_processor.file_handler:__init__:71 | DocumentProcessor initialized (cache: logs\document_cache)
+2026-09-09 23:39:40 | INFO     | document_processor.file_handler:__init__:72 | ✓ Docling pipeline configurado para operación offline
+2026-09-09 23:39:42 | INFO     | __main__:main:85 | ✓ All components initialized successfully
+2026-09-09 23:39:44 | INFO     | __main__:main:89 | Preflight checks:
+✓ Ollama: OK
+✓ ChromaDB: OK (v2)
+2026-09-09 23:39:44 | INFO     | __main__:main:808 | Launching Gradio server on 127.0.0.1:5020
+2026-09-09 23:40:03 | INFO     | __main__:refresh_collections_list:736 | ✓ Lista de colecciones refrescada: 5 colecciones
+2026-09-09 23:40:07 | INFO     | __main__:refresh_collections_list:736 | ✓ Lista de colecciones refrescada: 5 colecciones
+2026-09-09 23:40:18 | INFO     | __main__:delete_collection:754 | 🗑️ Eliminando colección: 'cusersjoelappdatalocaltempgradio7991774a_4e81a279'
+2026-09-09 23:40:18 | INFO     | __main__:delete_collection:760 | ✓ Colección 'cusersjoelappdatalocaltempgradio7991774a_4e81a279' eliminada
+2026-09-09 23:40:19 | INFO     | __main__:refresh_collections_list:736 | ✓ Lista de colecciones refrescada: 4 colecciones
+2026-09-09 23:40:22 | INFO     | __main__:delete_collection:754 | 🗑️ Eliminando colección: 'cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a'
+2026-09-09 23:40:22 | INFO     | __main__:delete_collection:760 | ✓ Colección 'cusersjoelappdatalocaltempgradiodd5825c5_52d8ca3a' eliminada
+2026-09-09 23:40:22 | INFO     | __main__:refresh_collections_list:736 | ✓ Lista de colecciones refrescada: 3 colecciones
+2026-09-09 23:40:26 | INFO     | __main__:delete_collection:754 | 🗑️ Eliminando colección: 'rag_agentai_documents'
+2026-09-09 23:40:26 | INFO     | __main__:delete_collection:760 | ✓ Colección 'rag_agentai_documents' eliminada
+2026-09-09 23:40:27 | INFO     | __main__:refresh_collections_list:736 | ✓ Lista de colecciones refrescada: 2 colecciones
+2026-09-09 23:40:29 | INFO     | __main__:check_chroma_health:608 | ✓ ChromaDB health: 2 collections, 292 chunks
+2026-09-09 23:40:40 | INFO     | __main__:delete_collection:754 | 🗑️ Eliminando colección: 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21'
+2026-09-09 23:40:40 | INFO     | __main__:delete_collection:760 | ✓ Colección 'cusersjoelappdatalocaltempgradioa2180a3b_3f683c21' eliminada
+2026-09-09 23:40:40 | INFO     | __main__:refresh_collections_list:736 | ✓ Lista de colecciones refrescada: 1 colecciones
+2026-09-09 23:40:50 | INFO     | __main__:refresh_collections_list:736 | ✓ Lista de colecciones refrescada: 1 colecciones
+2026-09-09 23:40:51 | INFO     | __main__:refresh_collections_list:736 | ✓ Lista de colecciones refrescada: 1 colecciones
+2026-09-09 23:40:58 | INFO     | __main__:refresh_collections_list:736 | ✓ Lista de colecciones refrescada: 1 colecciones
+2026-09-09 23:41:08 | INFO     | __main__:refresh_explore:510 | Documentos actualizados: ['financial_theory_with_python']
+2026-09-09 23:41:18 | INFO     | __main__:refresh_query_collections:569 | Colecciones disponibles: ['financial_theory_with_python']
+2026-09-09 23:41:35 | INFO     | __main__:process_collection_query:538 | Consultando colecciones: ['financial_theory_with_python']
+2026-09-09 23:41:35 | INFO     | __main__:process_collection_query:540 | Pregunta: tell me about finance
+...
+2026-09-09 23:41:35 | INFO     | __main__:process_collection_query:548 | ✓ Recuperador construido desde colecciones existentes
+2026-09-09 23:41:35 | INFO     | __main__:process_collection_query:553 | Iniciando pipeline RAG...
+2026-09-09 23:42:10 | INFO     | __main__:process_collection_query:558 | ✓ Pipeline completado

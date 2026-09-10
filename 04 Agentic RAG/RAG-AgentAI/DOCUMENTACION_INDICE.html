@@ -1,0 +1,487 @@
+<!DOCTYPE html []>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="MarkdownViewer++" />
+    <title>DOCUMENTACION_INDICE.md</title>
+    <style type="text/css">
+            
+/* Avoid page breaks inside the most common attributes, especially for exports (i.e. PDF) */
+td, h1, h2, h3, h4, h5, p, ul, ol, li {
+    page-break-inside: avoid; 
+}
+
+        </style>
+  </head>
+  <body>
+    <h1 id="indice-completo-de-documentacion-rag-agentai">📑 Índice Completo de Documentación — RAG-AgentAI</h1>
+    <p>
+      <strong>Última actualización:</strong> 2026-09-06 | <strong>Versión:</strong> 2.0</p>
+    <hr />
+    <h2 id="empezar-segun-tu-necesidad">🎯 Empezar según tu necesidad</h2>
+    <h3 id="si-es-la-primera-vez">🆕 <strong>Si es la primera vez</strong></h3>
+    <pre>
+      <code>1. README.md                  ← Entrada general
+2. SETUP.md                   ← Instalación paso a paso
+3. FLUJO_COMPLETO.md          ← Entiende qué sucede
+4. MONITORING_GUIDE.md        ← Observa en vivo
+5. MANUAL.md                  ← Cómo usar
+</code>
+    </pre>
+    <p>
+      <strong>Tiempo:</strong> ~1 hora primera vez</p>
+    <hr />
+    <h3 id="si-solo-quieres-usar-rapido">⚡ <strong>Si solo quieres usar rápido</strong></h3>
+    <pre>
+      <code>1. SETUP.md (Paso 1-5)        ← Instalación
+2. python app.py              ← Ejecuta
+3. http://127.0.0.1:5020      ← Abre en navegador
+</code>
+    </pre>
+    <p>
+      <strong>Tiempo:</strong> ~15 minutos</p>
+    <hr />
+    <h3 id="si-quieres-entender-la-arquitectura">🔍 <strong>Si quieres entender la arquitectura</strong></h3>
+    <pre>
+      <code>1. FLUJO_COMPLETO.md          ← Qué hace cada componente
+2. ARCHITECTURE_DETAILED.md   ← Decisiones de diseño
+3. CODE_WALKTHROUGH.md        ← Código anotado línea por línea
+4. CHROMA_VECTORIZATION.md    ← Cómo funcionan embeddings
+</code>
+    </pre>
+    <p>
+      <strong>Tiempo:</strong> ~2-3 horas</p>
+    <hr />
+    <h3 id="si-algo-no-funciona">🐛 <strong>Si algo no funciona</strong></h3>
+    <pre>
+      <code>1. TROUBLESHOOT_PANDAS_ERROR.md   ← Error de compilación pandas
+2. MONITORING_GUIDE.md             ← Qué esperar en cada fase
+3. SETUP.md (Troubleshooting)      ← Soluciones comunes
+</code>
+    </pre>
+    <hr />
+    <h2 id="documentos-principales">📚 Documentos principales</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Archivo</th>
+          <th>Tema</th>
+          <th>Nivel</th>
+          <th>Leer cuándo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <strong>README.md</strong>
+          </td>
+          <td>Entrada general</td>
+          <td>Principiante</td>
+          <td>Siempre primero</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>SETUP.md</strong>
+          </td>
+          <td>Instalación y verificación</td>
+          <td>Principiante</td>
+          <td>Configurando por primera vez</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>GETTING_STARTED.md</strong>
+          </td>
+          <td>5 minutos de quick-start</td>
+          <td>Principiante</td>
+          <td>Prisa (sin detalles)</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>FLUJO_COMPLETO.md</strong> ⭐</td>
+          <td>Qué sucede en cada fase</td>
+          <td>Intermedio</td>
+          <td>
+            <strong>Entender el proyecto</strong>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <strong>MONITORING_GUIDE.md</strong> ⭐</td>
+          <td>Observar en vivo + troubleshooting</td>
+          <td>Intermedio</td>
+          <td>Después de instalación</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>MANUAL.md</strong>
+          </td>
+          <td>Guía de uso de la UI</td>
+          <td>Intermedio</td>
+          <td>Usando la app</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>ARCHITECTURE_DETAILED.md</strong>
+          </td>
+          <td>Decisiones técnicas de diseño</td>
+          <td>Avanzado</td>
+          <td>Profundizar en decisiones</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>CODE_WALKTHROUGH.md</strong>
+          </td>
+          <td>Código anotado línea por línea</td>
+          <td>Avanzado</td>
+          <td>Entender implementación</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>CHROMA_VECTORIZATION.md</strong>
+          </td>
+          <td>Deep-dive en embeddings y ChromaDB</td>
+          <td>Avanzado</td>
+          <td>Optimizar búsquedas</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>TROUBLESHOOT_PANDAS_ERROR.md</strong>
+          </td>
+          <td>Error específico de compilación</td>
+          <td>Referencia</td>
+          <td>Si falla instalación</td>
+        </tr>
+      </tbody>
+    </table>
+    <hr />
+    <h2 id="estructura-de-carpetas">🗂️ Estructura de carpetas</h2>
+    <pre>
+      <code>RAG-AgentAI/
+│
+├── 📄 README.md                          ← COMIENZA AQUÍ
+├── 📄 SETUP.md                           ← Instalación
+├── 📄 GETTING_STARTED.md                 ← Quick start (5 min)
+│
+├── 📚 DOCUMENTACION_INDICE.md            ← TÚ ESTÁS AQUÍ
+├── 📚 FLUJO_COMPLETO.md                  ← Qué pasa en cada fase
+├── 📚 MONITORING_GUIDE.md                ← Observar en vivo
+├── 📚 MANUAL.md                          ← Uso de la UI
+├── 📚 ARCHITECTURE_DETAILED.md           ← Arquitectura técnica
+├── 📚 CODE_WALKTHROUGH.md                ← Código anotado
+├── 📚 CHROMA_VECTORIZATION.md            ← Embeddings
+├── 📚 TROUBLESHOOT_PANDAS_ERROR.md       ← Error específico
+│
+├── 🎮 app.py                             ← EJECUTAR AQUÍ
+├── 📋 config.ini                         ← Configuración
+├── 📋 requirements.txt                   ← Dependencias
+├── ✅ validate_smoke_test.py             ← Verificación
+│
+├── 📁 agents/                            ← 3 agentes (RelevanceChecker, ResearchAgent, VerificationAgent)
+├── 📁 retriever/                         ← Builder (BM25 + Vector)
+├── 📁 document_processor/                ← Docling + chunking
+├── 📁 config/                            ← Settings
+├── 📁 utils/                             ← Logging
+├── 📁 logs/                              ← Log files + document cache
+│
+└── 📁 checkpoint/                        ← Versiones estables
+    └── CHECKPOINTS.md
+</code>
+    </pre>
+    <hr />
+    <h2 id="rutas-de-aprendizaje">🎓 Rutas de aprendizaje</h2>
+    <h3 id="ruta-1-usuario-final-solo-quiero-usar">
+      <strong>Ruta 1: Usuario final (solo quiero usar)</strong>
+    </h3>
+    <pre>
+      <code>1. SETUP.md
+2. GETTING_STARTED.md
+3. MANUAL.md
+Done! Usa la app.
+</code>
+    </pre>
+    <p>⏱️ <strong>Tiempo:</strong> 30 min | 📚 <strong>Documentación:</strong> 15 páginas</p>
+    <hr />
+    <h3 id="ruta-2-curioso-tecnico-entender-como-funciona">
+      <strong>Ruta 2: Curioso técnico (entender cómo funciona)</strong>
+    </h3>
+    <pre>
+      <code>1. SETUP.md
+2. FLUJO_COMPLETO.md        ← Qué sucede paso a paso
+3. MONITORING_GUIDE.md      ← Observar en vivo
+4. ARCHITECTURE_DETAILED.md ← Por qué se diseñó así
+5. MANUAL.md (parámetros)   ← Cómo optimizar
+</code>
+    </pre>
+    <p>⏱️ <strong>Tiempo:</strong> 2-3 horas | 📚 <strong>Documentación:</strong> 40 páginas</p>
+    <hr />
+    <h3 id="ruta-3-desarrollador-quiero-modificar-codigo">
+      <strong>Ruta 3: Desarrollador (quiero modificar código)</strong>
+    </h3>
+    <pre>
+      <code>1. SETUP.md
+2. FLUJO_COMPLETO.md
+3. CODE_WALKTHROUGH.md       ← Línea por línea
+4. ARCHITECTURE_DETAILED.md  ← Decisiones
+5. CHROMA_VECTORIZATION.md   ← Si tocas embeddings
+6. Leer código real: agents/*.py
+</code>
+    </pre>
+    <p>⏱️ <strong>Tiempo:</strong> 4-5 horas | 📚 <strong>Documentación:</strong> 60 páginas</p>
+    <hr />
+    <h3 id="ruta-4-debugger-algo-no-funciona">
+      <strong>Ruta 4: Debugger (algo no funciona)</strong>
+    </h3>
+    <pre>
+      <code>1. TROUBLESHOOT_PANDAS_ERROR.md  (si error de instalación)
+2. MONITORING_GUIDE.md           (qué esperar en cada fase)
+3. SETUP.md (sección Troubleshooting)
+4. Logs: logs/rag_agentai.log
+</code>
+    </pre>
+    <p>⏱️ <strong>Tiempo:</strong> 30 min - 2 horas | 📚 <strong>Documentación:</strong> 25 páginas</p>
+    <hr />
+    <h2 id="busqueda-rapida-por-tema">🔍 Búsqueda rápida por tema</h2>
+    <h3 id="instalacion">
+      <strong>Instalación</strong>
+    </h3>
+    <ul>
+      <li>SETUP.md (todo)</li>
+      <li>SETUP.md → Paso 2 (si falla pip install)</li>
+      <li>TROUBLESHOOT_PANDAS_ERROR.md (error específico)</li>
+    </ul>
+    <h3 id="como-usar">
+      <strong>Cómo usar</strong>
+    </h3>
+    <ul>
+      <li>MANUAL.md (todo)</li>
+      <li>GETTING_STARTED.md (rápido)</li>
+      <li>README.md → "¿Cómo funciona?" (resumen)</li>
+    </ul>
+    <h3 id="entender-arquitectura">
+      <strong>Entender arquitectura</strong>
+    </h3>
+    <ul>
+      <li>FLUJO_COMPLETO.md (visual + texto)</li>
+      <li>ARCHITECTURE_DETAILED.md (decisiones)</li>
+      <li>README.md → "¿Cómo funciona?" (resumen)</li>
+    </ul>
+    <h3 id="monitoreardebuggear">
+      <strong>Monitorear/Debuggear</strong>
+    </h3>
+    <ul>
+      <li>MONITORING_GUIDE.md (4 terminales + observar)</li>
+      <li>logs/rag_agentai.log (histórico)</li>
+      <li>TROUBLESHOOT_PANDAS_ERROR.md (errores comunes)</li>
+    </ul>
+    <h3 id="chromadb">
+      <strong>ChromaDB</strong>
+    </h3>
+    <ul>
+      <li>CHROMA_VECTORIZATION.md (embeddings + storage)</li>
+      <li>FLUJO_COMPLETO.md → Fase 3 (indexación)</li>
+      <li>MONITORING_GUIDE.md → Monitoreo (ver datos en vivo)</li>
+    </ul>
+    <h3 id="agentes-ia">
+      <strong>Agentes IA</strong>
+    </h3>
+    <ul>
+      <li>FLUJO_COMPLETO.md → Fase 4 (3 agentes)</li>
+      <li>CODE_WALKTHROUGH.md → Agentes (código real)</li>
+      <li>ARCHITECTURE_DETAILED.md → Diseño (por qué 3)</li>
+    </ul>
+    <h3 id="ollama">
+      <strong>Ollama</strong>
+    </h3>
+    <ul>
+      <li>SETUP.md → Paso 4 (descargar modelos)</li>
+      <li>FLUJO_COMPLETO.md → Fase 1 y 4 (dónde se usa)</li>
+      <li>MONITORING_GUIDE.md → Terminal 1 (qué esperar)</li>
+    </ul>
+    <hr />
+    <h2 id="consejos-de-lectura">💡 Consejos de lectura</h2>
+    <h3 id="para-no-perderse">
+      <strong>Para no perderse:</strong>
+    </h3>
+    <ol>
+      <li>Todos los documentos tienen tabla de contenidos</li>
+      <li>
+        <code>---</code> (línea separadora) marca secciones principales</li>
+      <li>Títulos con emoji indican nivel: 🔧(técnico), 📖(guía), 🏗️(arquitectura)</li>
+    </ol>
+    <h3 id="para-aprender-rapido">
+      <strong>Para aprender rápido:</strong>
+    </h3>
+    <ol>
+      <li>Lee diagramas ASCII primero (resumen visual)</li>
+      <li>Lee encabezados y negritas (estructura)</li>
+      <li>Profundiza en secciones que te interesen</li>
+    </ol>
+    <h3 id="para-debuggear-rapido">
+      <strong>Para debuggear rápido:</strong>
+    </h3>
+    <ol>
+      <li>Abre 2 ventanas: documentación + logs</li>
+      <li>Usa Ctrl+F para buscar términos específicos</li>
+      <li>Salta a MONITORING_GUIDE.md (tiene checklist)</li>
+    </ol>
+    <hr />
+    <h2 id="estadisticas">📊 Estadísticas</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Métrica</th>
+          <th>Valor</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <strong>Total de páginas de documentación</strong>
+          </td>
+          <td>~150</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Documentos principales</strong>
+          </td>
+          <td>12</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Diagramas ASCII</strong>
+          </td>
+          <td>15+</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Ejemplos de código</strong>
+          </td>
+          <td>30+</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Casos de prueba</strong>
+          </td>
+          <td>3</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Checklist de verificación</strong>
+          </td>
+          <td>5</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Tiempo total lectura (todo)</strong>
+          </td>
+          <td>~8-10 horas</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Tiempo mínimo (setup + usar)</strong>
+          </td>
+          <td>~30 min</td>
+        </tr>
+      </tbody>
+    </table>
+    <hr />
+    <h2 id="actualizacion-de-documentos">🔄 Actualización de documentos</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Documento</th>
+          <th>Última actualización</th>
+          <th>Cambios</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>SETUP.md</td>
+          <td>2026-09-06</td>
+          <td>ChromaDB nativo en Windows (opción A) + guía lectura</td>
+        </tr>
+        <tr>
+          <td>FLUJO_COMPLETO.md</td>
+          <td>2026-09-06</td>
+          <td>NUEVO - Explicación completa del proceso</td>
+        </tr>
+        <tr>
+          <td>MONITORING_GUIDE.md</td>
+          <td>2026-09-06</td>
+          <td>NUEVO - Observar en vivo + troubleshooting</td>
+        </tr>
+        <tr>
+          <td>README.md</td>
+          <td>2026-09-06</td>
+          <td>Links a nuevos documentos</td>
+        </tr>
+        <tr>
+          <td>MANUAL.md</td>
+          <td>2026-09-05</td>
+          <td>Parámetros de config.ini</td>
+        </tr>
+        <tr>
+          <td>ARCHITECTURE_DETAILED.md</td>
+          <td>2026-09-05</td>
+          <td>Diseño técnico</td>
+        </tr>
+        <tr>
+          <td>CODE_WALKTHROUGH.md</td>
+          <td>2026-09-05</td>
+          <td>Código anotado</td>
+        </tr>
+      </tbody>
+    </table>
+    <hr />
+    <h2 id="soporte">🆘 Soporte</h2>
+    <h3 id="rapida-ayuda">
+      <strong>Rápida ayuda:</strong>
+    </h3>
+    <ol>
+      <li>Ctrl+F en DOCUMENTACION_INDICE.md (este archivo) para encontrar tema</li>
+      <li>Lee la sección relevante</li>
+      <li>Si hay código, revisa examples/ o CODE_WALKTHROUGH.md</li>
+    </ol>
+    <h3 id="si-no-encuentras-respuesta">
+      <strong>Si no encuentras respuesta:</strong>
+    </h3>
+    <ol>
+      <li>Revisa TROUBLESHOOT_PANDAS_ERROR.md (problemas comunes)</li>
+      <li>Abre 4 terminales y sigue MONITORING_GUIDE.md (ve qué falla)</li>
+      <li>Busca el error en logs/rag_agentai.log</li>
+      <li>Revisa archivo relevante en <code>agents/</code> o <code>document_processor/</code></li>
+    </ol>
+    <hr />
+    <h2 id="resumen-que-leer-hoy">🎯 Resumen: qué leer hoy</h2>
+    <h3 id="hoy-30-min">
+      <strong>Hoy (30 min):</strong>
+    </h3>
+    <ol>
+      <li>Este índice (2 min)</li>
+      <li>README.md (5 min)</li>
+      <li>SETUP.md (10 min) - verifica prerequisites</li>
+      <li>python validate_smoke_test.py (3 min)</li>
+      <li>python app.py + prueba en navegador (10 min)</li>
+    </ol>
+    <h3 id="este-fin-de-semana-2-3-horas">
+      <strong>Este fin de semana (2-3 horas):</strong>
+    </h3>
+    <ol>
+      <li>FLUJO_COMPLETO.md (entiende qué pasa)</li>
+      <li>MONITORING_GUIDE.md (observa en vivo)</li>
+      <li>MANUAL.md (optimiza parámetros)</li>
+    </ol>
+    <h3 id="proximas-semanas-si-quieres-profundizar">
+      <strong>Próximas semanas (si quieres profundizar):</strong>
+    </h3>
+    <ol>
+      <li>CODE_WALKTHROUGH.md (cómo está codificado)</li>
+      <li>ARCHITECTURE_DETAILED.md (por qué se diseñó así)</li>
+      <li>Lee código real: <code>agents/*.py</code>, <code>retriever/builder.py</code></li>
+    </ol>
+    <hr />
+    <p>
+      <strong>Bienvenido a RAG-AgentAI. Ahora tienes todo documentado. 🚀</strong>
+    </p>
+  </body>
+</html>

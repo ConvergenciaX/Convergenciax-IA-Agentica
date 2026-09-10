@@ -1,0 +1,596 @@
+<!DOCTYPE html []>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="MarkdownViewer++" />
+    <title>FLUJO_COMPLETO.md</title>
+    <style type="text/css">
+            
+/* Avoid page breaks inside the most common attributes, especially for exports (i.e. PDF) */
+td, h1, h2, h3, h4, h5, p, ul, ol, li {
+    page-break-inside: avoid; 
+}
+
+        </style>
+  </head>
+  <body>
+    <h1 id="flujo-completo-rag-agentai-desde-el-pdf-hasta-la-respuesta">FLUJO COMPLETO — RAG-AgentAI: Desde el PDF hasta la Respuesta</h1>
+    <p>
+      <strong>Objetivo:</strong> Entender qué sucede en cada fase cuando subes un documento y haces una pregunta.</p>
+    <hr />
+    <h2 id="diagrama-del-flujo-completo">📊 Diagrama del flujo completo</h2>
+    <pre>
+      <code>┌────────────────────────────────────────────────────────────────────────┐
+│ 1. CARGA &amp; PARSING (GPU + Docling + HuggingFace)                      │
+│                                                                         │
+│   [Usuario sube PDF] → Docling convierte a Markdown → easyocr extrae  │
+│                       texto + OCR de imágenes                          │
+│                       (GPU activa si hay imágenes)                     │
+└────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌────────────────────────────────────────────────────────────────────────┐
+│ 2. CHUNKING SEMÁNTICO (MarkdownHeaderTextSplitter)                    │
+│                                                                         │
+│   Markdown → dividir por encabezados (#, ##) preservando contexto      │
+│   Resultado: 50-500 chunks (según tamaño del PDF)                      │
+└────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌────────────────────────────────────────────────────────────────────────┐
+│ 3. INDEXACIÓN VECTORIAL (Ollama + ChromaDB)                           │
+│                                                                         │
+│   Cada chunk → OllamaEmbeddings (mxbai-embed-large) → vector 1024-dim │
+│              → ChromaDB guarda vector + metadata + texto original      │
+│              → Datos persistidos en ./chroma_data/                     │
+└────────────────────────────────────────────────────────────────────────┘
+                                    ↓
+┌────────────────────────────────────────────────────────────────────────┐
+│ 4. BÚSQUEDA HÍBRIDA &amp; GENERACIÓN (3 Agentes + LLM)                   │
+│                                                                         │
+│   [Usuario pregunta] → Recuperador Híbrido:                            │
+│                        · BM25 (búsqueda de palabras clave)             │
+│                        · Vector Search (Chroma, semántica)             │
+│                        · Combina ambos (EnsembleRetriever)             │
+│                                                                         │
+│                   → Paso 1: RelevanceChecker (¿hay documentos útiles?)│
+│                        Llama al LLM via Ollama (temperatura baja)      │
+│                                                                         │
+│                   → Paso 2: ResearchAgent (generar respuesta)          │
+│                        Combina documentos + pregunta → LLM → respuesta │
+│                                                                         │
+│                   → Paso 3: VerificationAgent (¿respuesta correcta?)  │
+│                        Verifica que la respuesta esté en los docs      │
+│                        Si NO: re-investigar (máx 1 intento más)        │
+│                                                                         │
+│   [Usuario ve respuesta + reporte de verificación]                     │
+└────────────────────────────────────────────────────────────────────────┘
+</code>
+    </pre>
+    <hr />
+    <h2 id="fase-1-carga-parsing-documentprocessor">🔍 Fase 1: Carga &amp; Parsing (DocumentProcessor)</h2>
+    <h3 id="archivo-document_processorfile_handler.py">Archivo: <code>document_processor/file_handler.py</code></h3>
+    <p>
+      <strong>¿Qué sucede?</strong>
+    </p>
+    <ol>
+      <li>Usuario sube un PDF, DOCX, TXT o MD</li>
+      <li>
+        <strong>Docling</strong> lo convierte a <strong>Markdown estructurado</strong></li>
+      <li>Si hay <strong>imágenes en el PDF</strong>, se activa <strong>easyocr + GPU</strong> para extraer texto (OCR)</li>
+      <li>Resultado: texto limpio + metadata (títulos, tablas, etc.)</li>
+    </ol>
+    <h3 id="componentes-usados">Componentes usados:</h3>
+    <ul>
+      <li>
+        <p>
+          <strong>Docling</strong>: conversor universal de documentos</p>
+        <ul>
+          <li>Soporta: PDF, DOCX, TXT, MD, HTML, images</li>
+          <li>Descarga modelos de HuggingFace automáticamente:
+<ul><li><code>easyocr</code>: para OCR en imágenes</li><li><code>timm/detectron2</code>: para detección de layouts (tablas, columnas)</li><li><code>transformers</code>: para análisis de estructura</li></ul></li>
+          <li>
+            <strong>Caché:</strong>
+            <code>~/.cache/huggingface/hub/</code> (primer uso tarda ~500MB de descarga)</li>
+        </ul>
+      </li>
+      <li>
+        <p>
+          <strong>GPU (torch)</strong>: se activa si el PDF tiene imágenes con texto</p>
+        <ul>
+          <li>Módulos: <code>easyocr</code>, <code>transformers</code> usan VRAM</li>
+          <li>Sin imágenes: GPU no se necesita</li>
+        </ul>
+      </li>
+    </ul>
+    <h3 id="ejemplo-de-log-esperado">Ejemplo de log esperado:</h3>
+    <pre>
+      <code>INFO | DocumentProcessor initialized (cache: logs\document_cache)
+INFO | Processing 1 file(s)
+DEBUG | ✓ File validation passed (total: 2.3MB)
+DEBUG | Cache hit for file: google-2024-environmental-report.pdf (hash: a1b2c3...)
+INFO | ✓ Document parsed: 156 chunks extracted
+</code>
+    </pre>
+    <h3 id="donde-ver-que-funciona">Dónde ver que funciona:</h3>
+    <ul>
+      <li>✅ <strong>Task Manager</strong>: VRAM sube si hay imágenes (~200-500MB extra)</li>
+      <li>✅ <strong>Logs</strong>: "Procesados N fragmentos de documento"</li>
+      <li>✅ <strong>Cache local</strong>: <code>logs\document_cache\&lt;hash&gt;.pkl</code> (almacena chunks parseados)</li>
+    </ul>
+    <hr />
+    <h2 id="fase-2-chunking-semantico-markdownheadertextsplitter">🧩 Fase 2: Chunking Semántico (MarkdownHeaderTextSplitter)</h2>
+    <h3 id="archivo-document_processorfile_handler.py-linea-80">Archivo: <code>document_processor/file_handler.py</code> (línea ~80)</h3>
+    <p>
+      <strong>¿Qué sucede?</strong>
+    </p>
+    <ol>
+      <li>El Markdown parseado se <strong>divide por encabezados</strong> (# y ##)</li>
+      <li>Se preserva el contexto de jerarquía (sección padre → hijo)</li>
+      <li>Cada chunk tiene <strong>metadatos</strong> (título, número de página, fuente)</li>
+    </ol>
+    <h3 id="parametros-de-chunking-en-config.ini-si-existen">Parámetros de chunking (en <code>config.ini</code>, si existen):</h3>
+    <pre>
+      <code class="language-ini">[document_processor]
+# chunk_size = 512  # tokens máximos por chunk
+# overlap = 100     # solapamiento entre chunks
+</code>
+    </pre>
+    <h3 id="ejemplo">Ejemplo:</h3>
+    <p>
+      <strong>PDF original:</strong>
+    </p>
+    <pre>
+      <code># Capítulo 1: Sostenibilidad
+
+## 1.1 Datos de centros de datos
+
+PUE efficiency in Singapore facility 2019: 1.23
+PUE efficiency in Singapore facility 2022: 1.15
+</code>
+    </pre>
+    <p>
+      <strong>Chunks resultantes:</strong>
+    </p>
+    <ol>
+      <li>Chunk 1: "# Capítulo 1: Sostenibilidad" + "## 1.1 Datos de centros de datos" + "PUE efficiency in Singapore facility 2019: 1.23"</li>
+      <li>Chunk 2: "## 1.1 Datos de centros de datos" + "PUE efficiency in Singapore facility 2022: 1.15"</li>
+    </ol>
+    <p>(Nota: se preserva contexto para que búsquedas vectoriales entiendan la relación)</p>
+    <h3 id="donde-ver-que-funciona-1">Dónde ver que funciona:</h3>
+    <ul>
+      <li>✅ <strong>Logs</strong>: "Procesados 156 fragmentos de documento"</li>
+      <li>✅ <strong>Caché pickle</strong>: <code>logs\document_cache\&lt;hash&gt;.pkl</code> contiene los chunks (binario)</li>
+    </ul>
+    <hr />
+    <h2 id="fase-3-indexacion-vectorial-ollama-chromadb">🔗 Fase 3: Indexación Vectorial (Ollama + ChromaDB)</h2>
+    <h3 id="archivo-retrieverbuilder.py-linea-20-41">Archivo: <code>retriever/builder.py</code> (línea ~20-41)</h3>
+    <p>
+      <strong>¿Qué sucede?</strong>
+    </p>
+    <ol>
+      <li>
+        <p>
+          <strong>Ollama genera embeddings</strong> para cada chunk</p>
+        <ul>
+          <li>Modelo: <code>mxbai-embed-large</code> (1024 dimensiones)</li>
+          <li>Endpoint: <code>http://localhost:11434/api/embeddings</code></li>
+          <li>Cada chunk → vector numérico de 1024 números</li>
+        </ul>
+      </li>
+      <li>
+        <p>
+          <strong>ChromaDB almacena los vectores</strong> (servidor HTTP en <code>localhost:8000</code>)</p>
+        <ul>
+          <li>Colección: <code>rag_agentai_documents</code></li>
+          <li>Datos persistidos: <code>./chroma_data/</code></li>
+        </ul>
+      </li>
+    </ol>
+    <h3 id="flujo-tecnico">Flujo técnico:</h3>
+    <pre>
+      <code class="language-python"># 1. Conectar a Ollama
+embeddings = OllamaEmbeddings(
+    model="mxbai-embed-large",
+    base_url="http://localhost:11434"
+)
+
+# 2. Para CADA chunk, generar vector
+vector = embeddings.embed_query(chunk_text)
+# Resultado: [0.123, -0.456, 0.789, ..., 0.001] (1024 números)
+
+# 3. Enviar vectores a ChromaDB vía HTTP
+vector_store = Chroma.from_documents(
+    documents=chunks,
+    embedding=embeddings,
+    client_type="http",
+    host="localhost",
+    port=8000,
+    collection_name="rag_agentai_documents"
+)
+</code>
+    </pre>
+    <h3 id="donde-se-guardan-los-datos">Dónde se guardan los datos:</h3>
+    <p>ChromaDB almacena en:</p>
+    <pre>
+      <code>./chroma_data/
+├── [collection_uuid]/
+│   ├── data/
+│   │   ├── [segment_uuid]/
+│   │   │   ├── embeddings.bin      ← vectores (float32)
+│   │   │   ├── documents.parquet   ← texto original
+│   │   │   ├── metadata.parquet    ← título, página, etc.
+│   │   │   └── uris.parquet        ← IDs únicos
+</code>
+    </pre>
+    <h3 id="log-esperado">Log esperado:</h3>
+    <pre>
+      <code>INFO | Initializing OllamaEmbeddings with model='mxbai-embed-large', base_url='http://localhost:11434'
+INFO | ✓ OllamaEmbeddings initialized
+INFO | Building hybrid retriever from 156 documents
+INFO | Connecting to Chroma at http://localhost:8000, collection 'rag_agentai_documents'
+INFO | ✓ Vector store (Chroma) created successfully
+</code>
+    </pre>
+    <h3 id="monitorear-esta-fase">Monitorear esta fase:</h3>
+    <ol>
+      <li>
+        <p>
+          <strong>¿Ollama recibió la petición?</strong>
+        </p>
+        <pre>
+          <code class="language-powershell"># En otra terminal, mira los logs de Ollama:
+ollama serve
+# Deberías ver: "POST /api/embeddings" requests
+</code>
+        </pre>
+      </li>
+      <li>
+        <p>
+          <strong>¿ChromaDB guardó los datos?</strong>
+        </p>
+        <pre>
+          <code class="language-powershell"># Verifica que la carpeta ./chroma_data tenga archivos
+Get-ChildItem -Recurse ./chroma_data
+</code>
+        </pre>
+      </li>
+      <li>
+        <p>
+          <strong>¿VRAM se usa?</strong>
+        </p>
+        <ul>
+          <li>Task Manager → Processes → <code>python.exe</code> → VRAM</li>
+          <li>Esperado: mxbai-embed-large ocupa ~1GB con 156 chunks</li>
+        </ul>
+      </li>
+    </ol>
+    <hr />
+    <h2 id="fase-4-busqueda-hibrida-respuesta-3-agentes-llm">🧠 Fase 4: Búsqueda Híbrida &amp; Respuesta (3 Agentes + LLM)</h2>
+    <h3 id="archivo-agentsworkflow.py">Archivo: <code>agents/workflow.py</code></h3>
+    <p>
+      <strong>¿Qué sucede?</strong>
+    </p>
+    <p>Cuando el usuario hace una pregunta, se ejecuta un <strong>pipeline de 3 agentes</strong>:</p>
+    <h3 id="paso-1-relevancechecker-agentsrelevance_checker.py">
+      <strong>Paso 1: RelevanceChecker</strong> (<code>agents/relevance_checker.py</code>)</h3>
+    <pre>
+      <code>[Usuario pregunta: "¿Cuál es el PUE en Singapur 2022?"]
+                    ↓
+[Recuperar top-20 chunks más relevantes]
+  · BM25: busca "PUE", "Singapur", "2022" (palabra clave)
+  · Vector: busca chunks semánticamente similares (via embeddings)
+  · Combina: 0.4 * BM25_score + 0.6 * Vector_score
+                    ↓
+[Llamar al LLM con temperatura baja (0.1)]
+  "Dada esta pregunta y estos documentos, ¿son relevantes para responder?"
+                    ↓
+Respuesta LLM: "SI" → continuar
+             "NO"  → retornar "Pregunta no relacionada con documentos"
+</code>
+    </pre>
+    <h3 id="paso-2-researchagent-agentsresearch_agent.py">
+      <strong>Paso 2: ResearchAgent</strong> (<code>agents/research_agent.py</code>)</h3>
+    <pre>
+      <code>[Usuario pregunta: "¿Cuál es el PUE en Singapur 2022?"]
+[Recuperar chunks relevantes: 5 mejores resultados]
+                    ↓
+[Construir prompt para LLM]
+  Sistema: "Eres experto en sostenibilidad. Responde en español basándote en los documentos."
+  Documentos: [chunk 1, chunk 2, chunk 3, ...]
+  Pregunta: "¿Cuál es el PUE en Singapur 2022?"
+                    ↓
+[Llamar al LLM (ChatOllama)]
+  Modelo: qwen2.5:7b-instruct-q4_K_M
+  Temperatura: 0.1 (determinístico)
+  Top-p: 0.9
+  Max tokens: 300
+                    ↓
+Respuesta LLM: "El PUE en Singapur 2022 fue de 1.15, representando una mejora..."
+</code>
+    </pre>
+    <h3 id="paso-3-verificationagent-agentsverification_agent.py">
+      <strong>Paso 3: VerificationAgent</strong> (<code>agents/verification_agent.py</code>)</h3>
+    <pre>
+      <code>[Respuesta generada: "El PUE en Singapur 2022 fue de 1.15..."]
+[Documentos recuperados: [chunk 1, chunk 2, ...]]
+                    ↓
+[Llamar al LLM para verificar]
+  "¿La respuesta anterior está soportada por los documentos?"
+  Busca: ¿aparecen 'PUE', 'Singapur', '2022', '1.15' en los chunks?
+                    ↓
+Respuesta: "SI - Respuesta soportada en documentos"
+        o  "NO - Respuesta no aparece. Re-investigar."
+                    ↓
+Si NO y no hay más reintentos:
+  [Ejecutar ResearchAgent de nuevo, intentar mejor respuesta]
+                    ↓
+[Usuario recibe: respuesta + reporte de verificación]
+</code>
+    </pre>
+    <h3 id="log-esperado-1">Log esperado:</h3>
+    <pre>
+      <code>INFO | Procesando pregunta: ¿Cuál es el PUE en Singapur 2022?...
+INFO | Construyendo nuevo recuperador para documentos...
+INFO | Procesados 156 fragmentos de documento
+INFO | ✓ Recuperador híbrido construido
+DEBUG | → Paso 1: check_relevance
+DEBUG | → Paso 2: research
+DEBUG | Respuesta generada (245 caracteres)
+DEBUG | → Paso 3: verification
+DEBUG | Reporte de verificación: "Soportado: SI"
+INFO | Pipeline completado exitosamente
+</code>
+    </pre>
+    <hr />
+    <h2 id="donde-se-almacenan-los-datos-intermedios">📦 Dónde se almacenan los datos intermedios</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>
+            <strong>Componente</strong>
+          </th>
+          <th>
+            <strong>Ubicación</strong>
+          </th>
+          <th>
+            <strong>Contenido</strong>
+          </th>
+          <th>
+            <strong>Persistencia</strong>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <strong>Chunks parseados</strong>
+          </td>
+          <td>
+            <code>logs/document_cache/&lt;hash&gt;.pkl</code>
+          </td>
+          <td>Texto chunkeado + metadata</td>
+          <td>Mientras exista el hash</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Vectores + texto</strong>
+          </td>
+          <td>
+            <code>./chroma_data/</code>
+          </td>
+          <td>Embeddings + documentos originales</td>
+          <td>Permanente (hasta borrar ChromaDB)</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Logs de ejecución</strong>
+          </td>
+          <td>
+            <code>logs/rag_agentai.log</code>
+          </td>
+          <td>Traces de cada fase</td>
+          <td>Rotación cada 10MB (5 backups)</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Conversación UI</strong>
+          </td>
+          <td>Memoria de sesión Gradio</td>
+          <td>Solo la sesión actual del navegador</td>
+          <td>Se pierde al cerrar navegador</td>
+        </tr>
+      </tbody>
+    </table>
+    <hr />
+    <h2 id="como-monitorear-cada-fase">🔧 Cómo monitorear cada fase</h2>
+    <h3 id="durante-la-carga-del-documento">
+      <strong>Durante la carga del documento:</strong>
+    </h3>
+    <ol>
+      <li>
+        <p>
+          <strong>Task Manager</strong> → VRAM debería <strong>subir ~500MB-2GB</strong></p>
+        <ul>
+          <li>Docling carga modelos de HuggingFace</li>
+          <li>easyocr activa si hay imágenes</li>
+        </ul>
+      </li>
+      <li>
+        <p>
+          <strong>Logs en tiempo real:</strong>
+        </p>
+        <pre>
+          <code class="language-powershell"># En otra terminal, mira el archivo de log
+Get-Content -Path logs\rag_agentai.log -Tail 20 -Wait
+</code>
+        </pre>
+      </li>
+      <li>
+        <p>
+          <strong>ChromaDB recibiendo datos:</strong>
+        </p>
+        <pre>
+          <code class="language-powershell"># Verifica requests HTTP a localhost:8000
+netstat -ano | findstr 8000
+# Deberías ver ESTABLISHED connections
+</code>
+        </pre>
+      </li>
+    </ol>
+    <h3 id="durante-la-generacion-de-respuesta">
+      <strong>Durante la generación de respuesta:</strong>
+    </h3>
+    <ol>
+      <li>
+        <p>
+          <strong>Ollama procesando:</strong>
+        </p>
+        <ul>
+          <li>En terminal de Ollama, verás requests de embedding</li>
+          <li>En otra terminal: VRAM sube si se está generando (LLM)</li>
+        </ul>
+      </li>
+      <li>
+        <p>
+          <strong>Logs del LLM:</strong>
+        </p>
+        <pre>
+          <code class="language-log">INFO | Llamando a LLM con temperatura=0.1
+INFO | Token generation: 45 / 300 tokens
+INFO | LLM respuesta recibida
+</code>
+        </pre>
+      </li>
+      <li>
+        <p>
+          <strong>Tiempo de respuesta:</strong>
+        </p>
+        <ul>
+          <li>Embeddings: ~2-5 seg (depende del tamaño de chunks)</li>
+          <li>LLM generation: ~10-30 seg (depende del modelo + longitud)</li>
+          <li>Verificación: ~5-10 seg más</li>
+        </ul>
+      </li>
+    </ol>
+    <hr />
+    <h2 id="resumen-de-tecnologias-por-fase">🎯 Resumen de tecnologías por fase</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>
+            <strong>Fase</strong>
+          </th>
+          <th>
+            <strong>Tecnología</strong>
+          </th>
+          <th>
+            <strong>CPU/GPU</strong>
+          </th>
+          <th>
+            <strong>Memoria</strong>
+          </th>
+          <th>
+            <strong>Red</strong>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <strong>1. Parsing</strong>
+          </td>
+          <td>Docling + easyocr + torch</td>
+          <td>GPU (si imágenes)</td>
+          <td>2-3 GB</td>
+          <td>HuggingFace (primer uso)</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>2. Chunking</strong>
+          </td>
+          <td>MarkdownHeaderTextSplitter</td>
+          <td>CPU</td>
+          <td>~500 MB</td>
+          <td>Ninguna</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>3. Embeddings</strong>
+          </td>
+          <td>OllamaEmbeddings (mxbai-embed-large)</td>
+          <td>GPU en Ollama</td>
+          <td>1 GB</td>
+          <td>localhost:11434 (HTTP)</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>3. ChromaDB</strong>
+          </td>
+          <td>ChromaDB server</td>
+          <td>CPU</td>
+          <td>1-2 GB</td>
+          <td>localhost:8000 (HTTP)</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>4. Búsqueda</strong>
+          </td>
+          <td>BM25 + Vector search</td>
+          <td>CPU/GPU en ChromaDB</td>
+          <td>~1 GB</td>
+          <td>localhost:8000 (HTTP)</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>4. LLM</strong>
+          </td>
+          <td>ChatOllama (qwen2.5:7b)</td>
+          <td>GPU</td>
+          <td>4-8 GB (según modelo)</td>
+          <td>localhost:11434 (HTTP)</td>
+        </tr>
+      </tbody>
+    </table>
+    <hr />
+    <h2 id="flujo-completo-resumido-en-10-segundos">🚀 Flujo completo resumido en 10 segundos</h2>
+    <pre>
+      <code>[PDF subido]
+    ↓ (Docling + HuggingFace, GPU si imágenes)
+[Texto limpio]
+    ↓ (MarkdownHeaderTextSplitter)
+[156 chunks semánticos]
+    ↓ (OllamaEmbeddings: mxbai-embed-large)
+[1024-dim vectors × 156]
+    ↓ (ChromaDB en localhost:8000)
+[Datos persistidos en ./chroma_data/]
+
+---
+
+[Usuario pregunta]
+    ↓ (RelevanceChecker: ¿hay documentos útiles?)
+    ↓ (ResearchAgent: generar respuesta del LLM)
+    ↓ (VerificationAgent: ¿respuesta correcta?)
+[Respuesta + reporte verificación]
+</code>
+    </pre>
+    <hr />
+    <h2 id="lectura-adicional">📖 Lectura adicional</h2>
+    <ul>
+      <li>
+        <strong>
+          <code>CODE_WALKTHROUGH.md</code>
+        </strong>: línea-por-línea del código</li>
+      <li>
+        <strong>
+          <code>CHROMA_VECTORIZATION.md</code>
+        </strong>: deep-dive en cómo funcionan los embeddings</li>
+      <li>
+        <strong>
+          <code>ARCHITECTURE_DETAILED.md</code>
+        </strong>: decisiones de diseño y alternativas</li>
+      <li>
+        <strong>
+          <code>MANUAL.md</code>
+        </strong>: cómo usar la UI</li>
+    </ul>
+  </body>
+</html>

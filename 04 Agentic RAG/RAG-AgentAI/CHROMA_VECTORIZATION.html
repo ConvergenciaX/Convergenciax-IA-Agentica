@@ -1,0 +1,555 @@
+<!DOCTYPE html []>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="MarkdownViewer++" />
+    <title>CHROMA_VECTORIZATION.md</title>
+    <style type="text/css">
+            
+/* Avoid page breaks inside the most common attributes, especially for exports (i.e. PDF) */
+td, h1, h2, h3, h4, h5, p, ul, ol, li {
+    page-break-inside: avoid; 
+}
+
+        </style>
+  </head>
+  <body>
+    <h1 id="chroma_vectorization-como-funciona-la-vectorizacion-en-chromadb">📊 CHROMA_VECTORIZATION — Cómo funciona la vectorización en ChromaDB</h1>
+    <p>
+      <strong>Versión:</strong> 1.0<br /><strong>Propósito:</strong> Entender qué es un embedding, cómo se genera y cómo ChromaDB lo usa<br /><strong>Nivel:</strong> Intermedio</p>
+    <hr />
+    <h2 id="contenidos">🎯 Contenidos</h2>
+    <ol>
+      <li>
+        <a href="#qu%C3%A9-es-un-embedding">¿Qué es un embedding?</a>
+      </li>
+      <li>
+        <a href="#flujo-completo-de-vectorizaci%C3%B3n">Flujo completo de vectorización</a>
+      </li>
+      <li>
+        <a href="#chromadb-internamente">ChromaDB internamente</a>
+      </li>
+      <li>
+        <a href="#b%C3%BAsqueda-vectorial">Búsqueda vectorial</a>
+      </li>
+      <li>
+        <a href="#configuraci%C3%B3n-y-optimizaci%C3%B3n">Configuración y optimización</a>
+      </li>
+    </ol>
+    <hr />
+    <h2 id="que-es-un-embedding">🔢 ¿Qué es un embedding?</h2>
+    <h3 id="concepto-simple">
+      <strong>Concepto simple</strong>
+    </h3>
+    <p>Un <strong>embedding</strong> es una representación numérica de texto. Convierte palabras → números.</p>
+    <pre>
+      <code>Texto:    "¿Cuál es la eficiencia PUE?"
+           ↓ (OllamaEmbeddings)
+Embedding: [0.123, -0.456, 0.789, 0.234, ..., 0.345]  ← 1024 números
+
+Texto:    "PUE (Power Usage Effectiveness) es una métrica de eficiencia"
+           ↓ (OllamaEmbeddings)
+Embedding: [0.125, -0.450, 0.795, 0.238, ..., 0.352]  ← 1024 números
+
+Similitud (cosine):
+  cos(embedding1, embedding2) = 0.98  ← Muy similares (0.0 = opuesto, 1.0 = idéntico)
+</code>
+    </pre>
+    <h3 id="por-que-1024-numeros">
+      <strong>¿Por qué 1024 números?</strong>
+    </h3>
+    <p>El modelo <code>mxbai-embed-large</code> genera vectores de <strong>1024 dimensiones</strong>.</p>
+    <pre>
+      <code>Dimensión 1: Mide concepto de "energía"      (0.123)
+Dimensión 2: Mide concepto de "eficiencia"   (-0.456)
+Dimensión 3: Mide concepto de "métrica"      (0.789)
+...
+Dimensión 1024: Mide concepto de "sistemas"  (0.345)
+
+Cada dimensión captura un aspecto semántico diferente.
+</code>
+    </pre>
+    <p>
+      <strong>Analogía:</strong> Como un mapa de 1024 dimensiones donde cada punto representa el "significado" del texto.</p>
+    <hr />
+    <h2 id="flujo-completo-de-vectorizacion">🔄 Flujo Completo de Vectorización</h2>
+    <h3 id="fase-1-instalacion-primera-vez">
+      <strong>Fase 1: Instalación (primera vez)</strong>
+    </h3>
+    <pre>
+      <code>Usuario ejecuta: python app.py
+        ↓
+app.py carga config.ini
+        ├─ base_url = http://localhost:11434  (Ollama)
+        ├─ embedding_model = mxbai-embed-large
+        └─ chroma = { host: localhost, port: 8000 }
+        ↓
+RetrieverBuilder.__init__()
+        ↓
+OllamaEmbeddings(model="mxbai-embed-large", base_url="http://localhost:11434")
+        ↓
+Crea cliente HTTP a Ollama
+        ↓
+✓ Embedder listo para usarse
+</code>
+    </pre>
+    <p>
+      <strong>¿Qué verifica?</strong>
+    </p>
+    <ul>
+      <li>✅ Ollama está accesible en puerto 11434</li>
+      <li>✅ Modelo <code>mxbai-embed-large</code> está descargado (<code>ollama list</code>)</li>
+      <li>✅ Chroma Docker está accesible en puerto 8000</li>
+    </ul>
+    <hr />
+    <h3 id="fase-2-carga-de-documentos-primer-archivo">
+      <strong>Fase 2: Carga de documentos (primer archivo)</strong>
+    </h3>
+    <pre>
+      <code>Usuario sube PDF
+        ↓
+app.py → handle_file_upload()
+        ↓
+DocumentProcessor.process(file_bytes)
+        ├─ Docling parsea PDF → Markdown
+        ├─ MarkdownHeaderTextSplitter → chunks
+        └─ Retorna List[Document] (chunks sin embeddings aún)
+        ↓
+app.py llama: retriever_builder.build_hybrid_retriever(documents)
+        ↓
+        ╔════════════════════════════════════════════════╗
+        ║     AQUÍ COMIENZA LA VECTORIZACIÓN           ║
+        ╚════════════════════════════════════════════════╝
+        ↓
+Chroma.from_documents(documents, embeddings=embedder, ...)
+        ↓
+Para CADA documento en documents:
+    ├─ doc = Document(page_content="...", metadata={...})
+    │
+    ├─ PASO 1: Llamar al embedder
+    │   ├─ embedder.embed_query(doc.page_content)
+    │   ├─ Envía HTTP POST a http://localhost:11434/api/embed
+    │   │   Payload: { "model": "mxbai-embed-large", "prompt": "..." }
+    │   └─ Ollama procesa con mxbai-embed-large
+    │
+    ├─ PASO 2: Recibir embedding
+    │   └─ Ollama retorna: { "embeddings": [[0.123, -0.456, ..., 0.345]] }
+    │
+    ├─ PASO 3: Crear registro en Chroma
+    │   ├─ id = doc.metadata["source"]
+    │   ├─ text = doc.page_content
+    │   ├─ embedding = [0.123, -0.456, ..., 0.345]  (vector 1024D)
+    │   └─ metadata = doc.metadata
+    │
+    └─ PASO 4: Guardar en Chroma (HTTP POST a localhost:8000)
+        └─ POST http://localhost:8000/api/v1/collections/.../add
+           {
+             "ids": ["doc-1"],
+             "documents": ["PDF text chunks..."],
+             "embeddings": [[0.123, -0.456, ..., 0.345]],
+             "metadatas": [{"filename": "example.pdf", "source": "..."}]
+           }
+        ↓
+        Chroma almacena en su BD vectorial (local dentro del contenedor)
+
+✓ Documento vectorizado y almacenado
+</code>
+    </pre>
+    <p>
+      <strong>Tiempo estimado:</strong>
+    </p>
+    <ul>
+      <li>1 documento: ~100ms (embedding) + 50ms (HTTP) = ~150ms</li>
+      <li>100 documentos: ~15 segundos</li>
+    </ul>
+    <hr />
+    <h3 id="fase-3-busqueda-cuando-usuario-pregunta">
+      <strong>Fase 3: Búsqueda (cuando usuario pregunta)</strong>
+    </h3>
+    <pre>
+      <code>Usuario pregunta: "¿Cuál es la eficiencia PUE?"
+        ↓
+app.py llama: retriever.invoke(question)
+        ↓
+EnsembleRetriever.invoke(question)
+        ├─ BM25Retriever.invoke(question)  ← Búsqueda léxica (paralelo)
+        └─ VectorRetriever.invoke(question) ← Búsqueda vectorial (paralelo)
+        ↓
+VectorRetriever (Chroma):
+    ├─ PASO 1: Embedificar la pregunta
+    │   ├─ embedder.embed_query("¿Cuál es la eficiencia PUE?")
+    │   ├─ Envía HTTP POST a Ollama
+    │   └─ Retorna: [0.125, -0.450, 0.795, ..., 0.352]  (1024D)
+    │
+    ├─ PASO 2: Buscar en Chroma
+    │   ├─ POST http://localhost:8000/api/v1/collections/.../query
+    │   │   Payload:
+    │   │   {
+    │   │     "query_embeddings": [[0.125, -0.450, 0.795, ..., 0.352]],
+    │   │     "n_results": 10
+    │   │   }
+    │   └─ Chroma calcula cosine_similarity con todos los documentos
+    │
+    └─ PASO 3: Retornar top-k
+        └─ [
+             Document(text="...", similarity=0.98),
+             Document(text="...", similarity=0.95),
+             Document(text="...", similarity=0.89),
+             ...,
+             Document(text="...", similarity=0.72)
+           ]
+
+BM25Retriever:
+    └─ Búsqueda léxica simple (sin LLM)
+       Score = TF-IDF(question tokens en documento)
+       
+Ensemble combina:
+    ├─ Toma top 10 de BM25
+    ├─ Toma top 10 de Vector
+    ├─ Combina: score_final = 0.4*score_BM25 + 0.6*score_vector
+    └─ Retorna top 10 ordenados por score_final
+
+✓ Retorna List[Document] (documentos más relevantes)
+</code>
+    </pre>
+    <p>
+      <strong>Tiempo estimado:</strong>
+    </p>
+    <ul>
+      <li>Embedificar pregunta: ~50ms</li>
+      <li>Búsqueda en Chroma: ~100-200ms</li>
+      <li>Total: ~200-300ms</li>
+    </ul>
+    <hr />
+    <h2 id="chromadb-internamente">🗂️ ChromaDB Internamente</h2>
+    <h3 id="estructura-de-almacenamiento">
+      <strong>Estructura de almacenamiento</strong>
+    </h3>
+    <pre>
+      <code>Chroma Docker (localhost:8000)
+└─ Base de datos vectorial
+   └─ Colección: "rag_agentai_documents"
+      ├─ doc-1
+      │  ├─ id: "example.pdf#Introduction"
+      │  ├─ text: "RAG es una técnica de IA..."
+      │  ├─ embedding: [0.123, -0.456, 0.789, ...]  (1024D)
+      │  └─ metadata:
+      │     ├─ filename: "example.pdf"
+      │     ├─ source: "example.pdf#Introduction"
+      │     ├─ header1: "Introduction"
+      │     └─ header2: "Basics"
+      │
+      ├─ doc-2
+      │  ├─ id: "example.pdf#How it works"
+      │  ├─ text: "El proceso es: 1) Retriever 2) Generator..."
+      │  ├─ embedding: [0.125, -0.450, 0.795, ...]  (1024D)
+      │  └─ metadata: {...}
+      │
+      └─ ... (más documentos)
+
+Total en Chroma:
+  - Documentos: N chunks
+  - Embeddings: N vectores de 1024D
+  - Espacio: ~4 MB por 1000 documentos (4 bytes * 1024D)
+</code>
+    </pre>
+    <h3 id="como-busca-chroma">
+      <strong>Cómo busca Chroma</strong>
+    </h3>
+    <pre>
+      <code>Pregunta embedding: [0.125, -0.450, 0.795, ..., 0.352]
+        ↓
+Para CADA documento en colección:
+    ├─ doc_embedding = [0.123, -0.456, 0.789, ...]
+    ├─ cosine_similarity(question_embedding, doc_embedding)
+    │   = (sum(q_i * d_i)) / (sqrt(sum(q_i²)) * sqrt(sum(d_i²)))
+    │   = 0.98 (escala 0.0 a 1.0)
+    └─ Guardar (document, score)
+
+Ordenar por score descendente
+Retornar top 10
+
+✓ Resultado: [
+    (Document, 0.98),
+    (Document, 0.95),
+    (Document, 0.89),
+    ...
+  ]
+</code>
+    </pre>
+    <hr />
+    <h2 id="busqueda-vectorial-casos-de-uso">🔍 Búsqueda Vectorial: Casos de uso</h2>
+    <h3 id="caso-1-busqueda-exacta-no-funciona-bien-solo-con-vector">
+      <strong>Caso 1: Búsqueda exacta (no funciona bien solo con vector)</strong>
+    </h3>
+    <pre>
+      <code>Pregunta: "¿Cuál es el valor de PUE?"
+
+Documentos:
+  1. "PUE = 1.12"
+  2. "Energía eficiente"
+  3. "Power Usage Effectiveness (PUE)"
+
+Vector search (cosmetic similarity):
+  Doc 1: 0.78 (contiene "PUE" pero no el contexto completo)
+  Doc 2: 0.65 (similar pero no exacto)
+  Doc 3: 0.95 (buena coincidencia)
+
+Problema: Si documento con "1.12" no tiene contexto sobre PUE,
+         no será top porque vector solo mira similitud semántica
+         
+Solución: BM25 prioriza documentos con palabra "PUE" exacta
+         → Híbrido asegura que palabras clave se encuentren
+</code>
+    </pre>
+    <h3 id="caso-2-busqueda-semantica-no-funciona-bien-solo-con-lexica">
+      <strong>Caso 2: Búsqueda semántica (no funciona bien solo con léxica)</strong>
+    </h3>
+    <pre>
+      <code>Pregunta: "¿Qué tan eficiente es el consumo de energía?"
+
+Documentos:
+  1. "Power Usage Effectiveness measures energy consumption"
+  2. "Eficiencia energética es importante"
+
+BM25 search:
+  Doc 1: 0.5 (palabras "power", "usage" pero no "eficiente")
+  Doc 2: 0.9 (contiene "eficiente" y "energía")
+
+Vector search:
+  Doc 1: 0.95 (significado es muy similar a la pregunta)
+  Doc 2: 0.92 (también similar)
+
+Problema: BM25 es demasiado literal
+          
+Solución: Vector captura el significado
+         → Híbrido asegura relevancia semántica
+</code>
+    </pre>
+    <h3 id="caso-3-hibrido-lo-mejor">
+      <strong>Caso 3: Híbrido (lo mejor)</strong>
+    </h3>
+    <pre>
+      <code>Pregunta: "¿Cómo optimizar PUE en data centers?"
+
+Documentos:
+  1. "Data center efficiency metrics (PUE, etc)"
+  2. "Cooling systems reduce energy costs"
+  3. "PUE optimization techniques"
+
+BM25 scores:
+  Doc 1: 0.70
+  Doc 2: 0.40
+  Doc 3: 0.95
+
+Vector scores:
+  Doc 1: 0.88
+  Doc 2: 0.75
+  Doc 3: 0.92
+
+Ensemble (0.4*BM25 + 0.6*Vector):
+  Doc 3: 0.4*0.95 + 0.6*0.92 = 0.932  ← MEJOR
+  Doc 1: 0.4*0.70 + 0.6*0.88 = 0.808
+  Doc 2: 0.4*0.40 + 0.6*0.75 = 0.610
+
+✓ Resultado correcto: Doc 3 + Doc 1 + Doc 2
+</code>
+    </pre>
+    <hr />
+    <h2 id="configuracion-y-optimizacion">⚙️ Configuración y Optimización</h2>
+    <h3 id="parametros-en-config.ini">
+      <strong>Parámetros en config.ini</strong>
+    </h3>
+    <pre>
+      <code class="language-ini">[chroma]
+# Host y puerto del servidor Chroma
+host = localhost
+port = 8000
+collection_name = rag_agentai_documents
+
+[embeddings]
+# Modelo de embeddings
+embedding_model = mxbai-embed-large
+
+[rag]
+# Número de documentos a recuperar
+vector_search_k = 10
+</code>
+    </pre>
+    <h3 id="que-significa-vector_search_k">
+      <strong>¿Qué significa vector_search_k?</strong>
+    </h3>
+    <pre>
+      <code>vector_search_k = 10  (recomendado)
+  ↓
+Cuando usuario pregunta:
+  ├─ EnsembleRetriever pide top 10 a BM25
+  ├─ EnsembleRetriever pide top 10 a Chroma
+  └─ Combina y retorna top 10 finales
+
+Si aumentas a 20:
+  ├─ Recupera más documentos (mejor recall)
+  ├─ Pero más lento (~200ms → ~400ms)
+  └─ Útil si los documentos son muy variados
+
+Si reduces a 5:
+  ├─ Más rápido (~200ms → ~100ms)
+  ├─ Pero puede perder relevantes
+  └─ Útil si documentos son cortos y específicos
+</code>
+    </pre>
+    <h3 id="tuning-de-ensemble-weights">
+      <strong>Tuning de ensemble weights</strong>
+    </h3>
+    <pre>
+      <code class="language-ini">ensemble_weights = 0.4,0.6  (actual: BM25=40%, Vector=60%)
+
+Si tus documentos tienen muchas palabras clave:
+  ensemble_weights = 0.6,0.4  (BM25=60%, Vector=40%)
+  Prioriza búsqueda léxica
+
+Si tus documentos son semánticos/parafraseados:
+  ensemble_weights = 0.2,0.8  (BM25=20%, Vector=80%)
+  Prioriza búsqueda vectorial
+
+Recomendado: 0.4,0.6 (balanced, funciona bien en mayoría casos)
+</code>
+    </pre>
+    <hr />
+    <h2 id="optimizacion-de-performance">🚀 Optimización de Performance</h2>
+    <h3 id="embeddings-en-cache">
+      <strong>1. Embeddings en caché</strong>
+    </h3>
+    <p>ChromaDB <strong>NO cachea embeddings de consulta</strong>.</p>
+    <pre>
+      <code>Primera pregunta: "¿Cuál es la eficiencia PUE?"
+  ├─ Embedificar: ~50ms
+  ├─ Buscar: ~100ms
+  └─ Total: ~150ms
+
+Segunda pregunta: Exacta misma
+  ├─ Embedificar de nuevo: ~50ms (sin caché)
+  ├─ Buscar: ~100ms
+  └─ Total: ~150ms (no hay ganancia)
+
+Solución: Cachear embeddings de preguntas frecuentes (nivel app)
+  ├─ Almacenar pregunta → embedding en dict
+  ├─ Si pregunta existe en caché, no re-embedificar
+  └─ Ganancia: ~50ms por pregunta frecuente
+
+Implementación sencilla:
+  query_cache = {}
+  if question in query_cache:
+      query_embedding = query_cache[question]
+  else:
+      query_embedding = embedder.embed_query(question)
+      query_cache[question] = query_embedding
+</code>
+    </pre>
+    <h3 id="batch-embeddings">
+      <strong>2. Batch embeddings</strong>
+    </h3>
+    <p>Si tienes 1000 documentos:</p>
+    <pre>
+      <code>Lento (1 por 1):
+  for doc in documents:
+      embedding = embedder.embed_query(doc)  # 1000 requests HTTP
+
+Rápido (batch):
+  embeddings = embedder.embed_documents([doc1, doc2, ..., doc1000])
+  # 1 request con 1000 textos
+  # Ahorra overhead de red
+</code>
+    </pre>
+    <h3 id="indices-en-chroma">
+      <strong>3. Índices en Chroma</strong>
+    </h3>
+    <p>ChromaDB crea índices automáticamente.</p>
+    <pre>
+      <code>Primera búsqueda en colección:
+  ├─ ChromaDB crea índice (búsqueda lineal por fuerza bruta)
+  ├─ Tiempo: O(n) donde n = número de documentos
+  └─ Para 10K docs: ~1 segundo
+
+Búsquedas posteriores:
+  ├─ ChromaDB usa índice (aproximado, ej. HNSW)
+  ├─ Tiempo: O(log n)
+  └─ Para 10K docs: ~50ms
+
+Automático: no hay configuración.
+</code>
+    </pre>
+    <hr />
+    <h2 id="monitoreo">📊 Monitoreo</h2>
+    <h3 id="verificar-que-chromadb-esta-funcionando">
+      <strong>Verificar que ChromaDB está funcionando</strong>
+    </h3>
+    <pre>
+      <code class="language-powershell"># Comprobar colección
+curl http://localhost:8000/api/v1/collections
+
+# Contar documentos en colección
+curl "http://localhost:8000/api/v1/collections/rag_agentai_documents/count"
+
+# Listar documentos (primeros 10)
+curl "http://localhost:8000/api/v1/collections/rag_agentai_documents/get?limit=10"
+</code>
+    </pre>
+    <h3 id="verificar-embeddings-en-logs">
+      <strong>Verificar embeddings en logs</strong>
+    </h3>
+    <pre>
+      <code>logs/rag_agentai.log
+
+DEBUG    | Sending prompt to LLM
+DEBUG    | Sending query embedding to Chroma
+DEBUG    | Chroma returned 10 documents with scores: [0.98, 0.95, ...]
+</code>
+    </pre>
+    <hr />
+    <h2 id="resumen-visual">🎓 Resumen visual</h2>
+    <pre>
+      <code>FLUJO COMPLETO DE VECTORIZACIÓN
+═════════════════════════════════════════════════════════
+
+1. CARGA (primera vez):
+   Documento PDF
+        ↓ (Docling)
+   Chunks de texto
+        ↓ (OllamaEmbeddings)
+   Vectores 1024D
+        ↓ (HTTP POST)
+   ChromaDB almacena
+        ✓ Indexado
+
+2. BÚSQUEDA (cada pregunta):
+   Pregunta usuario
+        ↓ (OllamaEmbeddings)
+   Vector 1024D
+        ↓ (HTTP POST a Chroma)
+   Cosine similarity
+        ↓
+   Top-10 documentos
+        ↓ (+ BM25)
+   Ensemble ranking
+        ↓
+   Documentos más relevantes
+        ✓ Respuesta
+
+3. VERIFICACIÓN:
+   Respuesta LLM
+        ↓
+   ¿Soportada por docs?
+        ↓
+   SI: devolver
+   NO: re-investigar
+        ✓ Respuesta verificada
+</code>
+    </pre>
+    <hr />
+    <p>
+      <strong>Fin del manual de vectorización.</strong>
+    </p>
+    <p>Para más detalles técnicos, consulta ARCHITECTURE_DETAILED.md o CODE_WALKTHROUGH.md.</p>
+  </body>
+</html>

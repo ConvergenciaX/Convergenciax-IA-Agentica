@@ -1,0 +1,324 @@
+<!DOCTYPE html []>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="MarkdownViewer++" />
+    <title>README.md</title>
+    <style type="text/css">
+            
+/* Avoid page breaks inside the most common attributes, especially for exports (i.e. PDF) */
+td, h1, h2, h3, h4, h5, p, ul, ol, li {
+    page-break-inside: avoid; 
+}
+
+        </style>
+  </head>
+  <body>
+    <h1 id="rag-agentai-agente-ia-de-recuperacion-aumentada-100-local">RAG-AgentAI: Agente IA de Recuperación Aumentada (100% Local)</h1>
+    <p>
+      <strong>Estado:</strong> ✅ Listo para usar | <strong>Lenguaje:</strong> Español | <strong>LLM Local:</strong> Ollama | <strong>Base de Datos:</strong> Chroma (Docker)</p>
+    <p>Agente IA que responde preguntas basándose <strong>SOLO</strong> en documentos que subes. Funciona 100% localmente (sin cloud), con interacción completamente en español.</p>
+    <hr />
+    <h2 id="inicio-rapido-5-minutos">🚀 Inicio Rápido (5 minutos)</h2>
+    <h3 id="requisitos-previos">1. Requisitos previos ✅</h3>
+    <ul>
+      <li>Windows 11 con Python 3.13 en <code>C:\workspace-vc\env-llm-ia</code></li>
+      <li>Docker Desktop (para Chroma)</li>
+      <li>Ollama instalado</li>
+    </ul>
+    <h3 id="instalacion">2. Instalación</h3>
+    <p>
+      <strong>Opción A: Automática (recomendado)</strong>
+    </p>
+    <pre>
+      <code class="language-powershell"># PowerShell en C:\Claude\dev-ia\RAG-AgentAI
+powershell -ExecutionPolicy Bypass -File INSTALL.ps1
+</code>
+    </pre>
+    <p>
+      <strong>Opción B: Manual</strong>
+    </p>
+    <pre>
+      <code class="language-powershell"># 1. Activa environment
+C:\workspace-vc\env-llm-ia\Scripts\activate
+
+# 2. Instala dependencias
+pip install -r requirements.txt
+
+# 3. Valida que todo está correcto
+python validate_smoke_test.py
+</code>
+    </pre>
+    <h3 id="inicia-la-app">3. Inicia la app</h3>
+    <pre>
+      <code class="language-powershell">python app.py
+# Abre: http://127.0.0.1:5020
+</code>
+    </pre>
+    <hr />
+    <h2 id="documentacion">📚 Documentación</h2>
+    <blockquote>
+      <p>
+        <strong>Lee esto antes de usar la app</strong>
+      </p>
+    </blockquote>
+    <ol>
+      <li>
+        <p>
+          <strong>
+            <a href="SETUP.md">SETUP.md</a>
+          </strong> — 🔧 Cómo preparar el entorno (Ollama, Chroma, modelos)</p>
+        <ul>
+          <li>Paso a paso para Windows</li>
+          <li>Troubleshooting de conexión</li>
+          <li>Verificación de recursos</li>
+        </ul>
+      </li>
+      <li>
+        <p>
+          <strong>
+            <a href="MANUAL.md">MANUAL.md</a>
+          </strong> — 📖 Guía de uso completa</p>
+        <ul>
+          <li>Interfaz Gradio</li>
+          <li>Los 3 agentes (relevancia, investigación, verificación)</li>
+          <li>Cómo optimizar parámetros</li>
+          <li>FAQ</li>
+        </ul>
+      </li>
+      <li>
+        <p>
+          <strong>
+            <a href="ARCHITECTURE.md">ARCHITECTURE.md</a>
+          </strong> — 🏗️ Arquitectura técnica</p>
+        <ul>
+          <li>Diagrama de flujo</li>
+          <li>Componentes y cómo trabajan</li>
+          <li>Data flow detallado</li>
+        </ul>
+      </li>
+    </ol>
+    <hr />
+    <h2 id="como-funciona">🎯 ¿Cómo funciona?</h2>
+    <pre>
+      <code>1. Subes documentos (PDF, DOCX, TXT, MD)
+           ↓
+2. El agente busca información relevante (BM25 + embeddings vectoriales)
+           ↓
+3. Tres agentes IA trabajan en paralelo:
+   a) RelevanceChecker: "¿Puedo responder esto?"
+   b) ResearchAgent: "Aquí está la respuesta"
+   c) VerificationAgent: "¿Está soportada?"
+           ↓
+4. Recibe respuesta verificada en español
+</code>
+    </pre>
+    <hr />
+    <h2 id="configuracion">⚙️ Configuración</h2>
+    <p>Todo en <strong><code>config.ini</code></strong> — no necesitas tocar código:</p>
+    <pre>
+      <code class="language-ini">[ollama]
+base_url = http://localhost:11434              # Endpoint de Ollama
+text_model = qwen2.5:7b-instruct-q4_K_M       # LLM (cambiar por otro si quieres)
+temperature = 0.1                             # Determinístico (0.0) vs Creativo (1.0)
+
+[chroma]
+host = localhost                              # Donde corre Chroma Docker
+port = 8000                                   # Puerto
+collection_name = rag_agentai_documents       # Nombre de la BD
+
+[rag]
+vector_search_k = 10                          # Documentos a buscar
+max_context_docs = 5                          # Documentos al LLM
+</code>
+    </pre>
+    <p>Ver <strong><a href="MANUAL.md">MANUAL.md</a></strong> sección "Parámetros de Configuración" para detalles.</p>
+    <hr />
+    <h2 id="caracteristicas">✨ Características</h2>
+    <p>✅ Documentos: PDF, DOCX, TXT, Markdown (con OCR)<br />
+✅ Búsqueda híbrida: palabras clave + semántica<br />
+✅ Interacción: 100% en español<br />
+✅ Verificación automática: Valida que la respuesta esté en los docs<br />
+✅ Logs detallados: Debugging fácil<br />
+✅ Interfaz web: Gradio (hermosa y responsiva)<br />
+✅ Configuración externalizada: Cambia parámetros sin código</p>
+    <hr />
+    <h2 id="rendimiento">📊 Rendimiento</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Acción</th>
+          <th>Tiempo</th>
+          <th>GPU</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Carga de PDF (primera vez)</td>
+          <td>10-60 seg</td>
+          <td>Depende tamaño</td>
+        </tr>
+        <tr>
+          <td>Búsqueda de documentos</td>
+          <td>&lt;1 seg</td>
+          <td>CPU</td>
+        </tr>
+        <tr>
+          <td>LLM responde pregunta</td>
+          <td>10-30 seg</td>
+          <td>RTX 3050 (6GB)</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Total</strong>
+          </td>
+          <td>
+            <strong>20-60 seg</strong>
+          </td>
+          <td>
+            <strong>Típico</strong>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Más rápido si:</p>
+    <ul>
+      <li>Usas GPU más potente (RTX A4500)</li>
+      <li>Usas modelo más pequeño (qwen2.5:3b)</li>
+      <li>Reduces <code>vector_search_k</code> en config.ini</li>
+    </ul>
+    <hr />
+    <h2 id="ejemplos-de-preguntas">🔍 Ejemplos de preguntas</h2>
+    <pre>
+      <code>Sube: google-2024-environmental-report.pdf
+Pregunta: "¿Cuál es la eficiencia PUE en 2022?"
+→ Respuesta: "Según el documento, la eficiencia PUE fue de 1.12 en 2022"
+
+Sube: tu_contrato.pdf
+Pregunta: "¿Cuáles son los términos de pago?"
+→ Respuesta: "[Extrae término específico del documento]"
+</code>
+    </pre>
+    <hr />
+    <h2 id="troubleshooting">🛠️ Troubleshooting</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Problema</th>
+          <th>Solución</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>"Cannot connect to Ollama"</td>
+          <td>Ejecuta <code>ollama serve</code> en otra terminal</td>
+        </tr>
+        <tr>
+          <td>"Cannot connect to Chroma"</td>
+          <td>Ejecuta <code>docker run -d -p 8000:8000 chromadb/chroma:latest</code></td>
+        </tr>
+        <tr>
+          <td>"Model not found"</td>
+          <td>Ejecuta <code>ollama pull qwen2.5:7b-instruct-q4_K_M</code></td>
+        </tr>
+        <tr>
+          <td>Lento</td>
+          <td>Reduce <code>vector_search_k</code> en config.ini, o usa modelo 3b</td>
+        </tr>
+        <tr>
+          <td>Respuestas incompletas</td>
+          <td>Aumenta <code>vector_search_k</code> o <code>max_context_docs</code></td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Ver <strong><a href="SETUP.md">SETUP.md</a></strong> sección Troubleshooting para más detalle.</p>
+    <hr />
+    <h2 id="checklist-para-empezar">📋 Checklist para empezar</h2>
+    <ul class="contains-task-list">
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> Python 3.13 verificado</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> Dependencies instaladas (<code>requirements.txt</code>)</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> Ollama corriendo (<code>ollama list</code> muestra modelos)</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> Chroma Docker corriendo (puerto 8000)</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> Smoke test pasó (<code>python validate_smoke_test.py</code>)</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> Leíste <a href="SETUP.md">SETUP.md</a></li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> Ejecutaste <code>python app.py</code></li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> Abriste <a href="http://127.0.0.1:5020">http://127.0.0.1:5020</a></li>
+    </ul>
+    <hr />
+    <h2 id="estructura-del-proyecto">📁 Estructura del proyecto</h2>
+    <pre>
+      <code>RAG-AgentAI/
+├── app.py                    # Interfaz Gradio (punto de entrada)
+├── config.ini                # Configuración (Ollama, Chroma, modelos)
+├── requirements.txt          # Dependencias Python
+├── validate_smoke_test.py    # Script de validación
+├── INSTALL.ps1              # Script de instalación automática
+│
+├── agents/                   # Los 3 agentes (LLM-basados)
+│   ├── relevance_checker.py  # ¿Puedo responder?
+│   ├── research_agent.py     # Genera respuesta
+│   ├── verification_agent.py # ¿Está verificada?
+│   └── workflow.py           # Orquestación
+│
+├── retriever/                # Búsqueda de documentos
+│   └── builder.py            # BM25 + Chroma + EnsembleRetriever
+│
+├── document_processor/       # Procesamiento de archivos
+│   └── file_handler.py       # Docling (PDF/DOCX parsing)
+│
+├── config/                   # Configuración
+│   └── settings.py           # Parser de config.ini
+│
+├── utils/                    # Utilidades
+│   └── logging.py            # Loguru (logs)
+│
+├── logs/                     # Logs (se crean automáticamente)
+│   └── rag_agentai.log
+│
+├── checkpoint/               # Versión y milestones
+│   └── CHECKPOINTS.md
+│
+├── README.md                 # Este archivo
+├── SETUP.md                  # Guía de setup
+├── MANUAL.md                 # Guía de uso
+└── ARCHITECTURE.md           # Arquitectura técnica
+</code>
+    </pre>
+    <hr />
+    <h2 id="soporte">📞 Soporte</h2>
+    <ul>
+      <li>
+        <strong>Logs:</strong>
+        <code>logs/rag_agentai.log</code> (lee esto si hay errores)</li>
+      <li>
+        <strong>Troubleshooting:</strong>
+        <a href="SETUP.md">SETUP.md</a> → Sección "Troubleshooting"</li>
+      <li>
+        <strong>Configuración:</strong>
+        <a href="MANUAL.md">MANUAL.md</a> → Sección "Parámetros"</li>
+      <li>
+        <strong>Arquitectura:</strong>
+        <a href="ARCHITECTURE.md">ARCHITECTURE.md</a>
+      </li>
+    </ul>
+    <hr />
+    <h2 id="aprende-como-funciona">🎓 Aprende cómo funciona</h2>
+    <ol>
+      <li>Lee <strong><a href="MANUAL.md">MANUAL.md</a></strong> sección "Los 3 Agentes"</li>
+      <li>Mira el código en <code>agents/</code> (está comentado)</li>
+      <li>Revisa logs en <code>logs/rag_agentai.log</code> mientras haces preguntas</li>
+      <li>Experimenta cambiando <code>config.ini</code></li>
+    </ol>
+    <hr />
+    <p>
+      <strong>¡Listo!</strong> Sigue <a href="SETUP.md">SETUP.md</a> para los próximos pasos.</p>
+  </body>
+</html>

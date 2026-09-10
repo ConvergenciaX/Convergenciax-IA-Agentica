@@ -1,0 +1,65 @@
+# RAG-AgentAI — Agente RAG local 100% en español
+# Python: 3.13 (env-llm-ia) ← REQUERIDO
+#
+# IMPORTANTE: Usa Python 3.13 de C:\workspace-vc\env-llm-ia
+# Versiones optimizadas para Windows + Python 3.13 (sin compilación Cython)
+
+# Core LangChain & LangGraph (0.3.x compatible)
+langchain==0.3.16
+langchain-community==0.3.16
+langchain-core==0.3.32
+langchain-text-splitters==0.3.5
+langchain-ollama==0.2.3
+langgraph==0.2.68
+langgraph-checkpoint==2.0.10
+
+# Embeddings & Vector Store
+chromadb==0.6.3
+rank-bm25==0.2.2
+
+# Document Processing (PDF/DOCX/TXT/MD parsing con OCR)
+docling==2.15.0
+docling-core==2.16.0
+docling-ibm-models==3.3.0
+docling-parse==3.1.2
+pypdf==5.2.0
+
+# UI & Web Server
+gradio==5.13.2
+gradio_client==1.6.0
+nest-asyncio==1.6.0
+
+# REST API (FastAPI)
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic-extra-types==2.7.0
+
+# Data & Configuration
+pydantic==2.10.6
+pydantic-settings==2.7.1
+python-dotenv==1.0.1
+
+# Logging (stdout + archivo rotativo)
+loguru==0.7.3
+
+# ML/Vision Dependencies (required by Docling for OCR in PDF/DOCX)
+# ⚠️ IMPORTANTE: torch requiere Python 3.13 exactamente (no 3.14)
+# Todas las versiones aquí tienen wheels precompilados para cp313
+torch==2.6.0
+torchvision==0.21.0
+opencv-python-headless==4.11.0.86
+pillow==10.4.0
+numpy==1.26.4
+scipy==1.15.1
+easyocr==1.7.2
+transformers==4.48.1
+
+# Utilities (versiones con wheels para Python 3.13)
+requests==2.32.3
+aiohttp==3.11.11
+anyio==4.8.0
+pyyaml==6.0.2
+tqdm==4.67.1
+
+# Installation command:
+# C:\workspace-vc\env-llm-ia\Scripts\python.exe -m pip install -r requirements.txt

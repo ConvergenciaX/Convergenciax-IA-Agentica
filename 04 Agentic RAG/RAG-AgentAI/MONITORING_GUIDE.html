@@ -1,0 +1,528 @@
+<!DOCTYPE html []>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="MarkdownViewer++" />
+    <title>MONITORING_GUIDE.md</title>
+    <style type="text/css">
+            
+/* Avoid page breaks inside the most common attributes, especially for exports (i.e. PDF) */
+td, h1, h2, h3, h4, h5, p, ul, ol, li {
+    page-break-inside: avoid; 
+}
+
+        </style>
+  </head>
+  <body>
+    <h1 id="guia-de-monitoreo-en-vivo-ver-que-esta-haciendo-rag-agentai">GUÍA DE MONITOREO EN VIVO — Ver qué está haciendo RAG-AgentAI</h1>
+    <p>Esta guía te permite <strong>monitorear en tiempo real</strong> cada componente mientras subes documentos y haces preguntas.</p>
+    <hr />
+    <h2 id="setup-abre-4-terminales">🎬 Setup: Abre 4 terminales</h2>
+    <p>Para ver todo lo que sucede, abre <strong>4 ventanas PowerShell/CMD</strong>:</p>
+    <pre>
+      <code>Terminal 1: Ollama (servidor LLM + embeddings)
+Terminal 2: ChromaDB (vector store)
+Terminal 3: RAG-AgentAI (app.py)
+Terminal 4: Logs en vivo (tail del archivo)
+</code>
+    </pre>
+    <h3 id="terminal-1-ollama-con-logs">Terminal 1: Ollama (con logs)</h3>
+    <pre>
+      <code class="language-powershell"># Abre en una terminal
+ollama serve
+</code>
+    </pre>
+    <p>
+      <strong>Qué esperar:</strong>
+    </p>
+    <pre>
+      <code>[GIN] 2025-09-07 22:31:11 | 200 | 245.3ms | 127.0.0.1 | POST /api/embeddings
+[GIN] 2025-09-07 22:31:12 | 200 | 3.2s   | 127.0.0.1 | POST /api/chat
+</code>
+    </pre>
+    <p>Esto significa:</p>
+    <ul>
+      <li>
+        <code>POST /api/embeddings</code> = OllamaEmbeddings generando vectores</li>
+      <li>
+        <code>POST /api/chat</code> = LLM respondiendo preguntas</li>
+    </ul>
+    <hr />
+    <h3 id="terminal-2-chromadb-nativa-en-windows">Terminal 2: ChromaDB (nativa en Windows)</h3>
+    <pre>
+      <code class="language-powershell"># Activa el entorno (si no lo hiciste)
+C:\workspace-vc\env-llm-ia\Scripts\activate
+
+# Inicia ChromaDB en puerto 8000
+chroma run --host localhost --port 8000 --path ./chroma_data --log-path ./chroma.log
+</code>
+    </pre>
+    <p>
+      <strong>Qué esperar:</strong>
+    </p>
+    <pre>
+      <code>Starting Chroma using DirectClient.
+Saving data to: ./chroma_data
+Chroma is running at http://localhost:8000
+
+(logs adicionales cuando se indexan documentos)
+</code>
+    </pre>
+    <p>
+      <strong>Verificar que está activo:</strong>
+    </p>
+    <pre>
+      <code class="language-powershell"># En otra terminal, haz un request de heartbeat
+curl http://localhost:8000/api/v2/heartbeat
+# Respuesta esperada: {}  (200 OK)
+</code>
+    </pre>
+    <hr />
+    <h3 id="terminal-3-rag-agentai-app.py">Terminal 3: RAG-AgentAI app.py</h3>
+    <pre>
+      <code class="language-powershell"># Navega a la carpeta del proyecto
+cd C:\workspace-vc\LLM\CognitiveClass\convergenciax-langchaint-LLM\04 Agentic RAG\RAG-AgentAI
+
+# Activa entorno
+C:\workspace-vc\env-llm-ia\Scripts\activate
+
+# Ejecuta con logs en vivo
+python app.py 2&gt;&amp;1 | Tee-Object -FilePath app_console.log
+</code>
+    </pre>
+    <p>
+      <strong>Qué esperar:</strong>
+    </p>
+    <pre>
+      <code>INFO     | utils.logging | Logging initialized (level=INFO, file=logs\rag_agentai.log)
+INFO     | __main__ | === DocChat RAG Initialization ===
+INFO     | document_processor.file_handler | DocumentProcessor initialized (cache: logs\document_cache)
+...
+Launching server locally at http://127.0.0.1:5020 ...
+</code>
+    </pre>
+    <p>Cuando abras la UI y subas un documento:</p>
+    <pre>
+      <code>INFO | Processing 1 file(s)
+INFO | ✓ File validation passed (total: 2.3MB)
+INFO | Procesados 156 fragmentos de documento
+INFO | Connecting to Chroma at http://localhost:8000, collection 'rag_agentai_documents'
+INFO | ✓ Vector store (Chroma) created successfully
+INFO | Building hybrid retriever from 156 documents
+</code>
+    </pre>
+    <hr />
+    <h3 id="terminal-4-logs-en-vivo-get-content-con-wait">Terminal 4: Logs en vivo (Get-Content con -Wait)</h3>
+    <pre>
+      <code class="language-powershell"># En otra terminal (sin activar entorno)
+Get-Content -Path C:\workspace-vc\LLM\CognitiveClass\convergenciax-langchaint-LLM\04 Agentic RAG\RAG-AgentAI\logs\rag_agentai.log -Tail 50 -Wait
+</code>
+    </pre>
+    <p>Esto te <strong>sigue los logs en tiempo real</strong> mientras la app corre. Verás:</p>
+    <pre>
+      <code>22:31:41 | INFO     | __main__ | Procesando pregunta: ¿Cuál es el PUE en Singapur?...
+22:31:42 | DEBUG    | agents.relevance_checker | Recuperando top-20 documentos...
+22:31:43 | DEBUG    | agents.relevance_checker | Evaluando relevancia con LLM...
+22:31:45 | DEBUG    | agents.research_agent | Generando respuesta...
+22:31:48 | DEBUG    | agents.verification_agent | Verificando respuesta...
+22:31:50 | INFO     | __main__ | Pipeline completado exitosamente
+</code>
+    </pre>
+    <hr />
+    <h2 id="monitoreo-por-fase">📊 Monitoreo por fase</h2>
+    <h3 id="fase-1-carga-parsing-del-documento">
+      <strong>FASE 1: Carga &amp; Parsing del documento</strong>
+    </h3>
+    <p>
+      <strong>En Terminal 4 (Logs):</strong>
+    </p>
+    <pre>
+      <code>INFO | Processing 1 file(s)
+DEBUG | ✓ File validation passed (total: 2.3MB)
+</code>
+    </pre>
+    <p>
+      <strong>En Terminal 3 (App console):</strong>
+Verás que <strong>VRAM sube</strong> en Task Manager:</p>
+    <pre>
+      <code>Antes:  VRAM usada = 4 GB
+Subiendo PDF con imágenes...
+Después: VRAM usada = 6-7 GB  ← Docling + easyocr activo
+</code>
+    </pre>
+    <p>
+      <strong>¿Dónde buscar evidencia?</strong>
+    </p>
+    <ul>
+      <li>✅ <strong>Task Manager</strong> → Processes → <code>python.exe</code> → "GPU memory" sube</li>
+      <li>✅ <strong>Logs</strong>: "Document parsed: 156 chunks extracted"</li>
+      <li>✅ <strong>Archivo</strong>: <code>logs/document_cache/&lt;hash&gt;.pkl</code> aparece (binario, no legible)</li>
+    </ul>
+    <hr />
+    <h3 id="fase-2-chunking-semantico">
+      <strong>FASE 2: Chunking semántico</strong>
+    </h3>
+    <p>
+      <strong>En Terminal 4 (Logs):</strong>
+    </p>
+    <pre>
+      <code>INFO | Procesados 156 fragmentos de documento
+</code>
+    </pre>
+    <p>
+      <strong>¿Qué significan los números?</strong>
+    </p>
+    <ul>
+      <li>156 fragmentos = PDF se dividió en 156 chunks semánticos</li>
+      <li>Esto es <strong>normal</strong> para un PDF de 2-3 MB</li>
+    </ul>
+    <p>
+      <strong>¿Dónde buscar evidencia?</strong>
+    </p>
+    <ul>
+      <li>✅ <strong>Logs</strong>: "Procesados N fragmentos"</li>
+    </ul>
+    <hr />
+    <h3 id="fase-3-indexacion-en-chromadb-embeddings">
+      <strong>FASE 3: Indexación en ChromaDB (Embeddings)</strong>
+    </h3>
+    <p>
+      <strong>En Terminal 1 (Ollama):</strong>
+    </p>
+    <pre>
+      <code>[GIN] 2025-09-07 22:31:43 | 200 | 2456ms | 127.0.0.1 | POST /api/embeddings
+[GIN] 2025-09-07 22:31:44 | 200 | 2123ms | 127.0.0.1 | POST /api/embeddings
+...
+</code>
+    </pre>
+    <p>Verás <strong>múltiples requests a /api/embeddings</strong> (uno por chunk). Cada uno tarda 1-5 segundos según el tamaño del chunk.</p>
+    <p>
+      <strong>En Terminal 2 (ChromaDB):</strong>
+Probablemente no verás logs visibles, pero internamente está recibiendo y guardando los vectores.</p>
+    <p>
+      <strong>En Terminal 4 (Logs):</strong>
+    </p>
+    <pre>
+      <code>INFO | Initializing OllamaEmbeddings with model='mxbai-embed-large', base_url='http://localhost:11434'
+INFO | ✓ OllamaEmbeddings initialized
+INFO | Connecting to Chroma at http://localhost:8000, collection 'rag_agentai_documents'
+INFO | ✓ Vector store (Chroma) created successfully
+</code>
+    </pre>
+    <p>
+      <strong>¿Dónde buscar evidencia?</strong>
+    </p>
+    <ul>
+      <li>✅ <strong>Terminal Ollama</strong>: requests a <code>/api/embeddings</code></li>
+      <li>✅ <strong>Task Manager</strong>: VRAM sube (mxbai-embed-large ocupa ~1 GB)</li>
+      <li>✅ <strong>Archivos</strong>: <code>./chroma_data/</code> crece (archivos .parquet, .bin)</li>
+      <li>✅ <strong>Logs</strong>: "Vector store (Chroma) created successfully"</li>
+    </ul>
+    <p>
+      <strong>Para inspeccionar qué hay en ChromaDB:</strong>
+    </p>
+    <pre>
+      <code class="language-powershell"># Cuenta cuántos documentos hay
+$response = Invoke-RestMethod -Uri "http://localhost:8000/api/v1/collections" -Method GET
+$response | ConvertTo-Json
+</code>
+    </pre>
+    <hr />
+    <h3 id="fase-4-busqueda-respuesta-3-agentes-llm">
+      <strong>FASE 4: Búsqueda &amp; Respuesta (3 Agentes + LLM)</strong>
+    </h3>
+    <p>Cuando el usuario <strong>hace una pregunta</strong>:</p>
+    <p>
+      <strong>En Terminal 4 (Logs):</strong>
+    </p>
+    <pre>
+      <code>22:31:41 | INFO     | __main__ | Procesando pregunta: ¿Cuál es el PUE?...
+
+---Paso 1: RelevanceChecker---
+22:31:42 | DEBUG    | agents.relevance_checker | Recuperando top-20 documentos...
+22:31:43 | DEBUG    | agents.relevance_checker | Resultado: MATCH
+
+---Paso 2: ResearchAgent---
+22:31:44 | DEBUG    | agents.research_agent | Generando respuesta...
+
+---Paso 3: VerificationAgent---
+22:31:47 | DEBUG    | agents.verification_agent | Resultado: Soportado: SI
+</code>
+    </pre>
+    <p>
+      <strong>En Terminal 1 (Ollama):</strong>
+    </p>
+    <pre>
+      <code>[GIN] 2025-09-07 22:31:42 | 200 | 123ms  | 127.0.0.1 | POST /api/embeddings
+[GIN] 2025-09-07 22:31:43 | 200 | 8456ms | 127.0.0.1 | POST /api/chat    ← ResearchAgent
+[GIN] 2025-09-07 22:31:48 | 200 | 5123ms | 127.0.0.1 | POST /api/chat    ← VerificationAgent
+</code>
+    </pre>
+    <ul>
+      <li>
+        <code>POST /api/embeddings</code> = búsqueda vectorial</li>
+      <li>
+        <code>POST /api/chat</code> = LLM respondiendo</li>
+    </ul>
+    <p>
+      <strong>En Task Manager:</strong>
+    </p>
+    <pre>
+      <code>python.exe VRAM: 4-6 GB (LLM cargado en GPU)
+</code>
+    </pre>
+    <p>
+      <strong>¿Dónde buscar evidencia?</strong>
+    </p>
+    <ul>
+      <li>✅ <strong>Terminal Ollama</strong>: múltiples <code>/api/chat</code> requests</li>
+      <li>✅ <strong>Task Manager</strong>: VRAM sube cuando LLM genera</li>
+      <li>✅ <strong>Terminal 3 (App console)</strong>: respuesta aparece en la UI</li>
+      <li>✅ <strong>Logs</strong>: "Pipeline completado exitosamente"</li>
+    </ul>
+    <hr />
+    <h2 id="casos-de-prueba-para-entender-el-flujo">🧪 Casos de prueba para entender el flujo</h2>
+    <h3 id="test-1-documento-simple-pregunta-directa">
+      <strong>Test 1: Documento simple + pregunta directa</strong>
+    </h3>
+    <pre>
+      <code>1. Sube: GETTING_STARTED.md (TXT simple, sin imágenes)
+   → Espera: No hay OCR, parsing es rápido (~5 seg)
+   
+2. Pregunta: "¿Qué es RAG?"
+   → Espera: Búsqueda encuentra la palabra "RAG" en el texto
+             RelevanceChecker dice "MATCH"
+             ResearchAgent responde basado en el documento
+             
+3. Monitorea:
+   - Terminal Ollama: 1 request de embeddings (pequeño)
+   - Terminal ChromaDB: ~50 chunks guardados
+   - VRAM: sube sólo cuando LLM genera
+</code>
+    </pre>
+    <h3 id="test-2-pdf-con-imagenes-pregunta-especifica">
+      <strong>Test 2: PDF con imágenes + pregunta específica</strong>
+    </h3>
+    <pre>
+      <code>1. Sube: google-2024-environmental-report.pdf (~5 MB con gráficos)
+   → Espera: easyocr se activa, VRAM sube a 6-8 GB
+             parsing tarda ~30-60 seg (extrae OCR de gráficos)
+   
+2. Pregunta: "¿Cuál fue el PUE en Singapur 2022?"
+   → Espera: Vector search encuentra chunks sobre "PUE" + "Singapur"
+             LLM extrae el número específico (1.15)
+             
+3. Monitorea:
+   - Terminal Ollama: muchos requests de embeddings
+   - Terminal ChromaDB: ~200-500 chunks (PDF es grande)
+   - VRAM: permanece alta (&gt;5 GB) mientras LLM procesa
+</code>
+    </pre>
+    <h3 id="test-3-documento-irrelevante">
+      <strong>Test 3: Documento irrelevante</strong>
+    </h3>
+    <pre>
+      <code>1. Sube: un recibo de supermercado (PDF sin relación)
+   
+2. Pregunta: "¿Qué datos sobre PUE hay?"
+   → Espera: RelevanceChecker dice "NO_MATCH"
+             UI responde: "Esta pregunta no está relacionada con los documentos"
+             
+3. Monitorea:
+   - No hay LLM call (se detiene en RelevanceChecker)
+   - Logs muestran: "Resultado: NO_MATCH → finalizando"
+</code>
+    </pre>
+    <hr />
+    <h2 id="troubleshooting-que-hacer-si-algo-no-funciona">🔍 Troubleshooting: ¿Qué hacer si algo no funciona?</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>
+            <strong>Síntoma</strong>
+          </th>
+          <th>
+            <strong>Causa probable</strong>
+          </th>
+          <th>
+            <strong>Verificación</strong>
+          </th>
+          <th>
+            <strong>Fix</strong>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>No hay logs de <code>/api/embeddings</code> en Ollama</td>
+          <td>OllamaEmbeddings no se conecta</td>
+          <td>¿ChromaDB levanta? <code>netstat -ano \| findstr 11434</code></td>
+          <td>Reinicia Ollama, verifica <code>http://localhost:11434/api/tags</code></td>
+        </tr>
+        <tr>
+          <td>ChromaDB recibe petición pero no guarda</td>
+          <td>Permisos en <code>./chroma_data/</code></td>
+          <td>
+            <code>Get-Item ./chroma_data</code>
+          </td>
+          <td>Borra <code>./chroma_data</code>, reinicia ChromaDB</td>
+        </tr>
+        <tr>
+          <td>LLM tarda &gt;1 minuto en responder</td>
+          <td>Modelo muy grande para GPU disponible</td>
+          <td>Task Manager: VRAM maxed out?</td>
+          <td>Cambia a modelo más pequeño en <code>config.ini</code></td>
+        </tr>
+        <tr>
+          <td>"No documentos relevantes" aunque hay PDF</td>
+          <td>Chunking no está preservando contexto</td>
+          <td>Logs: "Procesados N fragmentos"?</td>
+          <td>Revisa <code>FLUJO_COMPLETO.md</code> Fase 2</td>
+        </tr>
+        <tr>
+          <td>VRAM sube de golpe sin razón</td>
+          <td>Docling descargando modelos HuggingFace</td>
+          <td>¿Primer PDF subido?</td>
+          <td>Normal, tarda 2-3 minutos la primera vez</td>
+        </tr>
+      </tbody>
+    </table>
+    <hr />
+    <h2 id="expectativas-de-rendimiento">📈 Expectativas de rendimiento</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>
+            <strong>Operación</strong>
+          </th>
+          <th>
+            <strong>Tiempo esperado</strong>
+          </th>
+          <th>
+            <strong>VRAM típico</strong>
+          </th>
+          <th>
+            <strong>Variables</strong>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Parsing PDF 2 MB (sin imágenes)</td>
+          <td>5-10 seg</td>
+          <td>+200 MB</td>
+          <td>Complejidad de layout</td>
+        </tr>
+        <tr>
+          <td>Parsing PDF 5 MB (con imágenes)</td>
+          <td>30-60 seg</td>
+          <td>+2 GB</td>
+          <td>Cantidad de gráficos</td>
+        </tr>
+        <tr>
+          <td>Embeddings 156 chunks</td>
+          <td>60-120 seg</td>
+          <td>+1 GB</td>
+          <td>Tamaño promedio del chunk</td>
+        </tr>
+        <tr>
+          <td>Búsqueda vectorial</td>
+          <td>&lt;1 seg</td>
+          <td>~0 MB</td>
+          <td>(muy rápido)</td>
+        </tr>
+        <tr>
+          <td>ResearchAgent (generar respuesta)</td>
+          <td>10-30 seg</td>
+          <td>+3-4 GB</td>
+          <td>Longitud de la respuesta</td>
+        </tr>
+        <tr>
+          <td>VerificationAgent</td>
+          <td>5-10 seg</td>
+          <td>+3 GB</td>
+          <td>Verificación de claims</td>
+        </tr>
+        <tr>
+          <td>
+            <strong>Total: subir doc + pregunta</strong>
+          </td>
+          <td>
+            <strong>2-3 minutos</strong>
+          </td>
+          <td>
+            <strong>6-8 GB pico</strong>
+          </td>
+          <td>First-time slower (HF models)</td>
+        </tr>
+      </tbody>
+    </table>
+    <hr />
+    <h2 id="interpretar-los-numeros">💡 Interpretar los números</h2>
+    <h3 id="embeddings-que-es-un-vector-de-1024-dimensiones">
+      <strong>Embeddings: ¿qué es un vector de 1024 dimensiones?</strong>
+    </h3>
+    <pre>
+      <code class="language-python"># Un embedding se ve así (simplificado):
+chunk_text = "El PUE en Singapur 2022 fue de 1.15"
+
+embedding = OllamaEmbeddings.embed_query(chunk_text)
+# Resultado:
+[0.123, -0.456, 0.789, 0.012, -0.345, ..., 0.001]  ← 1024 números
+
+# Estos números capturan el "significado" del texto
+# Chunks similares tienen embeddings similares
+</code>
+    </pre>
+    <h3 id="busqueda-vectorial-como-chromadb-encuentra-documentos">
+      <strong>Búsqueda vectorial: cómo ChromaDB encuentra documentos</strong>
+    </h3>
+    <pre>
+      <code>Pregunta: "¿PUE en Singapur?"
+Embedding de pregunta: [0.100, -0.400, 0.800, ...]  (1024 números)
+
+ChromaDB calcula: similaridad = coseno_similarity(
+    pregunta_embedding,
+    [chunk1_embedding, chunk2_embedding, ...]
+)
+
+Resultado:
+- Chunk "PUE Singapur 2022": 0.87 similitud ✓ TOP 1
+- Chunk "CFE Asia Pacific": 0.65 similitud
+- Chunk "Política de compras": 0.12 similitud
+</code>
+    </pre>
+    <hr />
+    <h2 id="checklist-para-validar-que-todo-funciona">🎯 Checklist para validar que todo funciona</h2>
+    <ul class="contains-task-list">
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" />
+        <strong>Ollama activo</strong>: <code>ollama serve</code> en Terminal 1, sin errores</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" />
+        <strong>ChromaDB activo</strong>: <code>chroma run</code> en Terminal 2, "Chroma is running"</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" />
+        <strong>App activa</strong>: <code>python app.py</code> en Terminal 3, "Launching server"</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" />
+        <strong>Logs en vivo</strong>: Terminal 4 muestra logs en tiempo real</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" />
+        <strong>PDF sube sin errores</strong>: UI acepta archivo, logs muestran "Procesados N fragmentos"</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" />
+        <strong>Embeddings generados</strong>: Terminal 1 (Ollama) muestra requests <code>/api/embeddings</code></li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" />
+        <strong>ChromaDB recibe datos</strong>: Terminal 2 o <code>./chroma_data/</code> crece</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" />
+        <strong>LLM responde</strong>: Terminal 1 (Ollama) muestra <code>/api/chat</code>, respuesta aparece en UI</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" />
+        <strong>Logs muestran pasos</strong>: Terminal 4 muestra "Paso 1: check_relevance", "Paso 2: research", "Paso 3: verification"</li>
+    </ul>
+    <p>Si todos estos pasan, <strong>RAG-AgentAI está funcionando correctamente</strong>.</p>
+  </body>
+</html>

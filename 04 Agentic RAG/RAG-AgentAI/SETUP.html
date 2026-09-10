@@ -1,0 +1,376 @@
+<!DOCTYPE html []>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="MarkdownViewer++" />
+    <title>SETUP.md</title>
+    <style type="text/css">
+            
+/* Avoid page breaks inside the most common attributes, especially for exports (i.e. PDF) */
+td, h1, h2, h3, h4, h5, p, ul, ol, li {
+    page-break-inside: avoid; 
+}
+
+        </style>
+  </head>
+  <body>
+    <h1 id="setup-rag-agentai-guia-de-preparacion-del-entorno">SETUP — RAG-AgentAI: Guía de Preparación del Entorno</h1>
+    <p>
+      <strong>Versión:</strong> 1.0<br /><strong>Python:</strong> 3.13 (env-llm-ia)<br /><strong>Actualizado:</strong> 2026-09-05</p>
+    <hr />
+    <h2 id="resumen-ejecutivo">🎯 Resumen ejecutivo</h2>
+    <p>Antes de ejecutar RAG-AgentAI, necesitas:</p>
+    <ol>
+      <li>
+        <strong>Python 3.13</strong> en <code>C:\workspace-vc\env-llm-ia</code></li>
+      <li>
+        <strong>Docker</strong> con Chroma corriendo en puerto 8000</li>
+      <li>
+        <strong>Ollama</strong> con dos modelos descargados</li>
+      <li>
+        <strong>Dependencias Python</strong> instaladas</li>
+    </ol>
+    <p>Este documento te guía paso a paso. Tiempo estimado: <strong>15-20 minutos</strong> (depende de velocidad de descarga).</p>
+    <hr />
+    <h2 id="prerequisitos-verificados">✅ Prerequisitos verificados</h2>
+    <ul>
+      <li>✅ Windows 11 Home</li>
+      <li>✅ Docker Desktop instalado y ejecutándose</li>
+      <li>✅ Ollama instalado y accesible (<code>ollama</code> comando disponible)</li>
+      <li>✅ Python 3.13 en <code>C:\workspace-vc\env-llm-ia</code></li>
+    </ul>
+    <p>
+      <strong>Si NO tienes algo de lo anterior, instálalo primero antes de continuar.</strong>
+    </p>
+    <hr />
+    <h2 id="paso-1-verificar-python-3.13">Paso 1: Verificar Python 3.13</h2>
+    <pre>
+      <code class="language-powershell"># Abre PowerShell (como administrador)
+C:\workspace-vc\env-llm-ia\Scripts\python.exe --version
+# Esperado: Python 3.13.x
+</code>
+    </pre>
+    <p>Si obtienes error, instala el environment:</p>
+    <pre>
+      <code class="language-powershell">python -m venv C:\workspace-vc\env-llm-ia
+</code>
+    </pre>
+    <hr />
+    <h2 id="paso-2-instalar-dependencias-python">Paso 2: Instalar dependencias Python</h2>
+    <h3 id="opcion-a-instalacion-automatica-recomendado-si-hay-errores">Opción A: Instalación automática (recomendado si hay errores)</h3>
+    <pre>
+      <code class="language-powershell"># 1. Navega a la carpeta del proyecto
+cd C:\Claude\dev-ia\RAG-AgentAI
+
+# 2. Ejecuta el script de instalación fix
+powershell -ExecutionPolicy Bypass -File INSTALL_FIX.ps1
+
+# Esto instala con modo "wheels-only" para evitar compilación
+# Tarda 3-5 minutos
+</code>
+    </pre>
+    <h3 id="opcion-b-instalacion-manual">Opción B: Instalación manual</h3>
+    <pre>
+      <code class="language-powershell"># 1. Navega a la carpeta del proyecto
+cd C:\Claude\dev-ia\RAG-AgentAI
+
+# 2. Activa el environment
+C:\workspace-vc\env-llm-ia\Scripts\activate
+
+# 3. Limpia caché de pip (importante)
+pip cache purge
+
+# 4. Instala requirements.txt
+pip install -r requirements.txt --only-binary :all:
+
+# Tarda 3-5 minutos (descarga torch, docling, etc.)
+</code>
+    </pre>
+    <p>
+      <strong>Esperado al final:</strong>
+    </p>
+    <pre>
+      <code>Successfully installed langchain-0.3.16 langchain-community-0.3.16 ... (25+ paquetes)
+</code>
+    </pre>
+    <h3 id="si-falla-con-pandas-compilation-error">⚠️ Si falla con "pandas compilation error"</h3>
+    <p>
+      <strong>SOLUCIÓN:</strong> Usamos INSTALL_FIX.ps1 que:</p>
+    <ul>
+      <li>Elimina pandas (no se usa en el código)</li>
+      <li>Usa mode <code>--only-binary</code> para evitar compilación Cython</li>
+      <li>Tiene fallback automático</li>
+    </ul>
+    <pre>
+      <code class="language-powershell">powershell -ExecutionPolicy Bypass -File INSTALL_FIX.ps1
+</code>
+    </pre>
+    <hr />
+    <h2 id="paso-3-iniciar-chroma-docker-base-de-datos-vectorial">Paso 3: Iniciar Chroma Docker (Base de Datos Vectorial)</h2>
+    <p>Chroma es la base de datos donde se guardan los embeddings de tus documentos.</p>
+    <h3 id="arrancar-chroma-en-docker">3.1 Arrancar Chroma en Docker</h3>
+    <pre>
+      <code class="language-powershell"># Opción A: Si es la primera vez (descargar imagen)
+docker run -d -p 8000:8000 chromadb/chroma:latest
+
+# Opción B: Si ya está descargado (más rápido)
+docker start &lt;container_id&gt;  # Reemplaza &lt;container_id&gt; con el ID real
+</code>
+    </pre>
+    <h3 id="verificar-que-esta-corriendo">3.2 Verificar que está corriendo</h3>
+    <pre>
+      <code class="language-powershell"># Debería devolver HTTP 200
+curl http://localhost:8000/api/v1
+
+# O en PowerShell:
+Invoke-WebRequest -Uri "http://localhost:8000/api/v1" -ErrorAction SilentlyContinue
+# Si devuelve un Status Code 200, está funcionando ✓
+</code>
+    </pre>
+    <p>
+      <strong>Nota:</strong> Chroma se ejecuta en el puerto <strong>8000</strong> (configurable en <code>config.ini</code>).</p>
+    <hr />
+    <h2 id="paso-4-descargar-modelos-en-ollama">Paso 4: Descargar modelos en Ollama</h2>
+    <p>Necesitas dos modelos:</p>
+    <ol>
+      <li>
+        <strong>mxbai-embed-large</strong> (670 MB) — para convertir texto a vectores</li>
+      <li>
+        <strong>qwen2.5:7b-instruct-q4_K_M</strong> (4.7 GB) — para responder preguntas</li>
+    </ol>
+    <h3 id="verificar-que-ollama-esta-corriendo">4.1 Verificar que Ollama está corriendo</h3>
+    <pre>
+      <code class="language-powershell"># Debería devolver versión de Ollama
+ollama -v
+
+# Y ver el status:
+curl http://localhost:11434/api/tags
+</code>
+    </pre>
+    <h3 id="descargar-los-modelos">4.2 Descargar los modelos</h3>
+    <pre>
+      <code class="language-powershell"># 1. Descargar embedding model (670 MB, ~2-3 min)
+ollama pull mxbai-embed-large
+
+# 2. Descargar LLM text model (4.7 GB, ~15-20 min con conexión normal)
+ollama pull qwen2.5:7b-instruct-q4_K_M
+
+# 3. Verificar que están instalados
+ollama list
+# Debería mostrar:
+# mxbai-embed-large           670 MB
+# qwen2.5:7b-instruct-q4_K_M  4.7 GB
+</code>
+    </pre>
+    <p>
+      <strong>Nota sobre modelos alternativos:</strong>
+    </p>
+    <ul>
+      <li>Si tienes GPU RTX A4500 (16 GB), puedes usar <code>qwen2.5:14b-instruct-q4_K_M</code> (mejor calidad)</li>
+      <li>Si tienes GPU RTX 3050 (6 GB), mantén <code>qwen2.5:7b-instruct-q4_K_M</code></li>
+      <li>Si quieres pruebas rápidas: usa <code>qwen2.5:3b-instruct</code> (1.3 GB, más rápido pero menos preciso)</li>
+    </ul>
+    <p>Actualiza los nombres de modelos en <strong><code>config.ini</code></strong> sección <code>[ollama]</code> si cambias.</p>
+    <hr />
+    <h2 id="paso-5-configurar-config.ini">Paso 5: Configurar config.ini</h2>
+    <p>Abre <strong><code>config.ini</code></strong> en tu editor favorito y verifica:</p>
+    <pre>
+      <code class="language-ini">[ollama]
+base_url = http://localhost:11434        # URL de Ollama (cambiar si es remoto)
+text_model = qwen2.5:7b-instruct-q4_K_M # Modelo que descargaste en Paso 4
+temperature = 0.1                        # 0.0 = determinístico, 1.0 = creativo
+
+[embeddings]
+embedding_model = mxbai-embed-large     # Coincide con lo que descargaste
+
+[chroma]
+host = localhost                         # Debe coincidir con donde corre Docker
+port = 8000                              # Puerto Docker
+collection_name = rag_agentai_documents  # Nombre de la colección (se crea automáticamente)
+
+[gradio]
+server_port = 5020                       # Puerto web (http://127.0.0.1:5020)
+</code>
+    </pre>
+    <p>
+      <strong>Importante:</strong> Si Ollama está en una máquina diferente (ej. <code>http://convergenciax02:11434</code>), actualiza <code>base_url</code>.</p>
+    <hr />
+    <h2 id="paso-6-validar-que-todo-funciona-smoke-test">Paso 6: Validar que todo funciona (Smoke Test)</h2>
+    <pre>
+      <code class="language-powershell"># Desde C:\Claude\dev-ia\RAG-AgentAI con env activado:
+python validate_smoke_test.py
+
+# Esperado: Todos los checks ✓
+# ✓ Config loads OK
+# ✓ Settings loaded
+# ✓ Ollama connectivity OK
+# ✓ Chroma connectivity OK
+# ✓ All components instantiate OK
+# ✓ Smoke test PASSED
+</code>
+    </pre>
+    <p>Si algo falla, ve a <strong>Troubleshooting</strong> abajo.</p>
+    <hr />
+    <h2 id="paso-7-crear-la-base-de-datos-chroma-primera-vez">Paso 7: Crear la base de datos Chroma (primera vez)</h2>
+    <p>La BD se crea automáticamente cuando cargas documentos. Pero puedes pre-crearla vacía:</p>
+    <pre>
+      <code class="language-powershell"># Activar env
+C:\workspace-vc\env-llm-ia\Scripts\activate
+
+# Ejecutar script de inicialización
+python -c "from retriever.builder import RetrieverBuilder; RetrieverBuilder().build_empty_retriever()"
+
+# O simplemente: carga un documento en la UI (Paso 9)
+</code>
+    </pre>
+    <p>La colección <strong><code>rag_agentai_documents</code></strong> se crea en Chroma automáticamente.</p>
+    <hr />
+    <h2 id="paso-8-ejecutar-la-aplicacion">🚀 Paso 8: Ejecutar la aplicación</h2>
+    <pre>
+      <code class="language-powershell"># Con env-llm-ia activado:
+python app.py
+
+# Esperado:
+# INFO:     Uvicorn running on http://127.0.0.1:5020
+</code>
+    </pre>
+    <p>Abre el navegador:</p>
+    <pre>
+      <code>http://127.0.0.1:5020
+</code>
+    </pre>
+    <hr />
+    <h2 id="paso-9-probar-con-documentos-de-ejemplo">📚 Paso 9: Probar con documentos de ejemplo</h2>
+    <ol>
+      <li>En la UI, selecciona un ejemplo del menú <strong>"Cargar Ejemplo"</strong></li>
+      <li>Haz una pregunta relacionada (ej. "¿Cuál es la eficiencia PUE en 2022?")</li>
+      <li>Presiona <strong>"Enviar"</strong></li>
+      <li>Espera <strong>10-30 segundos</strong> (depende del modelo y GPU)</li>
+      <li>Verás:
+<ul><li><strong>Respuesta:</strong> Generada desde los documentos</li><li><strong>Reporte de Verificación:</strong> Dice si la respuesta está soportada</li></ul></li>
+    </ol>
+    <hr />
+    <h2 id="troubleshooting">🔧 Troubleshooting</h2>
+    <h3 id="cannot-connect-to-ollama">"Cannot connect to Ollama"</h3>
+    <pre>
+      <code>Error: httpx._exceptions.ConnectError: Unable to connect to http://localhost:11434
+
+Soluciones:
+1. Verifica que Ollama está corriendo: ollama list
+2. Si no, inicia: ollama serve (en otra terminal)
+3. Si es remoto, actualiza base_url en config.ini
+4. Verifica firewall (puerto 11434 debe estar abierto)
+</code>
+    </pre>
+    <h3 id="cannot-connect-to-chroma">"Cannot connect to Chroma"</h3>
+    <pre>
+      <code>Error: Connection refused: ('localhost', 8000)
+
+Soluciones:
+1. Verifica que Docker está corriendo: docker ps
+2. Verifica que Chroma está en puerto 8000:
+   curl http://localhost:8000/api/v1
+3. Si no, arranca Docker Chroma:
+   docker run -d -p 8000:8000 chromadb/chroma:latest
+</code>
+    </pre>
+    <h3 id="model-not-found-qwen2.57b-instruct-q4_k_m">"Model not found: qwen2.5:7b-instruct-q4_K_M"</h3>
+    <pre>
+      <code>Error: model 'qwen2.5:7b-instruct-q4_K_M' not found
+
+Soluciones:
+1. Descarga el modelo:
+   ollama pull qwen2.5:7b-instruct-q4_K_M
+2. Espera a que termine (puede ser 15-20 min)
+3. Verifica: ollama list
+</code>
+    </pre>
+    <h3 id="modulenotfounderror-no-module-named-torch-o-pandas-compilation-error">"ModuleNotFoundError: No module named 'torch'" o "pandas compilation error"</h3>
+    <pre>
+      <code>Error durante pip install requirements.txt:
+  ninja: build stopped: subcommand failed
+  error: metadata-generation-failed × Encountered error while generating package metadata
+
+Causa: pandas o torch intentan compilar desde código fuente (Cython)
+
+SOLUCIÓN RÁPIDA:
+1. Usa INSTALL_FIX.ps1:
+   powershell -ExecutionPolicy Bypass -File INSTALL_FIX.ps1
+
+SOLUCIÓN MANUAL:
+1. Limpia caché:
+   pip cache purge
+
+2. Instala con --only-binary (solo wheels precompilados):
+   pip install -r requirements.txt --only-binary :all:
+
+3. Si sigue fallando, verifica que usas Python 3.13:
+   C:\workspace-vc\env-llm-ia\Scripts\python.exe --version
+   # Debe mostrar: Python 3.13.x
+
+4. Si todo falla, reinstala el environment:
+   python -m venv C:\workspace-vc\env-llm-ia
+   C:\workspace-vc\env-llm-ia\Scripts\activate
+   pip install -r requirements.txt --only-binary :all:
+</code>
+    </pre>
+    <h3 id="application-starts-but-ui-is-blank-or-slow">"Application starts but UI is blank or slow"</h3>
+    <pre>
+      <code>Soluciones:
+1. Abre la consola del navegador (F12) y busca errores
+2. Revisa logs/rag_agentai.log
+3. Si el modelo es lento: reduce vector_search_k en config.ini (de 10 a 5)
+4. Si Ollama es lento: aumenta keep_alive en config.ini
+</code>
+    </pre>
+    <hr />
+    <h2 id="verificacion-de-recursos-opcional">📊 Verificación de recursos (opcional)</h2>
+    <p>Antes de ejecutar, asegúrate de tener suficientes recursos:</p>
+    <pre>
+      <code class="language-powershell"># Ver uso de VRAM
+nvidia-smi  # Si tienes NVIDIA GPU
+
+# Ver VRAM después de cargar un modelo
+# En PowerShell, después de que Ollama lo cargue
+</code>
+    </pre>
+    <p>
+      <strong>Requisitos mínimos:</strong>
+    </p>
+    <ul>
+      <li>GPU VRAM: 6 GB (RTX 3050) ✓ Suficiente</li>
+      <li>RAM: 8 GB ✓ Suficiente</li>
+      <li>Disco: 10 GB libres ✓ Para modelos + DB</li>
+    </ul>
+    <hr />
+    <h2 id="checklist-antes-de-manual.md">✅ Checklist antes de MANUAL.md</h2>
+    <ul class="contains-task-list">
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> Python 3.13 verificado</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> requirements.txt instalados sin errores</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> Chroma Docker corriendo (puerto 8000)</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> Ollama corriendo (puerto 11434)</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> Modelos descargados (<code>ollama list</code> muestra ambos)</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> config.ini actualizado con tus paths/URLs</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> validate_smoke_test.py pasa ✓</li>
+      <li class="task-list-item">
+        <input disabled="disabled" type="checkbox" /> app.py se ejecuta sin errores</li>
+    </ul>
+    <p>
+      <strong>Si todos los checks ✓, sigue a MANUAL.md para usar la app.</strong>
+    </p>
+    <hr />
+    <h2 id="soporte">📞 Soporte</h2>
+    <ul>
+      <li>Logs detallados: <code>logs/rag_agentai.log</code></li>
+      <li>Código: <code>C:\Claude\dev-ia\RAG-AgentAI</code></li>
+      <li>Preguntas: Ver sección <strong>Troubleshooting</strong> o revisar MANUAL.md</li>
+    </ul>
+  </body>
+</html>

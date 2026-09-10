@@ -1,0 +1,612 @@
+# 🏗️ ARCHITECTURE_DETAILED — Explicación completa del código
+
+**Versión:** 1.0  
+**Propósito:** Entender cómo funciona cada componente internamente  
+**Nivel:** Intermedio (entiende Python, LLM, vectores)
+
+---
+
+## 📋 Índice
+
+1. [Visión General](#visión-general)
+2. [Flujo Completo de Datos](#flujo-completo-de-datos)
+3. [Componentes Principales](#componentes-principales)
+4. [Explicación Línea por Línea](#explicación-línea-por-línea)
+5. [Decisiones de Diseño](#decisiones-de-diseño)
+
+---
+
+## 🎯 Visión General
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                  RAG-AgentAI Architecture               │
+└─────────────────────────────────────────────────────────┘
+
+INPUT:
+  User uploads: PDF/DOCX/TXT/MD
+  User asks: pregunta en español
+
+PROCESSING:
+  1. DocumentProcessor
+     └─ Docling (parse) → Markdown → Chunks → Cache
+  
+  2. RetrieverBuilder
+     ├─ OllamaEmbeddings (vectores locales)
+     ├─ Chroma HTTP (vector store remoto)
+     └─ BM25 (búsqueda léxica)
+     
+  3. AgentWorkflow (3 agentes)
+     ├─ RelevanceChecker (¿relevante?)
+     ├─ ResearchAgent (genera respuesta)
+     └─ VerificationAgent (verifica)
+
+OUTPUT:
+  Answer (español) + Verification Report
+```
+
+---
+
+## 🔄 Flujo Completo de Datos
+
+### **Fase 1: Carga de Documentos**
+
+```python
+# Usuario sube archivo → app.py llama a process_file()
+
+def process_file(file_bytes: bytes, filename: str):
+    """Procesa un archivo y lo indexa en Chroma."""
+    
+    # 1. Calcular hash SHA256 del contenido
+    content_hash = hashlib.sha256(file_bytes).hexdigest()
+    cache_file = f"cache/{content_hash}.pkl"
+    
+    # 2. ¿Está en caché?
+    if cache_file exists:
+        # Cargar desde .pkl (rápido: <1 seg)
+        return load_from_cache(cache_file)
+    
+    # 3. Parsear con Docling (lento: 10-60 seg)
+    #    Convierte PDF/DOCX → Markdown
+    documents = docling_parse(file_bytes)
+    
+    # 4. Chunking: dividir por # headers
+    chunks = markdown_header_text_splitter(documents)
+    
+    # 5. Guardar en Chroma (+ embeddings)
+    chroma_collection.add(
+        documents=chunks,
+        embeddings=ollama_embeddings(chunks),
+        metadatas={"filename": filename}
+    )
+    
+    # 6. Cachear resultado
+    save_to_cache(cache_file, chunks)
+    
+    return chunks
+```
+
+**Tiempo:** 
+- Primera carga: 10-60 seg (depende tamaño PDF)
+- Caché hit: <1 seg
+
+---
+
+### **Fase 2: Recuperación de Documentos (Retrieval)**
+
+```python
+# Cuando usuario pregunta → retriever_builder.build_hybrid_retriever()
+
+def build_hybrid_retriever(documents: List[Document]):
+    """Crea recuperador híbrido: BM25 + Vector Search."""
+    
+    # 1. BM25 Retriever (sparse, léxico)
+    bm25_retriever = BM25Retriever.from_documents(documents)
+    # Usa: TF-IDF sobre palabras (rápido, sin LLM)
+    
+    # 2. Vector Retriever (dense, semántico)
+    embeddings = OllamaEmbeddings(model="mxbai-embed-large")
+    chroma_vectorstore = Chroma.from_documents(
+        documents,
+        embeddings,
+        collection_name="rag_agentai_documents",
+        client=chromadb.HttpClient(host="localhost", port=8000)
+    )
+    vector_retriever = chroma_vectorstore.as_retriever(k=10)
+    
+    # 3. Ensemble: combina ambos
+    ensemble = EnsembleRetriever(
+        retrievers=[bm25_retriever, vector_retriever],
+        weights=[0.4, 0.6]  # BM25: 40%, Vector: 60%
+    )
+    
+    return ensemble
+```
+
+**Cómo funciona la búsqueda:**
+
+```
+Pregunta: "¿Cuál es la eficiencia PUE?"
+
+BM25 search:
+  └─ Busca documentos que contengan: "PUE" o "eficiencia"
+  └─ Relevancia: TF-IDF (frecuencia de término)
+  └─ Velocidad: ~10ms
+  └─ Resultado: top 10 por relevancia léxica
+
+Vector search:
+  └─ Convierte "¿Cuál es la eficiencia PUE?" a vector (embeddings)
+  └─ Busca documentos vectorialmente similares en Chroma
+  └─ Relevancia: cosine similarity
+  └─ Velocidad: ~100-200ms (depende Chroma)
+  └─ Resultado: top 10 por similitud semántica
+
+Ensemble:
+  └─ Combina resultados: 0.4 * BM25_scores + 0.6 * Vector_scores
+  └─ Retorna: top 10 documentos finales (híbridos)
+```
+
+**Por qué los dos?**
+- **BM25** es excelente para palabras exactas (ej. "PUE" debe encontrarse)
+- **Vector** es excelente para significado (ej. "eficiencia de energía" ≈ "PUE")
+- **Híbrido** combina lo mejor de ambos
+
+---
+
+### **Fase 3: Workflow de 3 Agentes (LLM)**
+
+```python
+# app.py llama a: workflow.full_pipeline(question, retriever)
+
+def full_pipeline(question: str, retriever) -> Dict:
+    """Ejecuta 3 agentes en secuencia."""
+    
+    # NODE 1: RelevanceChecker
+    # ─────────────────────────────────────────────────
+    top_docs = retriever.invoke(question)[:20]  # Top 20
+    
+    relevance_check = RelevanceChecker()
+    is_relevant = relevance_check.check(question, retriever)
+    # Retorna: "CAN_ANSWER", "PARTIAL", o "NO_MATCH"
+    
+    if is_relevant == "NO_MATCH":
+        return {
+            "draft_answer": "No encontré información relevante",
+            "verification_report": "Relevancia: NO"
+        }
+    
+    # NODE 2: ResearchAgent
+    # ─────────────────────────────────────────────────
+    top_docs = retriever.invoke(question)[:5]  # Top 5
+    context = "\n".join(doc.page_content for doc in top_docs)
+    
+    research_agent = ResearchAgent()
+    prompt = f"""Eres un asistente IA. Responde SOLO basándote en:
+
+Pregunta: {question}
+
+Documentos:
+{context}
+
+Respuesta:"""
+    
+    draft_answer = research_agent.model.invoke(prompt).content
+    # LLM genera respuesta (10-30 seg)
+    
+    # NODE 3: VerificationAgent
+    # ─────────────────────────────────────────────────
+    verification_agent = VerificationAgent()
+    prompt = f"""¿Está esta respuesta soportada por los documentos?
+
+Pregunta: {question}
+Respuesta: {draft_answer}
+
+Documentos: {context}
+
+Análisis:"""
+    
+    verification_report = verification_agent.model.invoke(prompt).content
+    # LLM verifica (5-10 seg)
+    
+    # NODE 4: Re-research (si no verificado)
+    # ─────────────────────────────────────────────────
+    if "Soportado: NO" in verification_report:
+        # Vuelve a investigar (máximo 1 retry)
+        draft_answer = research_agent.research(question, retriever)
+        verification_report = verification_agent.verify(question, draft_answer, retriever)
+    
+    return {
+        "draft_answer": draft_answer,
+        "verification_report": verification_report
+    }
+```
+
+---
+
+## 🔧 Componentes Principales
+
+### **1. DocumentProcessor (`document_processor/file_handler.py`)**
+
+```python
+class DocumentProcessor:
+    """Parsea archivos (PDF/DOCX/TXT/MD) a chunks indexables."""
+    
+    def process(self, file_bytes: bytes, filename: str) -> List[Document]:
+        """
+        Flujo:
+        1. File bytes
+           ↓
+        2. SHA256 hash → ¿En caché?
+           ↓
+        3. Docling parse (con OCR si PDF)
+           ↓ (PDF → Markdown con OCR de imágenes)
+        4. MarkdownHeaderTextSplitter (# headers)
+           ↓
+        5. Deduplicación por hash de contenido
+           ↓
+        6. Guardar .pkl en caché
+           ↓
+        7. Retornar List[Document]
+        """
+        
+        # Pseudocódigo
+        content_hash = sha256(file_bytes).hexdigest()
+        cache_path = f"cache/{content_hash}.pkl"
+        
+        # ¿Caché?
+        if os.path.exists(cache_path):
+            return pickle.load(open(cache_path, 'rb'))
+        
+        # Parsear
+        docling_parser = DocumentConverter()
+        result = docling_parser.convert(BytesIO(file_bytes))
+        markdown = result.document.export_to_markdown()
+        
+        # Chunking
+        splitter = MarkdownHeaderTextSplitter(
+            headers_to_split_on=[("#", "section"), ("##", "subsection")]
+        )
+        chunks = splitter.split_text(markdown)
+        
+        # Dedup
+        seen = set()
+        unique_chunks = []
+        for chunk in chunks:
+            content_hash = sha256(chunk.page_content.encode()).hexdigest()
+            if content_hash not in seen:
+                unique_chunks.append(chunk)
+                seen.add(content_hash)
+        
+        # Cachear
+        os.makedirs("cache", exist_ok=True)
+        pickle.dump(unique_chunks, open(cache_path, 'wb'))
+        
+        return unique_chunks
+```
+
+**Decisiones:**
+- **Docling:** Mejor que pypdf porque maneja OCR y múltiples formatos
+- **MarkdownHeaderTextSplitter:** Respeta estructura (no divide en mitad de sección)
+- **Dedup:** Evita duplicados si mismo contenido en múltiples docs
+- **Caché .pkl:** Reutilizar chunks sin reparsear
+
+---
+
+### **2. RetrieverBuilder (`retriever/builder.py`)**
+
+```python
+class RetrieverBuilder:
+    """Construye recuperador híbrido BM25 + Vector."""
+    
+    def build_hybrid_retriever(self, documents: List[Document]):
+        """
+        Paso 1: OllamaEmbeddings
+        ───────────────────────
+        Convierte texto → vectores (embeddings)
+        Usa modelo local: mxbai-embed-large (670 MB)
+        Endpoint: http://localhost:11434/api/embed
+        
+        def embed(texts):
+            for text in texts:
+                → Ollama conversa con mxbai-embed-large
+                ← Retorna vector de 1024 dimensiones
+        
+        Paso 2: Chroma Vector Store
+        ───────────────────────────
+        Guarda documentos + embeddings en BD vectorial remota
+        Conexión: HTTP (localhost:8000)
+        
+        chroma.add(
+            ids=["doc1", "doc2", ...],
+            documents=[text1, text2, ...],
+            embeddings=[[vec1], [vec2], ...],
+            metadatas=[{"filename": "x.pdf"}, ...]
+        )
+        
+        Búsqueda: query_vector → cosine_similarity con todos
+        
+        Paso 3: BM25Retriever
+        ────────────────────
+        Índice léxico in-memory (sin LLM, sin Chroma)
+        
+        bm25 = BM25Okapi(corpus)  # corpus = tokens por doc
+        scores = bm25.get_scores(query_tokens)
+        
+        Ranking: TF-IDF (term frequency, inverse document frequency)
+        
+        Paso 4: EnsembleRetriever
+        ────────────────────────
+        Combina ambos recuperadores
+        
+        results_bm25 = bm25.retrieve(question, k=10)
+        results_vector = chroma.search(question, k=10)
+        
+        merged = [
+            (doc, 0.4 * score_bm25 + 0.6 * score_vector)
+            for doc in union(results_bm25, results_vector)
+        ]
+        
+        return top_10(merged)
+        """
+        pass
+```
+
+---
+
+### **3. Los 3 Agentes (LLM-based)**
+
+#### **Agent 1: RelevanceChecker**
+```python
+class RelevanceChecker:
+    """¿Pueden los documentos responder la pregunta?"""
+    
+    def check(self, question: str, retriever) -> str:
+        """
+        Entrada: pregunta + top 20 documentos
+        
+        Prompt al LLM:
+        ───────────
+        "Eres un verificador. Clasifica: ¿estos docs responden?
+         Opciones: CAN_ANSWER, PARTIAL, NO_MATCH
+         
+         Pregunta: ¿Cuál es la eficiencia PUE en 2022?
+         
+         Documentos:
+         [Doc 1] ...información sobre PUE...
+         [Doc 2] ...información sobre eficiencia...
+         
+         Respuesta (solo la etiqueta):"
+        
+        LLM response: "CAN_ANSWER" ✓
+        
+        Temperatura: 0.0 (determinístico, mismo resultado c/vez)
+        
+        Retorna: "CAN_ANSWER" | "PARTIAL" | "NO_MATCH"
+        """
+        pass
+```
+
+#### **Agent 2: ResearchAgent**
+```python
+class ResearchAgent:
+    """Genera la respuesta basada en documentos."""
+    
+    def research(self, question: str, retriever) -> str:
+        """
+        Entrada: pregunta + top 5 documentos
+        
+        Prompt al LLM:
+        ───────────
+        "Eres un asistente. Responde SOLO basándote en docs.
+         
+         Pregunta: ¿Cuál es la eficiencia PUE en 2022?
+         
+         Documentos:
+         [Doc 1] ...PUE 2022: 1.12...
+         [Doc 2] ...regional averages...
+         
+         Instrucciones:
+         - Usa solo estos docs
+         - Cita qué doc usaste
+         - Si no hay respuesta, dilo
+         
+         Respuesta:"
+        
+        LLM response: 
+        "Según el Documento 1, la eficiencia PUE en 2022 
+         fue de 1.12, mostrando mejora respecto a 2021..."
+        
+        Temperatura: 0.3 (algo de variación, no repetitivo)
+        Max tokens: 300 (respuesta moderada, no infinita)
+        
+        Retorna: respuesta (español)
+        """
+        pass
+```
+
+#### **Agent 3: VerificationAgent**
+```python
+class VerificationAgent:
+    """Verifica que la respuesta esté en los documentos."""
+    
+    def verify(self, question: str, answer: str, retriever) -> str:
+        """
+        Entrada: pregunta + respuesta generada + documentos
+        
+        Prompt al LLM:
+        ───────────
+        "Eres un verificador de hechos. Verifica:
+         
+         ¿Esta respuesta está soportada por los docs?
+         
+         Pregunta: ¿Cuál es la eficiencia PUE en 2022?
+         
+         Respuesta a verificar:
+         'Según el Documento 1, la eficiencia PUE en 2022
+          fue de 1.12...'
+         
+         Documentos: [Doc 1, Doc 2, ...]
+         
+         Formato de respuesta:
+         Soportado: SI/NO/PARCIAL
+         Relevante: SI/NO
+         Resumen: [1-2 oraciones]"
+        
+        LLM response:
+        "Soportado: SI
+         Relevante: SI
+         Resumen: El valor 1.12 está explícitamente 
+         mencionado en Doc 1."
+        
+        Temperatura: 0.0 (determinístico, strict fact-checking)
+        
+        Retorna: verification report (español)
+        """
+        pass
+```
+
+---
+
+## 💡 Decisiones de Diseño
+
+### **1. ¿Por qué 3 agentes en secuencia?**
+
+```
+Alternativa 1: Un solo LLM
+❌ Genera respuesta sin verificar
+❌ No controla alucinaciones
+❌ Respuesta puede venir de "memoria" del modelo
+
+Alternativa 2: 3 agentes secuenciales ✓
+✅ Relevance gate: evita procesar preguntas no relacionadas
+✅ Research: enfoque estrecho (solo docs)
+✅ Verification: fact-check automático
+✅ Re-research loop: si verifica falla, intenta de nuevo
+✅ Transparencia: cada paso es debuggeable
+```
+
+### **2. ¿Por qué BM25 + Vector (híbrido)?**
+
+```
+Solo BM25 (léxico):
+❌ "eficiencia de energía" ≠ "PUE" (no encuentra)
+❌ Sinónimos fallan
+✓ Palabras exactas funciona bien
+
+Solo Vector (semántico):
+✓ "eficiencia de energía" ≈ "PUE" (encuentra por significado)
+✓ Paráfrasis funciona bien
+❌ Introduce ruido (demasiado "fuzzy")
+
+Híbrido (BM25 + Vector) ✓✓
+✓ Precision de BM25 + Recall de Vector
+✓ Palabras clave exactas + significado relacionado
+✓ Mejor cobertura con menos ruido
+```
+
+### **3. ¿Por qué Chroma HTTP (remoto) no local?**
+
+```
+Local (ChromaDB in-process):
+❌ Ocupa memoria del proceso de la app
+❌ Si app falla, pierdes BD
+❌ Difícil compartir entre procesos
+
+HTTP (Chroma server remoto en Docker) ✓
+✓ Separación de concerns (BD aparte de app)
+✓ Fácil resetear sin perder app
+✓ Escalable (múltiples apps → 1 Chroma)
+✓ Monitoreable independientemente
+```
+
+### **4. ¿Por qué MarkdownHeaderTextSplitter?**
+
+```
+Chunk sin estructura:
+❌ Divide una sección a mitad
+❌ Context pierde coherencia
+❌ LLM confundido
+
+MarkdownHeaderTextSplitter (respeta headers) ✓
+✓ Mantiene coherencia: [# Title] → [## Subtopic] → [### Detail]
+✓ Cada chunk es auto-contenido
+✓ Metadatos rich: { section: "...", subsection: "..." }
+```
+
+### **5. ¿Por qué temperatura variable?**
+
+```
+RelevanceChecker & VerificationAgent:
+  temperature = 0.0 (determinístico)
+  Por qué: Decisiones binarias (si/no). 
+           Repetibilidad = confiable.
+
+ResearchAgent:
+  temperature = 0.3 (leve variación)
+  Por qué: Generación de texto. Si 0.0, repetitivo.
+           0.3 = variación sin volverse aleatorio.
+```
+
+---
+
+## 🔐 Garantías de Diseño
+
+```
+GARANTÍA 1: Respuestas solo de documentos
+└─ Prompt: "SOLO basándote en los documentos"
+└─ Verificación: VerificationAgent comprueba
+└─ Si falla: Re-research automático
+└─ Si persiste: Marca como "Soportado: NO"
+
+GARANTÍA 2: Debugging transparente
+└─ Cada agente loguea su entrada y salida
+└─ Logs en logs/rag_agentai.log
+└─ Usuario ve: ¿qué documentos se usaron?
+└─          ¿qué pregunta se le hizo al LLM?
+└─          ¿qué respuesta generó?
+
+GARANTÍA 3: Sin alucinaciones críticas
+└─ RelevanceChecker filtra preguntas fuera de scope
+└─ VerificationAgent rechaza respuestas sin soporte
+└─ Max 1 retry: si falla dos veces, comunica error
+
+GARANTÍA 4: Idioma español end-to-end
+└─ Prompts → español
+└─ Respuestas → español esperado
+└─ Si LLM devuelve inglés → síntoma de mal sistema prompt
+```
+
+---
+
+## 📊 Métricas de Observabilidad
+
+```
+Cada request de pregunta captura:
+
+1. Latencia:
+   - Retrievaltime: 0.1-0.5 seg
+   - LLM time: 10-30 seg
+   - Total: 15-45 seg
+
+2. Tokens:
+   - Input tokens: ~500-1000 (prompt + context)
+   - Output tokens: ~100-300 (respuesta)
+
+3. Documentos:
+   - Retrieved (k=20): 20 docs del retriever
+   - Used for research (k=5): 5 docs pasados al LLM
+   - Average chunk length: ~500 chars
+
+4. Scores:
+   - Relevance: CAN_ANSWER | PARTIAL | NO_MATCH
+   - Verification: Soportado (SI/NO/PARCIAL)
+   - Re-research attempts: 0 o 1
+```
+
+Todos estos logs → `logs/rag_agentai.log` para análisis posterior.
+
+---
+
+**Fin de explicación arquitectónica detallada.**
+
+Para continuar: lee CODE_WALKTHROUGH.md para ver el código real línea a línea.

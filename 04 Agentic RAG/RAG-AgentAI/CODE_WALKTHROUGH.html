@@ -1,0 +1,1031 @@
+<!DOCTYPE html []>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="author" content="MarkdownViewer++" />
+    <title>CODE_WALKTHROUGH.md</title>
+    <style type="text/css">
+            
+/* Avoid page breaks inside the most common attributes, especially for exports (i.e. PDF) */
+td, h1, h2, h3, h4, h5, p, ul, ol, li {
+    page-break-inside: avoid; 
+}
+
+        </style>
+  </head>
+  <body>
+    <h1 id="code_walkthrough-explicacion-del-codigo-real">📝 CODE_WALKTHROUGH — Explicación del código real</h1>
+    <p>
+      <strong>Versión:</strong> 1.0<br /><strong>Propósito:</strong> Ver el código real y entender cada línea<br /><strong>Nivel:</strong> Intermedio a Avanzado</p>
+    <hr />
+    <h2 id="indice">📋 Índice</h2>
+    <ol>
+      <li>
+        <a href="#punto-de-entrada-apppy">Punto de Entrada</a>
+      </li>
+      <li>
+        <a href="#documentprocessor">DocumentProcessor</a>
+      </li>
+      <li>
+        <a href="#retrieverbuilder">RetrieverBuilder</a>
+      </li>
+      <li>
+        <a href="#los-3-agentes">Los 3 Agentes</a>
+      </li>
+      <li>
+        <a href="#workflow-orquestador">Workflow Orquestador</a>
+      </li>
+    </ol>
+    <hr />
+    <h2 id="punto-de-entrada-app.py">🚀 Punto de Entrada: app.py</h2>
+    <h3 id="codigo-real">
+      <strong>Código real:</strong>
+    </h3>
+    <pre>
+      <code class="language-python"># app.py (Gradio UI)
+
+import gradio as gr
+from document_processor.file_handler import DocumentProcessor
+from retriever.builder import RetrieverBuilder
+from agents.workflow import AgentWorkflow
+from config.settings import settings
+from utils.logging import logger
+
+def main():
+    """Punto de entrada: crea UI Gradio + inicializa componentes."""
+    
+    logger.info("=== RAG-AgentAI Initialization ===")
+    
+    # PASO 1: Instanciar los 3 componentes principales
+    # ────────────────────────────────────────────────
+    try:
+        processor = DocumentProcessor()        # Parsa archivos
+        retriever_builder = RetrieverBuilder()  # Crea recuperador
+        workflow = AgentWorkflow()              # Orquesta agentes
+        logger.info("✓ All components initialized")
+    except Exception as e:
+        logger.error(f"❌ Failed to initialize: {e}", exc_info=True)
+        raise
+    
+    # PASO 2: Crear interfaz Gradio
+    # ────────────────────────────────────────────────
+    with gr.Blocks(theme=gr.themes.Ocean(), title="RAG-AgentAI") as demo:
+        
+        # Título
+        gr.Markdown("## RAG-AgentAI: Agente IA Local 🌊")
+        gr.Markdown("### Powered by Ollama + Chroma + LangGraph")
+        gr.Markdown("# ¿Cómo funciona? ✨")
+        gr.Markdown("📤 Sube documentos → 💬 Haz pregunta → ✅ Respuesta verificada")
+        
+        # PASO 3: Crear session state para caching
+        # ────────────────────────────────────────────────
+        session_state = gr.State({
+            "file_hashes": frozenset(),  # Documentos cargados
+            "retriever": None             # Recuperador (para reusar)
+        })
+        # ¿Por qué state?
+        # - Evita re-procesar mismos documentos
+        # - Mantiene retriever en memoria entre preguntas
+        # - Mejora latencia significativamente
+        
+        # PASO 4: Interfaz de usuario
+        # ────────────────────────────────────────────────
+        with gr.Row():
+            with gr.Column():
+                # Input 1: Carga de documentos
+                file_input = gr.File(
+                    label="📤 Sube documentos",
+                    type="binary",
+                    file_types=[".pdf", ".docx", ".txt", ".md"]
+                )
+                
+                # Input 2: Selecciona ejemplo
+                example_dropdown = gr.Dropdown(
+                    choices=list(EXAMPLES.keys()),
+                    label="📋 Cargar Ejemplo"
+                )
+                
+                # Input 3: Pregunta
+                question_input = gr.Textbox(
+                    label="💬 Tu Pregunta",
+                    placeholder="Pregunta en español...",
+                    lines=3
+                )
+                
+                # Botones
+                submit_btn = gr.Button("Enviar")
+                clear_btn = gr.Button("Limpiar")
+            
+            with gr.Column():
+                # Output 1: Respuesta
+                answer_output = gr.Textbox(
+                    label="📝 RESPUESTA",
+                    lines=5,
+                    interactive=False
+                )
+                
+                # Output 2: Reporte de verificación
+                report_output = gr.Textbox(
+                    label="✅ REPORTE DE VERIFICACIÓN",
+                    lines=4,
+                    interactive=False
+                )
+        
+        # PASO 5: Event handlers
+        # ────────────────────────────────────────────────
+        
+        def load_example(example_name):
+            """Carga un ejemplo pre-cargado."""
+            if example_name not in EXAMPLES:
+                return None, "", ""
+            
+            example = EXAMPLES[example_name]
+            example_question = example["question"]
+            
+            # Nota: Los documentos del ejemplo ya están en Chroma
+            # (pre-cargados en SETUP)
+            
+            return (
+                example_question,  # Pone pregunta en textbox
+                "",                # Limpia respuesta
+                ""                 # Limpia reporte
+            )
+        
+        def process_question(question, session_state):
+            """Procesa pregunta → llama al workflow."""
+            
+            logger.debug(f"Processing question: '{question}'")
+            
+            # PASO 5A: Obtener recuperador del state
+            # ─────────────────────────────────────
+            if session_state["retriever"] is None:
+                logger.warning("No documents loaded yet")
+                return (
+                    "Por favor sube documentos primero.",
+                    "Error: Sin documentos"
+                )
+            
+            retriever = session_state["retriever"]
+            
+            # PASO 5B: Ejecutar workflow (3 agentes)
+            # ─────────────────────────────────────
+            try:
+                result = workflow.full_pipeline(question, retriever)
+                # Retorna: { "draft_answer": "...", "verification_report": "..." }
+                
+                return (
+                    result["draft_answer"],           # Al textbox respuesta
+                    result["verification_report"]    # Al textbox reporte
+                )
+            
+            except Exception as e:
+                logger.error(f"Pipeline error: {e}", exc_info=True)
+                return (
+                    f"Error en pipeline: {str(e)}",
+                    "Verifica logs/rag_agentai.log"
+                )
+        
+        def handle_file_upload(files, session_state):
+            """Carga archivos → procesa → indexa en Chroma."""
+            
+            if not files:
+                return "No files uploaded", session_state
+            
+            file_hashes = set()
+            all_documents = []
+            
+            # PASO 5C: Procesar cada archivo
+            # ─────────────────────────────────────
+            for file_obj in files:
+                try:
+                    filename = file_obj.name
+                    file_bytes = file_obj.data
+                    
+                    logger.info(f"Processing: {filename}")
+                    
+                    # Parsear documento
+                    documents = processor.process(file_bytes, filename)
+                    # Retorna List[Document] con chunks
+                    
+                    all_documents.extend(documents)
+                    
+                    # Calcular hash para dedup
+                    import hashlib
+                    file_hash = hashlib.sha256(file_bytes).hexdigest()
+                    file_hashes.add(file_hash)
+                    
+                    logger.info(f"✓ {filename}: {len(documents)} chunks")
+                
+                except Exception as e:
+                    logger.error(f"Failed to process {filename}: {e}")
+                    continue
+            
+            # PASO 5D: Construir recuperador (primera vez)
+            # ─────────────────────────────────────────────
+            if all_documents:
+                try:
+                    logger.info("Building hybrid retriever...")
+                    retriever = retriever_builder.build_hybrid_retriever(all_documents)
+                    # Retorna EnsembleRetriever(BM25 + Chroma vector)
+                    
+                    session_state["retriever"] = retriever
+                    session_state["file_hashes"] = frozenset(file_hashes)
+                    
+                    logger.info(f"✓ Retriever ready ({len(all_documents)} chunks total)")
+                    
+                    return (
+                        f"✓ {len(all_documents)} chunks cargados",
+                        session_state
+                    )
+                
+                except Exception as e:
+                    logger.error(f"Failed to build retriever: {e}")
+                    return (
+                        f"Error construyendo recuperador: {str(e)}",
+                        session_state
+                    )
+            
+            return "No documents were processed", session_state
+        
+        # Conectar eventos
+        file_input.change(
+            handle_file_upload,
+            inputs=[file_input, session_state],
+            outputs=[gr.Textbox(visible=False), session_state]
+        )
+        
+        submit_btn.click(
+            process_question,
+            inputs=[question_input, session_state],
+            outputs=[answer_output, report_output]
+        )
+        
+        example_dropdown.change(
+            load_example,
+            inputs=[example_dropdown],
+            outputs=[question_input, answer_output, report_output]
+        )
+        
+        clear_btn.click(
+            lambda: ("", "", ""),
+            outputs=[question_input, answer_output, report_output]
+        )
+    
+    # PASO 6: Lanzar servidor Gradio
+    # ────────────────────────────────────────────────
+    demo.launch(
+        server_name=settings.GRADIO_SERVER_NAME,  # 127.0.0.1
+        server_port=settings.GRADIO_SERVER_PORT,  # 5020
+        share=settings.GRADIO_SHARE                # False (local only)
+    )
+
+if __name__ == "__main__":
+    main()
+</code>
+    </pre>
+    <p>
+      <strong>Explicación de flujo:</strong>
+    </p>
+    <pre>
+      <code>Usuario abre http://127.0.0.1:5020
+         ↓
+    app.py main() ejecuta
+         ↓
+    Gradio UI se renderiza
+         ↓
+    Usuario sube archivo
+         ↓
+    handle_file_upload() executa
+         ├─ processor.process(file_bytes) → List[Document]
+         ├─ retriever_builder.build() → EnsembleRetriever
+         └─ Guarda en session_state
+         ↓
+    Usuario escribe pregunta + presiona "Enviar"
+         ↓
+    process_question() executa
+         ├─ Obtiene retriever del session_state
+         ├─ Llama a workflow.full_pipeline(question, retriever)
+         └─ Muestra respuesta + reporte
+</code>
+    </pre>
+    <hr />
+    <h2 id="documentprocessor">📄 DocumentProcessor</h2>
+    <h3 id="codigo-real-document_processorfile_handler.py">
+      <strong>Código real: document_processor/file_handler.py</strong>
+    </h3>
+    <pre>
+      <code class="language-python">from docling.document_converter import DocumentConverter
+from langchain_text_splitters import MarkdownHeaderTextSplitter
+from langchain_core.documents import Document
+import hashlib
+import pickle
+import os
+import logging
+
+logger = logging.getLogger(__name__)
+
+class DocumentProcessor:
+    """Parsea archivos (PDF/DOCX/TXT/MD) a chunks."""
+    
+    def __init__(self):
+        """Inicializa Docling parser."""
+        self.converter = DocumentConverter()  # Docling engine
+        self.cache_dir = "cache"
+        os.makedirs(self.cache_dir, exist_ok=True)
+        logger.info("✓ DocumentProcessor initialized")
+    
+    def process(self, file_bytes: bytes, filename: str) -&gt; list:
+        """
+        Procesa un archivo binario → List[Document]
+        
+        Args:
+            file_bytes: Contenido del archivo (PDF/DOCX/etc.)
+            filename: Nombre original (para metadatos)
+        
+        Returns:
+            List[Document] con chunks y metadatos
+        """
+        
+        # PASO 1: Calcular SHA256 del contenido
+        # ──────────────────────────────────────
+        content_hash = hashlib.sha256(file_bytes).hexdigest()
+        cache_file = os.path.join(self.cache_dir, f"{content_hash}.pkl")
+        
+        logger.debug(f"Content hash: {content_hash}")
+        
+        # PASO 2: ¿Está en caché?
+        # ──────────────────────────────────────
+        if os.path.exists(cache_file):
+            logger.info(f"✓ Loading from cache: {cache_file}")
+            
+            with open(cache_file, "rb") as f:
+                chunks = pickle.load(f)
+            
+            logger.debug(f"Loaded {len(chunks)} chunks from cache")
+            return chunks
+        
+        # PASO 3: Parsear con Docling (sin caché)
+        # ──────────────────────────────────────
+        logger.info(f"Parsing with Docling: {filename}")
+        
+        try:
+            # Docling convierte archivo → DocumentLayout
+            from io import BytesIO
+            result = self.converter.convert(BytesIO(file_bytes))
+            
+            # ¿Por qué Docling?
+            # - Maneja PDF/DOCX/PPTX/etc.
+            # - Extrae OCR (imágenes con texto → texto)
+            # - Mantiene estructura (tablas, headers)
+            
+            logger.debug(f"Conversion complete: {len(result.document.pages)} pages")
+        
+        except Exception as e:
+            logger.error(f"❌ Docling parse failed: {e}")
+            raise
+        
+        # PASO 4: Convertir a Markdown
+        # ──────────────────────────────────────
+        logger.debug("Converting to Markdown")
+        markdown_text = result.document.export_to_markdown()
+        # Resultado: Markdown con # headers, ## subsections, etc.
+        
+        logger.debug(f"Markdown: {len(markdown_text)} chars")
+        
+        # PASO 5: Chunking por headers (semantic)
+        # ──────────────────────────────────────
+        logger.debug("Splitting by Markdown headers")
+        
+        splitter = MarkdownHeaderTextSplitter(
+            headers_to_split_on=[
+                ("#", "header1"),      # # título principal
+                ("##", "header2"),     # ## subtítulo
+                ("###", "header3")     # ### detalle
+            ],
+            return_each_line=False  # Agrupar líneas
+        )
+        
+        # ¿Por qué headers?
+        # - Mantiene coherencia: cada chunk es auto-contenido
+        # - Metadata rich: {header1: "...", header2: "..."}
+        # - No divide en mitad de una sección
+        
+        chunks_data = splitter.split_text(markdown_text)
+        # Retorna List[Document] con page_content + metadata
+        
+        logger.debug(f"Split into {len(chunks_data)} chunks")
+        
+        # PASO 6: Deduplicación (si mismo contenido en múltiples docs)
+        # ──────────────────────────────────────────────────────────
+        logger.debug("Deduplicating chunks")
+        
+        seen_hashes = set()
+        unique_chunks = []
+        duplicates = 0
+        
+        for chunk in chunks_data:
+            # Calcular hash del contenido del chunk
+            chunk_hash = hashlib.sha256(
+                chunk.page_content.encode()
+            ).hexdigest()
+            
+            if chunk_hash not in seen_hashes:
+                unique_chunks.append(chunk)
+                seen_hashes.add(chunk_hash)
+            else:
+                duplicates += 1
+        
+        logger.debug(f"Removed {duplicates} duplicate chunks")
+        
+        # PASO 7: Agregar metadatos
+        # ──────────────────────────────────────
+        for chunk in unique_chunks:
+            # Guardar filename en metadatos
+            if "metadata" not in chunk.metadata:
+                chunk.metadata = {}
+            
+            chunk.metadata["filename"] = filename
+            chunk.metadata["source"] = f"{filename}#{chunk.metadata.get('header1', 'unknown')}"
+        
+        # PASO 8: Cachear resultado
+        # ──────────────────────────────────────
+        logger.info(f"Saving cache: {cache_file}")
+        
+        with open(cache_file, "wb") as f:
+            pickle.dump(unique_chunks, f)
+        
+        logger.info(f"✓ Processing complete: {len(unique_chunks)} chunks")
+        
+        return unique_chunks
+</code>
+    </pre>
+    <p>
+      <strong>Diagrama de flujo:</strong>
+    </p>
+    <pre>
+      <code>File upload (PDF)
+    ↓ (file_bytes)
+SHA256 hash
+    ├─ Si en cache → Cargar .pkl (&lt; 1 seg)
+    └─ Si no en cache ↓
+        Docling convert PDF → Document
+            ↓ (con OCR si hay imágenes)
+        Export to Markdown
+            ↓
+        MarkdownHeaderTextSplitter
+            ↓ (respetar # headers)
+        Dedup por content hash
+            ↓
+        Add metadata (filename, source)
+            ↓
+        Pickle.dump() a cache
+            ↓
+        Return List[Document]
+</code>
+    </pre>
+    <hr />
+    <h2 id="retrieverbuilder">🔍 RetrieverBuilder</h2>
+    <h3 id="codigo-real-retrieverbuilder.py">
+      <strong>Código real: retriever/builder.py</strong>
+    </h3>
+    <pre>
+      <code class="language-python">from langchain_ollama import OllamaEmbeddings
+from langchain_chroma import Chroma
+from langchain_community.retrievers import BM25Retriever, EnsembleRetriever
+from config.settings import settings
+import logging
+
+logger = logging.getLogger(__name__)
+
+class RetrieverBuilder:
+    """Construye recuperador híbrido BM25 + Vector."""
+    
+    def __init__(self):
+        """Inicializa embedder Ollama."""
+        logger.info(f"Initializing RetrieverBuilder (embedding model: {settings.EMBEDDING_MODEL})")
+        
+        # Crear embedder (conexión a Ollama)
+        self.embedder = OllamaEmbeddings(
+            model=settings.EMBEDDING_MODEL,  # mxbai-embed-large
+            base_url=settings.OLLAMA_BASE_URL,  # http://localhost:11434
+            show_progress=True
+        )
+        
+        # ¿Por qué OllamaEmbeddings?
+        # - Usa modelo local (no cloud)
+        # - Integración con Ollama
+        # - Cada call: invoke(text) → vector 1024D
+        
+        logger.info("✓ RetrieverBuilder initialized")
+    
+    def build_hybrid_retriever(self, documents: list):
+        """
+        Construye recuperador híbrido.
+        
+        Arquitectura:
+            documents
+                ├─ BM25Retriever (léxico, in-memory)
+                └─ Chroma (vector, HTTP remoto)
+                    ├─ OllamaEmbeddings (convierte texto → vector)
+                    └─ Chroma HTTP client (guarda en servidor)
+                
+                ↓ Ensemble (combina con pesos)
+                
+                Recuperador híbrido final
+        """
+        
+        logger.info(f"Building hybrid retriever ({len(documents)} documents)")
+        
+        # PASO 1: BM25 Retriever (búsqueda léxica)
+        # ──────────────────────────────────────
+        logger.debug("Creating BM25 retriever")
+        
+        bm25_retriever = BM25Retriever.from_documents(documents)
+        
+        # ¿Qué hace BM25?
+        # 1. Tokeniza cada documento (palabra por palabra)
+        # 2. Crea índice TF-IDF
+        # 3. En búsqueda: score = relevancia semántica léxica
+        # 4. Retorna top-k docs ordenados por score
+        
+        logger.debug(f"✓ BM25 ready ({len(documents)} docs indexed)")
+        
+        # PASO 2: Vector Retriever (búsqueda semántica)
+        # ──────────────────────────────────────────
+        logger.debug(f"Creating vector store (Chroma HTTP: {settings.CHROMA_URL})")
+        
+        import chromadb
+        
+        # Conectar a Chroma Docker (HTTP)
+        chroma_client = chromadb.HttpClient(
+            host=settings.CHROMA_HOST,      # localhost
+            port=settings.CHROMA_PORT       # 8000
+        )
+        
+        # ¿Por qué HTTP?
+        # - BD está en Docker separado
+        # - Permite múltiples apps → 1 Chroma
+        # - Fácil resetear sin reiniciar app
+        
+        # Crear o conectar a colección
+        try:
+            # Verificar si colección existe
+            collection = chroma_client.get_collection(
+                name=settings.CHROMA_COLLECTION_NAME
+            )
+            
+            logger.debug(f"✓ Connected to existing collection: {settings.CHROMA_COLLECTION_NAME}")
+        
+        except Exception as e:
+            logger.debug(f"Collection doesn't exist, creating new one: {e}")
+            collection = None
+        
+        # Crear vector store (o conectar existente)
+        vector_store = Chroma(
+            client=chroma_client,
+            collection_name=settings.CHROMA_COLLECTION_NAME,  # rag_agentai_documents
+            embedding_function=self.embedder,  # OllamaEmbeddings
+            persist_directory=None  # No persist local (HTTP remoto)
+        )
+        
+        # ¿Qué pasa aquí?
+        # 1. Chroma.from_documents() itera sobre docs
+        # 2. Para cada doc: embedder.embed_query(text)
+        # 3. Envia embedding + texto a Chroma servidor (HTTP)
+        # 4. Chroma almacena en BD vectorial (en Docker)
+        
+        logger.info("Adding documents to vector store (this may take a moment)...")
+        
+        # Agregar documentos (si no existen)
+        vector_store.add_documents(documents)
+        
+        logger.debug(f"✓ Vector store ready ({len(documents)} docs embedded + stored)")
+        
+        # Crear retriever desde vector store
+        vector_retriever = vector_store.as_retriever(
+            k=settings.VECTOR_SEARCH_K  # top 10
+        )
+        
+        # ¿Qué hace as_retriever?
+        # - Convierte Chroma en formato compatible con Langchain
+        # - Implementa .invoke(query) → List[Document]
+        
+        # PASO 3: Ensemble Retriever (híbrido)
+        # ────────────────────────────────────
+        logger.debug("Creating ensemble retriever")
+        
+        weights = settings.ENSEMBLE_WEIGHTS  # [0.4, 0.6]
+        
+        ensemble = EnsembleRetriever(
+            retrievers=[bm25_retriever, vector_retriever],
+            weights=weights
+        )
+        
+        # ¿Cómo funciona ensemble?
+        # 1. invoke(query) llama ambos retrievers en paralelo
+        # 2. BM25: retorna top 10 con scores BM25
+        # 3. Vector: retorna top 10 con scores cosine_similarity
+        # 4. Combina: score_final = 0.4*score_bm25 + 0.6*score_vector
+        # 5. Re-rankea y retorna top 10 finales
+        
+        logger.info(f"✓ Hybrid retriever ready (BM25: {weights[0]}, Vector: {weights[1]})")
+        
+        return ensemble
+</code>
+    </pre>
+    <p>
+      <strong>Explicación de Embeddings:</strong>
+    </p>
+    <pre>
+      <code class="language-python"># ¿Cómo funciona OllamaEmbeddings?
+
+embedder = OllamaEmbeddings(model="mxbai-embed-large", base_url="http://localhost:11434")
+
+# Cuando se llama:
+embedding = embedder.embed_query("¿Cuál es la eficiencia PUE?")
+
+# Paso a paso:
+# 1. Ollama Client conecta a http://localhost:11434/api/embed
+# 2. Envía: { "model": "mxbai-embed-large", "prompt": "¿Cuál..." }
+# 3. mxbai-embed-large procesa el texto
+# 4. Retorna: [0.123, -0.456, 0.789, ..., 0.345]  # 1024 números (vector)
+# 5. Este vector representa el "significado" del texto
+# 6. Se almacena en Chroma con el texto original
+
+# Búsqueda:
+# 1. Query embedding = embedder.embed_query(user_question)
+# 2. Chroma calcula: cosine_similarity(query_embedding, doc_embeddings)
+# 3. Retorna top-k docs más similares
+</code>
+    </pre>
+    <hr />
+    <h2 id="los-3-agentes">🤖 Los 3 Agentes</h2>
+    <h3 id="agent-1-relevancechecker">
+      <strong>Agent 1: RelevanceChecker</strong>
+    </h3>
+    <pre>
+      <code class="language-python"># agents/relevance_checker.py
+
+from langchain_ollama import ChatOllama
+from config.settings import settings
+import logging
+
+logger = logging.getLogger(__name__)
+
+class RelevanceChecker:
+    """¿Pueden los documentos responder la pregunta?"""
+    
+    def __init__(self):
+        """Inicializa LLM para clasificación."""
+        logger.info(f"Initializing RelevanceChecker (model: {settings.OLLAMA_TEXT_MODEL})")
+        
+        self.model = ChatOllama(
+            model=settings.OLLAMA_TEXT_MODEL,           # qwen2.5:7b-instruct...
+            base_url=settings.OLLAMA_BASE_URL,          # http://localhost:11434
+            temperature=0.0,  # Determinístico (siempre misma respuesta)
+            top_p=settings.OLLAMA_TOP_P,
+            num_predict=10  # Muy corta respuesta esperada
+        )
+        
+        logger.info("✓ RelevanceChecker initialized")
+    
+    def check(self, question: str, retriever, k: int = 3) -&gt; str:
+        """
+        Clasifica si documentos pueden responder.
+        
+        Retorna: "CAN_ANSWER", "PARTIAL", o "NO_MATCH"
+        """
+        
+        logger.debug(f"RelevanceChecker.check(question='{question}')")
+        
+        try:
+            # PASO 1: Recuperar documentos
+            top_docs = retriever.invoke(question)
+            
+            if not top_docs:
+                logger.debug("No documents retrieved")
+                return "NO_MATCH"
+            
+            # PASO 2: Limitarse a top k docs
+            top_docs = top_docs[:k]
+            
+            # PASO 3: Crear contexto
+            document_content = "\n\n".join([
+                f"[Doc {i+1}] {doc.page_content}"
+                for i, doc in enumerate(top_docs)
+            ])
+            
+            # PASO 4: Crear prompt (instrucciones al LLM)
+            prompt = f"""Eres un verificador de relevancia. Clasifica si estos documentos pueden responder la pregunta.
+
+**Responde SOLO con una etiqueta: CAN_ANSWER, PARTIAL, o NO_MATCH**
+
+- "CAN_ANSWER": Los documentos contienen información explícita para responder completamente.
+- "PARTIAL": Los documentos mencionan el tema pero no dan detalles completos.
+- "NO_MATCH": Los documentos no discuten el tema de la pregunta.
+
+**Pregunta:** {question}
+
+**Párrafos:**
+{document_content}
+
+**Respuesta (SOLO la etiqueta):**"""
+            
+            # ¿Por qué este prompt?
+            # 1. Claro: una sola tarea
+            # 2. Estructurado: opciones explícitas
+            # 3. Determinístico: resultado consistente
+            # 4. Corto: temp=0.0 + pocas palabras
+            
+            logger.debug(f"Sending prompt to LLM (temp=0.0, max_tokens=10)")
+            
+            # PASO 5: Llamar al LLM
+            message = self.model.invoke(prompt)
+            llm_response = message.content.strip().upper()
+            
+            logger.debug(f"LLM response: '{llm_response}'")
+            
+            # PASO 6: Validar respuesta
+            valid_labels = {"CAN_ANSWER", "PARTIAL", "NO_MATCH"}
+            
+            if llm_response not in valid_labels:
+                logger.warning(f"Invalid response '{llm_response}', defaulting to NO_MATCH")
+                return "NO_MATCH"
+            
+            logger.debug(f"✓ Classification: {llm_response}")
+            return llm_response
+        
+        except Exception as e:
+            logger.error(f"❌ Error in relevance check: {e}", exc_info=True)
+            return "NO_MATCH"
+</code>
+    </pre>
+    <h3 id="agent-2-researchagent">
+      <strong>Agent 2: ResearchAgent</strong>
+    </h3>
+    <pre>
+      <code class="language-python"># agents/research_agent.py
+
+class ResearchAgent:
+    """Genera respuesta basada en documentos."""
+    
+    def __init__(self):
+        logger.info(f"Initializing ResearchAgent")
+        
+        self.model = ChatOllama(
+            model=settings.OLLAMA_TEXT_MODEL,
+            base_url=settings.OLLAMA_BASE_URL,
+            temperature=0.3,  # Leve variación (no repetitivo, no aleatorio)
+            top_p=settings.OLLAMA_TOP_P,
+            num_predict=settings.OLLAMA_NUM_PREDICT  # 300 tokens max
+        )
+        
+        logger.info("✓ ResearchAgent initialized")
+    
+    def research(self, question: str, retriever) -&gt; str:
+        """
+        Genera respuesta basada SOLO en documentos.
+        """
+        
+        logger.debug(f"ResearchAgent.research(question='{question}')")
+        
+        try:
+            # PASO 1: Recuperar documentos
+            docs = retriever.invoke(question)
+            
+            if not docs:
+                logger.warning("No documents retrieved")
+                return "No encontré documentos relevantes para responder tu pregunta."
+            
+            # PASO 2: Limitar a max_context_docs
+            context_docs = docs[:settings.MAX_CONTEXT_DOCS]  # top 5
+            
+            # PASO 3: Crear contexto
+            context = "\n\n".join([
+                f"[Doc {i+1}] {doc.page_content}"
+                for i, doc in enumerate(context_docs)
+            ])
+            
+            # PASO 4: Crear prompt (detallado y estructurado)
+            prompt = f"""Eres un asistente IA útil. Responde la pregunta del usuario SOLO basándote en los documentos proporcionados.
+
+**Instrucciones:**
+- Usa solo información de los documentos abajo.
+- Sé claro, conciso y bien estructurado.
+- Si los documentos no contienen la respuesta, dilo.
+- Cita qué documento(s) usaste.
+
+**Pregunta:** {question}
+
+**Documentos:**
+{context}
+
+**Respuesta:**"""
+            
+            logger.debug("Sending prompt to LLM (temp=0.3)")
+            
+            # PASO 5: Llamar al LLM
+            message = self.model.invoke(prompt)
+            answer = message.content.strip()
+            
+            logger.debug(f"Generated answer ({len(answer)} chars)")
+            
+            return answer
+        
+        except Exception as e:
+            logger.error(f"❌ Error in research: {e}", exc_info=True)
+            return f"Error generating answer: {str(e)}"
+</code>
+    </pre>
+    <h3 id="agent-3-verificationagent">
+      <strong>Agent 3: VerificationAgent</strong>
+    </h3>
+    <pre>
+      <code class="language-python"># agents/verification_agent.py
+
+class VerificationAgent:
+    """Verifica que respuesta esté soportada por documentos."""
+    
+    def __init__(self):
+        logger.info("Initializing VerificationAgent")
+        
+        self.model = ChatOllama(
+            model=settings.OLLAMA_TEXT_MODEL,
+            base_url=settings.OLLAMA_BASE_URL,
+            temperature=0.0,  # Determinístico (fact-checking estricto)
+            top_p=settings.OLLAMA_TOP_P,
+            num_predict=settings.OLLAMA_NUM_PREDICT
+        )
+        
+        logger.info("✓ VerificationAgent initialized")
+    
+    def verify(self, question: str, answer: str, retriever) -&gt; str:
+        """
+        Verifica que respuesta está soportada.
+        """
+        
+        logger.debug(f"VerificationAgent.verify(answer_len={len(answer)})")
+        
+        try:
+            docs = retriever.invoke(question)
+            
+            if not docs:
+                logger.warning("No docs for verification")
+                return "Verification: Unable to verify (no docs). Relevant: UNKNOWN"
+            
+            context_docs = docs[:settings.MAX_CONTEXT_DOCS]
+            context = "\n\n".join([
+                f"[Doc {i+1}] {doc.page_content}"
+                for i, doc in enumerate(context_docs)
+            ])
+            
+            # Prompt para verificación (fact-checking riguroso)
+            prompt = f"""Eres un verificador de hechos. Verifica si la respuesta proporcionada está soportada por los documentos.
+
+**Tarea:**
+1. Comprueba si las afirmaciones de la respuesta están soportadas por los documentos.
+2. Identifica contradicciones o afirmaciones no soportadas.
+3. Proporciona un breve reporte de verificación.
+
+**Formatea tu respuesta como:**
+Soportado: SI/NO/PARCIAL
+Relevante: SI/NO
+Resumen: [1-2 oraciones sobre lo que encontraste]
+
+**Pregunta:** {question}
+
+**Respuesta Generada:**
+{answer}
+
+**Documentos de Apoyo:**
+{context}
+
+**Reporte de Verificación:**"""
+            
+            logger.debug("Sending verification prompt to LLM (temp=0.0)")
+            
+            message = self.model.invoke(prompt)
+            report = message.content.strip()
+            
+            logger.debug("✓ Verification report generated")
+            
+            return report
+        
+        except Exception as e:
+            logger.error(f"❌ Error in verification: {e}", exc_info=True)
+            return f"Verification: Error during verification: {str(e)}"
+</code>
+    </pre>
+    <hr />
+    <h2 id="workflow-orquestador">🔗 Workflow Orquestador</h2>
+    <h3 id="codigo-real-agentsworkflow.py">
+      <strong>Código real: agents/workflow.py</strong>
+    </h3>
+    <pre>
+      <code class="language-python"># agents/workflow.py
+
+class AgentWorkflow:
+    """Orquesta los 3 agentes."""
+    
+    def __init__(self):
+        logger.info("Initializing AgentWorkflow")
+        
+        self.researcher = ResearchAgent()
+        self.verifier = VerificationAgent()
+        self.relevance_checker = RelevanceChecker()
+        
+        logger.info("✓ AgentWorkflow initialized")
+    
+    def full_pipeline(self, question: str, retriever) -&gt; Dict:
+        """
+        Ejecuta pipeline completo: relevance → research → verification.
+        
+        Flujo:
+        1. RelevanceChecker (¿relevante?)
+        2. ResearchAgent (generar)
+        3. VerificationAgent (verificar)
+        4. If verification falla: re-research (máx 1x)
+        """
+        
+        logger.info(f"Starting full pipeline: '{question}'")
+        
+        try:
+            # NODO 1: Relevancia
+            # ─────────────────
+            logger.debug("→ Node 1: check_relevance")
+            
+            classification = self.relevance_checker.check(
+                question=question,
+                retriever=retriever,
+                k=20
+            )
+            
+            logger.debug(f"  Result: {classification}")
+            
+            if classification == "NO_MATCH":
+                logger.debug("  NO_MATCH detected → returning early")
+                return {
+                    "draft_answer": "Esta pregunta no está relacionada con los documentos. Por favor, haz otra pregunta.",
+                    "verification_report": "Relevancia: NO"
+                }
+            
+            # NODO 2: Investigación
+            # ────────────────────
+            logger.debug("→ Node 2: research")
+            
+            draft_answer = self.researcher.research(
+                question=question,
+                retriever=retriever
+            )
+            
+            logger.debug(f"  Generated answer ({len(draft_answer)} chars)")
+            
+            # NODO 3: Verificación
+            # ────────────────────
+            logger.debug("→ Node 3: verification")
+            
+            verification_report = self.verifier.verify(
+                question=question,
+                answer=draft_answer,
+                retriever=retriever
+            )
+            
+            logger.debug("  Verification report generated")
+            
+            # NODO 4: Re-research (si verificación falló)
+            # ────────────────────────────────────────────
+            if "Soportado: NO" in verification_report or "Relevant: NO" in verification_report:
+                logger.debug("  Verification failed → re-researching (attempt 1)")
+                
+                draft_answer = self.researcher.research(
+                    question=question,
+                    retriever=retriever
+                )
+                
+                verification_report = self.verifier.verify(
+                    question=question,
+                    answer=draft_answer,
+                    retriever=retriever
+                )
+                
+                logger.debug("  Re-verification done")
+            
+            logger.info("✓ Pipeline completed successfully")
+            
+            return {
+                "draft_answer": draft_answer,
+                "verification_report": verification_report
+            }
+        
+        except Exception as e:
+            logger.error(f"❌ Pipeline failed: {e}", exc_info=True)
+            raise
+</code>
+    </pre>
+    <hr />
+    <p>
+      <strong>Fin de explicación del código real.</strong>
+    </p>
+    <p>Este document muestra el código real con anotaciones. Para entender la arquitectura conceptual, lee ARCHITECTURE_DETAILED.md. Para entender la vectorización en Chroma específicamente, lee CHROMA_VECTORIZATION.md.</p>
+  </body>
+</html>
