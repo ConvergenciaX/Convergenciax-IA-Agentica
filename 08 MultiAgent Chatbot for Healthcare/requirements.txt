@@ -1,0 +1,80 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# DEPENDENCIAS — MultiAgent Chatbot for Healthcare
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# AMBIENTE RECOMENDADO: Python 3.14 (env-llm-314) o Python 3.13 (env-llm-ia)
+# INSTALACIÓN:
+#   C:\workspace-vc\env-llm-314\Scripts\python.exe -m pip install -r requirements.txt
+#
+# NOTA: autogen[ollama] instala automáticamente fix_busted_json y otras dependencias Ollama
+#
+# Si AutoGen no instala en 3.14, cambiar a:
+#   C:\workspace-vc\env-llm-ia\Scripts\python.exe -m pip install -r requirements.txt
+#
+# VERIFICACIÓN:
+#   python -c "import autogen; print(autogen.__version__)"
+#
+# ═══════════════════════════════════════════════════════════════════════════
+
+# Framework de Multi-Agente: AutoGen (AG2) — VERSIÓN v2.1 PYTHON 3.14
+# Nota: El paquete correcto es 'autogen' (AG2, https://ag2.ai/), NO 'pyautogen'
+# Versión verificada y testeada: 0.14.1+ (compatible con Python 3.14, API moderna)
+# - Cliente Ollama nativo: api_type="ollama"
+# - Parámetro correcto: system_message (NO system_prompt)
+# - Extra [ollama] incluye dependencias como fix_busted_json
+autogen[ollama]>=0.14.0
+
+# LangChain: utilities opcionales (para integración con Ollama si necesario)
+langchain>=1.4
+
+# Ollama client para Python (interacción directa con Ollama)
+# Nota: También se puede usar requests directamente, pero ollama proporciona SDK más limpio
+# ollama-python>=0.1.0   # Descomentar si quieres cliente oficial de Ollama
+
+# Análisis y benchmarking de resultados
+pandas>=2.2.0
+matplotlib>=3.11.0
+
+# Utilidades de configuración
+configparser>=5.3.0
+
+# Logging y debugging
+python-dotenv>=1.0.0
+
+# Optional: Para historial de pacientes (futuro, SQLite integrado en stdlib)
+# sqlalchemy>=2.0
+
+# Optional: Para procesamiento de texto médico
+# spacy>=3.7.0        # NLP avanzado (descargar modelo: python -m spacy download es_core_news_sm)
+
+# ═══════════════════════════════════════════════════════════════════════════
+# NOTAS DE INSTALACIÓN
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# 1. AUTOGEN (AG2) COMPATIBILITY (PYTHON 3.14)
+#    - AutoGen (AG2) 0.14.0+ soporta completamente Python 3.14
+#    - Cliente Ollama nativo: api_type="ollama" (NO "open_ai")
+#    - Parámetro correcto: system_message (NO system_prompt)
+#    - Si necesitas Python 3.13, cambiar a env-llm-ia
+#
+# 2. OLLAMA LOCAL REQUERIDO
+#    - Descargar: https://ollama.ai
+#    - Ejecutar: ollama serve (en otra terminal)
+#    - Modelos necesarios:
+#      → ollama pull qwen2.5:7b (modelo principal)
+#      → ollama pull llama3.1:8b-instruct-q2_K (opcional, para medical info)
+#
+# 3. EJECUCIÓN
+#    - Script principal: python main.py
+#    - Jupyter (si quieres notebook): pip install jupyter
+#
+# 4. VERSIONADO (v2.1 — PYTHON 3.14 — CORREGIDO)
+#    - autogen (AG2) pinned a >=0.14.0 (verificado y testeado, cliente Ollama nativo)
+#    - Cambios desde v2.0:
+#      * system_prompt → system_message (parámetro correcto)
+#      * api_type: "open_ai" → api_type: "ollama" (cliente nativo, no simular OpenAI)
+#      * human_input_mode="NEVER" agregado (agentes 100% automáticos)
+#      * ChatResult.summary usado para capturar respuestas reales
+#    - Para Python 3.13, cambiar a env-llm-ia (considerar usar versión anterior)
+#
+# ═══════════════════════════════════════════════════════════════════════════

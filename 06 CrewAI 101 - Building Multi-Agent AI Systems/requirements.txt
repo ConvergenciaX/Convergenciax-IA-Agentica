@@ -1,0 +1,65 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# CREWAI 101 - DEPENDENCIAS DEL PROYECTO
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# AMBIENTE RECOMENDADO: Python 3.13 (env-llm-ia)
+# ⚠️ NO usar Python 3.14 (tiktoken/regex no tienen wheels precompilados)
+#
+# INSTALACIÓN:
+#   C:\workspace-vc\env-llm-ia\Scripts\python.exe -m pip install -r requirements.txt
+#
+# VERIFICACIÓN:
+#   C:\workspace-vc\env-llm-ia\Scripts\python.exe -c "import crewai; print(crewai.__version__)"
+#
+# ═══════════════════════════════════════════════════════════════════════════
+
+# Framework principal: CrewAI para sistemas multiagente
+# Versión: 1.15.21 (con Flow runtime y native tool-calling experimental)
+crewai==1.15.21
+
+# Herramientas específicas de CrewAI (búsqueda web, etc.)
+crewai-tools>=1.15.21
+
+# LiteLLM: proveedor unificado para múltiples LLMs (DEPENDENCIA OBLIGATORIA)
+# CrewAI usa internamente litellm.completion() para toda llamada a LLM
+litellm>=1.0.0
+
+# LangChain: framework para aplicaciones LLM
+langchain>=0.3.20
+
+# Soporte específico para Ollama en LangChain
+langchain-ollama>=0.1.0
+
+# Jupyter para notebooks interactivos
+#jupyter>=1.0.0
+#ipython>=8.0.0
+
+# Logging y utilidades
+#python-dotenv>=1.0.0
+
+# ═══════════════════════════════════════════════════════════════════════════
+# NOTAS IMPORTANTES
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# 1. OLLAMA LOCAL REQUERIDO
+#    - Descargar e instalar Ollama desde https://ollama.ai
+#    - Ejecutar: ollama serve (en otra terminal)
+#    - Descargar modelo: ollama pull qwen2.5:7b
+#
+# 2. CONFIGURACIÓN
+#    - Editar config.ini antes de ejecutar
+#    - Secciones obligatorias: [ollama], [logging], [output]
+#    - Secciones opcionales: [serper] (para búsqueda web)
+#
+# 3. AMBIENTE PYTHON
+#    - Usar SIEMPRE env-llm-ia (Python 3.13)
+#    - Evitar env-llm-314 (Python 3.14) por falta de wheels para tiktoken/regex
+#
+# 4. EJECUCIÓN DEL NOTEBOOK
+#    C:\workspace-vc\env-llm-ia\Scripts\python.exe -m jupyter notebook
+#    → Abrir: CrewAI 101 - Multi-Agent AI Systems_LLM_local.ipynb
+#
+# 5. VERIFICACIÓN RÁPIDA
+#    python -c "from crewai import Agent, Task, Crew; print('✅ CrewAI instalado')"
+#
+# ═══════════════════════════════════════════════════════════════════════════

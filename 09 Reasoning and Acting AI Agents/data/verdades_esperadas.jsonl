@@ -1,0 +1,10 @@
+{"id": 1, "consulta": "¿Cuánto es 2 + 2?", "respuesta_esperada": "4", "herramientas_esperadas": ["calculadora"], "dificultad": "facil"}
+{"id": 2, "consulta": "Convierte 32 grados Fahrenheit a Celsius", "respuesta_esperada": "0", "herramientas_esperadas": ["conversor"], "dificultad": "facil"}
+{"id": 3, "consulta": "¿Cuánto es 15 * 3?", "respuesta_esperada": "45", "herramientas_esperadas": ["calculadora"], "dificultad": "facil"}
+{"id": 4, "consulta": "Convierte 100 kg a libras", "respuesta_esperada": "220", "herramientas_esperadas": ["conversor"], "dificultad": "medio"}
+{"id": 5, "consulta": "¿Cuál es la fórmula del agua?", "respuesta_esperada": "H2O", "herramientas_esperadas": ["wikipedia"], "dificultad": "facil"}
+{"id": 6, "consulta": "¿Cuánto es (50 + 30) * 2?", "respuesta_esperada": "160", "herramientas_esperadas": ["calculadora"], "dificultad": "medio"}
+{"id": 7, "consulta": "¿Cuántos metros son 5 kilómetros?", "respuesta_esperada": "5000", "herramientas_esperadas": ["conversor"], "dificultad": "facil"}
+{"id": 8, "consulta": "¿Qué hora es ahora?", "respuesta_esperada": "2026", "herramientas_esperadas": ["fecha"], "dificultad": "facil"}
+{"id": 9, "consulta": "¿Cuánto es 1000 / 5?", "respuesta_esperada": "200", "herramientas_esperadas": ["calculadora"], "dificultad": "facil"}
+{"id": 10, "consulta": "Convierte 0 grados Celsius a Fahrenheit", "respuesta_esperada": "32", "herramientas_esperadas": ["conversor"], "dificultad": "medio"}

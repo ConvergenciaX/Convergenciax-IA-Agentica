@@ -1,0 +1,57 @@
+# ═══════════════════════════════════════════════════════════════════════════
+# DEPENDENCIAS — IA Agente - Tools y Math
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# AMBIENTE RECOMENDADO: Python 3.14 (env-llm-314)
+# INSTALACIÓN:
+#   C:\workspace-vc\env-llm-314\Scripts\python.exe -m pip install -r requirements.txt
+#
+# VERIFICACIÓN:
+#   C:\workspace-vc\env-llm-314\Scripts\python.exe -c "import langchain; print(langchain.__version__)"
+#
+# ═══════════════════════════════════════════════════════════════════════════
+
+# LangChain: framework para aplicaciones con LLM
+# Nota: v1.4+ requerido para create_agent (reemplazo de create_react_agent)
+langchain>=1.4
+
+# Módulos comunitarios de LangChain (dependencia transitiva)
+# Ya no se importa directo (Wikipedia ahora usa paquete standalone)
+langchain-community>=0.3.16
+
+# Soporte específico para Ollama en LangChain
+langchain-ollama>=0.2.0
+
+# LangGraph: framework para construir agentes con estados (ReAct, etc.)
+langgraph>=0.6.1
+
+# Wikipedia: búsqueda y extracción de artículos
+wikipedia>=1.4.0
+
+# Análisis y visualización de datos (benchmarking)
+# Usados en analyze_benchmark.py para gráficos PNG y tablas
+pandas>=2.2.0
+matplotlib>=3.11.0
+
+# ═══════════════════════════════════════════════════════════════════════════
+# NOTAS IMPORTANTES
+# ═══════════════════════════════════════════════════════════════════════════
+#
+# 1. OLLAMA LOCAL REQUERIDO
+#    - Descargar e instalar Ollama desde https://ollama.ai
+#    - Ejecutar: ollama serve (en otra terminal)
+#    - Descargar modelo: ollama pull llama3.1:8b-instruct-q2_K
+#
+# 2. CONFIGURACIÓN
+#    - Editar config.ini antes de ejecutar
+#    - Secciones obligatorias: [ollama], [project], [logging], [output]
+#
+# 3. AMBIENTE PYTHON
+#    - Usar env-llm-314 (Python 3.14)
+#    - Si hay conflicto, volver a env-llm-ia (Python 3.13) — documentar en MANUAL.md
+#
+# 4. EJECUCIÓN DEL NOTEBOOK
+#    C:\workspace-vc\env-llm-314\Scripts\python.exe -m jupyter notebook
+#    → Abrir: AI Math Assistant - LangChain Tool Calling_LLM_local.ipynb
+#
+# ═══════════════════════════════════════════════════════════════════════════
